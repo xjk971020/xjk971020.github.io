@@ -519,9 +519,10 @@ System<span class="token punctuation">.</span>out<span class="token punctuation"
 <li>Integer i1=40；Java在编译的时候会直接将代码封装成Integer i1=Integer.valueOf(40);，从而使用常量池中的对象。</li>
 <li>Integer i1 = new Integer(40);这种情况下会创建新的对象，所以尽量避免使用这种方式。</li>
 </ol>
-<pre><code>  Integer i1 = 40;  
-Integer i2 = new Integer(40);  
-System.out.println(i1==i2);//输出fals</code></pre><p><strong>Integer比较更丰富的一个例子:</strong></p>
+<pre class=" language-java"><code class="language-java">Integer i1 <span class="token operator">=</span> <span class="token number">40</span><span class="token punctuation">;</span>  
+Integer i2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Integer</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>i1<span class="token operator">==</span>i2<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//输出fals</span></code></pre>
+<p><strong>Integer比较更丰富的一个例子:</strong></p>
 <pre class=" language-java"><code class="language-java">Integer i1 <span class="token operator">=</span> <span class="token number">40</span><span class="token punctuation">;</span>  
 Integer i2 <span class="token operator">=</span> <span class="token number">40</span><span class="token punctuation">;</span> 
 Integer i3 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>  
