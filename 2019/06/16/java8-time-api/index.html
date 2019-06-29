@@ -1,0 +1,928 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="Java8-time-api, Cathetine&#39;s Blog">
+    <meta name="description" content="Java8新特性之日期-时间API在Java8之前的版本中，我们处理时间类型常常使用的是java.util包下的Date类。
+但使用Date类却有诸多的弊端，如：java.util.Date是非线程安全的，所有的日期类都是可变的；日期/时间">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Java8-time-api | Cathetine&#39;s Blog</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    <style type="text/css">
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+
+<header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="container">
+            <div class="nav-wrapper">
+                <div class="brand-logo">
+                    <a href="/" class="waves-effect waves-light">
+                        
+                        <img src="/medias/logo.png" class="logo-img hide-on-small-only">
+                        
+                        <span class="logo-span">Cathetine's Blog</span>
+                    </a>
+                </div>
+                
+
+<a href="#" data-activates="mobile-nav" class="button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a id="toggleSearch" class="waves-effect waves-light">
+            <i id="searchIcon" class="mdi-action-search" title="搜索"></i>
+        </a>
+    </li>
+
+</ul>
+
+<div class="side-nav" id="mobile-nav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Cathetine's Blog</div>
+        <div class="logo-desc">
+            
+            做个好汉子，每天要自强
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+    </ul>
+
+    <div class="social-link">
+    <a href="https://github.com/xjk971020" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:823840954@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href=" " class="tooltipped" data-tooltip="微信联系我: xjk9710" data-position="top" data-delay="50">
+        <i class="fa fa-wechat"></i>
+    </a>
+
+
+</div>
+</div>
+
+            </div>
+        </div>
+
+        
+    </nav>
+</header>
+
+
+
+
+
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        Java8-time-api
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+</style>
+<div class="row">
+    <div class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Java8新特性/" target="_blank">
+                                <span class="chip bg-color">Java8新特性</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Java基础知识/" class="post-category" target="_blank">
+                                Java基础知识
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-06-16
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        1.3k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        5 分
+                    </div>
+                    
+                
+				
+				
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="Java8新特性之日期-时间API"><a href="#Java8新特性之日期-时间API" class="headerlink" title="Java8新特性之日期-时间API"></a>Java8新特性之日期-时间API</h1><p>在Java8之前的版本中，我们处理时间类型常常使用的是java.util包下的Date类。</p>
+<p>但使用Date类却有诸多的弊端，如：java.util.Date是非线程安全的，所有的日期类都是可变的；日期/时间类的定义并不一致，在java.util和java.sql的包下都含有Date类，在开发过程中极易出错； 日期类并不提供国际化，没有时区支持。</p>
+<p>为了解决以上问题，Java8在java.time包下提供了很多新的API，常用的类包括LocalDate、LocalTime、LocalDateTime，用以处理日期，时间，日期/时间等</p>
+<hr>
+<h2 id="LocalDate类"><a href="#LocalDate类" class="headerlink" title="LocalDate类"></a>LocalDate类</h2><p>LocalDate是一个不可变类，在不考虑时区的情况下可以对日期（不包括时间）进行各种操作，它的默认格式是yyyy-MM-dd</p>
+<h3 id="获取当前日期以及年、月、日"><a href="#获取当前日期以及年、月、日" class="headerlink" title="获取当前日期以及年、月、日"></a>获取当前日期以及年、月、日</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//获取当前日期以及年、月、日</span>
+LocalDate localDate <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> year <span class="token operator">=</span> localDate<span class="token punctuation">.</span><span class="token function">getYear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> month <span class="token operator">=</span> localDate<span class="token punctuation">.</span><span class="token function">getMonthValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> day <span class="token operator">=</span> localDate<span class="token punctuation">.</span><span class="token function">getDayOfMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"年："</span> <span class="token operator">+</span> year <span class="token operator">+</span> <span class="token string">"  月："</span> <span class="token operator">+</span> month <span class="token operator">+</span> <span class="token string">"  日："</span> <span class="token operator">+</span> day<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>当前日期：2018-12-12<br>年：2018  月：12  日：12</p>
+</blockquote>
+<h3 id="获取指定的日期"><a href="#获取指定的日期" class="headerlink" title="获取指定的日期"></a>获取指定的日期</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//获取指定的日期</span>
+LocalDate specifiedDay <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">2008</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"指定日期："</span> <span class="token operator">+</span> specifiedDay<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>指定日期：2008-08-18</p>
+</blockquote>
+<h3 id="比较两个时间的先后顺序以及是否相等"><a href="#比较两个时间的先后顺序以及是否相等" class="headerlink" title="比较两个时间的先后顺序以及是否相等"></a>比较两个时间的先后顺序以及是否相等</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java">LocalDate localDate <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+LocalDate otherDate <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">2018</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//equals方法用于比较两个日期是否相等</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>localDate<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>otherDate<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localDate与otherDate相等！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+     <span class="token comment" spellcheck="true">//isAfter和isBefore方法用于比较两个日期前后顺序</span>
+     <span class="token keyword">if</span><span class="token punctuation">(</span>localDate<span class="token punctuation">.</span><span class="token function">isAfter</span><span class="token punctuation">(</span>otherDate<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localDate晚于otherDate！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">}</span>
+     <span class="token keyword">if</span><span class="token punctuation">(</span>localDate<span class="token punctuation">.</span><span class="token function">isBefore</span><span class="token punctuation">(</span>otherDate<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localDate早于otherDate！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>localDate晚于otherDate！</p>
+</blockquote>
+<h3 id="对日期做加减运算"><a href="#对日期做加减运算" class="headerlink" title="对日期做加减运算"></a>对日期做加减运算</h3><pre class=" language-java"><code class="language-java">LocalDate localDate <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2年后日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">plusYears</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"6月后日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">plusMonths</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"3周后日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">plusWeeks</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"15天后日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">plusDays</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2年前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">minusYears</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"6月前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">minusMonths</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"3周前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">minusWeeks</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"15天前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">.</span><span class="token function">minusDays</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>2年后日期：2020-12-12<br>6月后日期：2019-06-12<br>3周后日期：2019-01-02<br>15天后日期：2018-12-27</p>
+</blockquote>
+<blockquote>
+<p>2年前日期：2016-12-12<br>6月前日期：2018-06-12<br>3周前日期：2018-11-21<br>15天前日期：2018-11-27</p>
+</blockquote>
+<h3 id="获取日期间隔的天数"><a href="#获取日期间隔的天数" class="headerlink" title="获取日期间隔的天数"></a>获取日期间隔的天数</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//获取某年份的第N天的日期</span>
+LocalDate specialDay <span class="token operator">=</span> LocalDate<span class="token punctuation">.</span><span class="token function">ofYearDay</span><span class="token punctuation">(</span><span class="token number">2018</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2018年的第100天："</span> <span class="token operator">+</span> specialDay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//获取两个日期的间隔天数</span>
+<span class="token keyword">long</span> intervalDay <span class="token operator">=</span> localDate<span class="token punctuation">.</span><span class="token function">toEpochDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> specialDay<span class="token punctuation">.</span><span class="token function">toEpochDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"间隔天数： "</span> <span class="token operator">+</span> intervalDay<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>2018年的第100天：2018-04-10<br>间隔天数：246</p>
+</blockquote>
+<hr>
+<h2 id="LocalTime类"><a href="#LocalTime类" class="headerlink" title="LocalTime类"></a>LocalTime类</h2><p>LocalTime与LocalDate一样，也是一个不可变的类，默认格式是hh: mm: ss.zzz，它提供了对时间的各种操作</p>
+<h3 id="获取当前时间以及自定义时间"><a href="#获取当前时间以及自定义时间" class="headerlink" title="获取当前时间以及自定义时间"></a>获取当前时间以及自定义时间</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//获取当前时间、时、分、秒以及自定义时间</span>
+LocalTime localTime <span class="token operator">=</span> LocalTime<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> hour <span class="token operator">=</span> localTime<span class="token punctuation">.</span><span class="token function">getHour</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> minute <span class="token operator">=</span> localTime<span class="token punctuation">.</span><span class="token function">getMinute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> second <span class="token operator">=</span> localTime<span class="token punctuation">.</span><span class="token function">getSecond</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"时："</span> <span class="token operator">+</span> hour <span class="token operator">+</span> <span class="token string">"  分："</span> <span class="token operator">+</span> minute <span class="token operator">+</span> <span class="token string">"  秒："</span> <span class="token operator">+</span> second<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//获取自定义时间</span>
+LocalTime specifiedTime <span class="token operator">=</span> LocalTime<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">45</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"自定义时间："</span> <span class="token operator">+</span> specifiedTime<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>当前时间：13:45:59.039<br>时：13  分：45  秒：59<br>自定义时间：15:30:45</p>
+</blockquote>
+<h3 id="比较两个时间的先后顺序"><a href="#比较两个时间的先后顺序" class="headerlink" title="比较两个时间的先后顺序"></a>比较两个时间的先后顺序</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//equals方法比较两个时间是否相等</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>localTime<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>specifiedTime<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localTime与specifiedTime相等！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//isAfter、isBefore方法比较两个时间的先后顺序</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>localTime<span class="token punctuation">.</span><span class="token function">isAfter</span><span class="token punctuation">(</span>specifiedTime<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localTime晚于specifiedTime！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>localTime<span class="token punctuation">.</span><span class="token function">isBefore</span><span class="token punctuation">(</span>specifiedTime<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"localTime早于specifiedTime！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>localTime早于specifiedTime！</p>
+</blockquote>
+<h3 id="对时间做加减运算"><a href="#对时间做加减运算" class="headerlink" title="对时间做加减运算"></a>对时间做加减运算</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java">LocalTime localTime <span class="token operator">=</span> LocalTime<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2小时后时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">plusHours</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"30分钟后时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">plusMinutes</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"500秒后日时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">plusSeconds</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2小时前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">minusHours</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"30分钟前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">minusMinutes</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"500秒前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">.</span><span class="token function">minusSeconds</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>当前时间：14:10:15.666<br>2小时后时间：16:10:15.666<br>30分钟后时间：14:40:15.666<br>500秒后时间：14:18:35.666</p>
+</blockquote>
+<blockquote>
+<p>2小时前时间：12:10:15.666<br>30分钟前时间：13:40:15.666<br>500秒前时间：14:01:55.666</p>
+</blockquote>
+<hr>
+<h2 id="LocalDateTime类"><a href="#LocalDateTime类" class="headerlink" title="LocalDateTime类"></a>LocalDateTime类</h2><p>LocalDateTime是一个不可变的日期-时间对象，它既包含了日期同时又含有时间，默认格式是yyyy-MM-ddTHH-mm-ss.zzz</p>
+<h3 id="获取当前日期时间以及自定义日期时间"><a href="#获取当前日期时间以及自定义日期时间" class="headerlink" title="获取当前日期时间以及自定义日期时间"></a>获取当前日期时间以及自定义日期时间</h3><p>示例代码：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//获取当前的日期时间</span>
+LocalDateTime localDateTime <span class="token operator">=</span> LocalDateTime<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前的日期时间："</span> <span class="token operator">+</span> localDateTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//获取自定义的的日期时间</span>
+LocalDateTime specifiedDateTime <span class="token operator">=</span> LocalDateTime<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>LocalDate<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> LocalTime<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"自定义的日期时间："</span> <span class="token operator">+</span> specifiedDateTime<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>当前的日期时间：2018-12-12T14:31:00.163<br>自定义的日期时间：2018-12-12T14:31:00.164</p>
+</blockquote>
+<h3 id="转化为日期和时间"><a href="#转化为日期和时间" class="headerlink" title="转化为日期和时间"></a>转化为日期和时间</h3><p>代码示例：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//转化为LocalDate和LocalTime</span>
+LocalDate localDate <span class="token operator">=</span> localDateTime<span class="token punctuation">.</span><span class="token function">toLocalDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+LocalTime localTime <span class="token operator">=</span> localDateTime<span class="token punctuation">.</span><span class="token function">toLocalTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前日期："</span> <span class="token operator">+</span> localDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"当前时间："</span> <span class="token operator">+</span> localTime<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>运行结果：</p>
+<blockquote>
+<p>当前日期：2018-12-12<br>当前时间：14:31:00.163</p>
+</blockquote>
+
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff;
+        background-color: #22AB38;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff;
+        background-color: #019FE8;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a class="reward-link btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs">
+                        <li class="tab wechat-tab waves-effect waves-light"><a class="active" href="#wechat">微信</a></li>
+                        <li class="tab alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                    </ul>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#reward .reward-link').on('click', function () {
+            $('#rewardModal').openModal();
+        });
+
+        $('#rewardModal .close').on('click', function () {
+            $('#rewardModal').closeModal();
+        });
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            <div class="reprint">
+                <p>
+                    <span class="reprint-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="http://yoursite.com" class="b-link-green">Cathetine's Blog</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2019/06/16/java8-time-api/" class="b-link-green">Java8-time-api</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2019/06/20/java-concurrent/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Java-concurrent">
+                        
+                        <span class="card-title">Java-concurrent</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">Java并发编程基础
+1、在java中守护线程和本地线程区别？java中的线程分为两种：守护线程和用户线程。
+任何线程都可以设置为守护线程和用户线程，通过方法Thread.setDaemon(boolean)；true则把该线程设置为守护线</div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-06-20
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java基础知识/" class="post-category" target="_blank">
+                                    Java基础知识
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/并发编程/" target="_blank">
+                        <span class="chip bg-color">并发编程</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/06/16/java8-stream/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Java8-stream">
+                        
+                        <span class="card-title">Java8-stream</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">Java 8中处理集合的优雅姿势——Stream在Java中，集合和数组是我们经常会用到的数据结构，需要经常对他们做增、删、改、查、聚合、统计、过滤等操作。相比之下，关系型数据库中也同样有这些操作，但是在Java 8之前，集合和数组的处理并</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-06-16
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java基础知识/" class="post-category" target="_blank">
+                                    Java基础知识
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java8新特性/" target="_blank">
+                        <span class="chip bg-color">Java8新特性</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+    </div>
+    <div class="col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+    });
+</script>
+    
+
+</main>
+
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            本站由&copy;<a href="https://blinkfox.github.io/" target="_blank">Blinkfox</a>基于
+            <a href="https://hexo.io/" target="_blank">Hexo</a> 的
+            <a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">hexo-theme-matery</a>主题搭建.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">60k</span>
+            
+
+            
+			
+                <br>
+                
+                <span id="busuanzi_container_site_pv">
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+                </span>
+                
+                
+                <span id="busuanzi_container_site_uv">
+                    <i class="fa fa-users"></i>
+                    次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                </span>
+                
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/xjk971020" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:823840954@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href=" " class="tooltipped" data-tooltip="微信联系我: xjk9710" data-position="top" data-delay="50">
+        <i class="fa fa-wechat"></i>
+    </a>
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+<!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input" autofocus="">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+</script>
+<!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+<script src="/libs/materialize/js/materialize.min.js"></script>
+<script src="/libs/masonry/masonry.pkgd.min.js"></script>
+<script src="/libs/aos/aos.js"></script>
+<script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+<script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+<script src="/js/matery.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    <script src="/libs/others/clicklove.js"></script>
+
+
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+
+
+</body>
+</html>
