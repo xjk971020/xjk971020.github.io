@@ -375,7 +375,7 @@
                 <h1 id="TreeSet-amp-红黑树"><a href="#TreeSet-amp-红黑树" class="headerlink" title="TreeSet&amp;红黑树"></a>TreeSet&amp;红黑树</h1><p>本文以Java TreeMap为例，从源代码层面，结合详细的图解，剥茧抽丝地讲解红黑树（Red-Black tree）的插入，删除以及由此产生的调整过程。</p>
 <h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><h3 id="总体介绍"><a href="#总体介绍" class="headerlink" title="总体介绍"></a>总体介绍</h3><p>Java TreeMap实现了SortedMap接口，也就是说会按照key的大小顺序对Map中的元素进行排序，key大小的评判可以通过其本身的自然顺序（natural ordering），也可以通过构造时传入的比较器（Comparator）。</p>
 <p><strong>TreeMap底层通过红黑树（Red-Black tree）实现</strong>，也就意味着containsKey(), get(), put(), remove()都有着log(n)的时间复杂度。其具体算法实现参照了《算法导论》。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/1.png" alt></p>
+<p><img src="/images/red-blackTree/1.png" alt></p>
 <p>出于性能原因，TreeMap是非同步的（not synchronized），如果需要在多线程环境使用，需要程序员手动同步；或者通过如下方式将TreeMap包装成（wrapped）同步的：</p>
 <p>SortedMap m = Collections.synchronizedSortedMap(new TreeMap(…));</p>
 <p><strong>红黑树是一种近似平衡的二叉查找树，它能够确保任何一个节点的左右子树的高度差不会超过二者中较低那个的一倍。</strong>具体来说，红黑树是满足如下条件的二叉查找树（binary search tree）：</p>
@@ -388,7 +388,7 @@
 <p>在树的结构发生改变时（插入或者删除操作），往往会破坏上述条件3或条件4，需要通过调整使得查找树重新满足红黑树的条件。</p>
 <h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h3><p>前文说到当查找树的结构发生改变时，红黑树的条件可能被破坏，需要通过调整使得查找树重新满足红黑树的条件。调整可以分为两类：一类是颜色调整，即改变某个节点的颜色；另一类是结构调整，集改变检索树的结构关系。结构调整过程包含两个基本操作：左旋（Rotate Left），右旋（RotateRight）。</p>
 <h3 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h3><p>左旋的过程是将x的右子树绕x逆时针旋转，使得x的右子树成为x的父亲，同时修改相关节点的引用。旋转之后，二叉查找树的属性仍然满足。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/2.png" alt></p>
+<p><img src="/images/red-blackTree/2.png" alt></p>
 <p>TreeMap中左旋代码如下：</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//Rotate Left</span>
 <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">rotateLeft</span><span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> p<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -409,7 +409,7 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h3 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h3><p>右旋的过程是将x的左子树绕x顺时针旋转，使得x的左子树成为x的父亲，同时修改相关节点的引用。旋转之后，二叉查找树的属性仍然满足。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/3.png" alt></p>
+<p><img src="/images/red-blackTree/3.png" alt></p>
 <p>TreeMap中右旋代码如下：</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//Rotate Right</span>
 <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">rotateRight</span><span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> p<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -428,7 +428,7 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h3 id="方法剖析"><a href="#方法剖析" class="headerlink" title="方法剖析"></a>方法剖析</h3><h4 id="get"><a href="#get" class="headerlink" title="get()"></a>get()</h4><p>get(Object key)方法根据指定的key值返回对应的value，该方法调用了getEntry(Object key)得到相应的entry，然后返回entry.value。因此getEntry()是算法的核心。算法思想是根据key的自然顺序（或者比较器顺序）对二叉查找树进行查找，直到找到满足k.compareTo(p.key) == 0的entry。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/4.png" alt></p>
+<p><img src="/images/red-blackTree/4.png" alt></p>
 <p>具体代码如下：</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//getEntry()方法</span>
 <span class="token keyword">final</span> Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> <span class="token function">getEntry</span><span class="token punctuation">(</span>Object key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -471,7 +471,7 @@
     <span class="token keyword">return</span> null<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
 <p>上述代码的插入部分并不难理解：首先在红黑树上找到合适的位置，然后创建新的entry并插入（当然，新插入的节点一定是树的叶子）。难点是调整函数fixAfterInsertion()，前面已经说过，调整往往需要1.改变某些节点的颜色，2.对某些节点进行旋转。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/5.png" alt></p>
+<p><img src="/images/red-blackTree/5.png" alt></p>
 <p>调整函数fixAfterInsertion()的具体代码如下，其中用到了上文中提到的rotateLeft()和rotateRight()函数。通过代码我们能够看到，情况2其实是落在情况3内的。情况4～情况6跟前三种情况是对称的，因此图解中并没有画出后三种情况，读者可以参考代码自行理解。</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//红黑树调整函数fixAfterInsertion()</span>
 <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">fixAfterInsertion</span><span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -523,7 +523,7 @@
 <li>t的右孩子为空，则t的后继是其第一个向左走的祖先。</li>
 </ol>
 <p>后继节点在红黑树的删除操作中将会用到。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/6.png" alt></p>
+<p><img src="/images/red-blackTree/6.png" alt></p>
 <p>TreeMap中寻找节点后继的代码如下：</p>
 <pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 寻找节点后继函数successor()</span>
 <span class="token keyword">static</span> <span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> TreeMap<span class="token punctuation">.</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> <span class="token function">successor</span><span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -595,7 +595,7 @@
 <span class="token punctuation">}</span></code></pre>
 <p>上述代码中占据大量代码行的，是用来修改父子节点间引用关系的代码，其逻辑并不难理解。下面着重讲解删除后调整函数fixAfterDeletion()。首先请思考一下，删除了哪些点才会导致调整？<strong>只有删除点是BLACK的时候，才会触发调整函数，</strong>因为删除RED节点不会破坏红黑树的任何约束，而删除BLACK节点会破坏规则4。</p>
 <p>跟上文中讲过的fixAfterInsertion()函数一样，这里也要分成若干种情况。记住，无论有多少情况，具体的调整操作只有两种：1.改变某些节点的颜色，2.对某些节点进行旋转。</p>
-<p><img src="E:/Projects/Hexo/source/_posts/images/red-blackTree/7.png" alt></p>
+<p><img src="/images/red-blackTree/7.png" alt></p>
 <p>上述图解的总体思想是：将情况1首先转换成情况2，或者转换成情况3和情况4。当然，该图解并不意味着调整过程一定是从情况1开始。通过后续代码我们还会发现几个有趣的规则：a).如果是由情况1之后紧接着进入的情况2，那么情况2之后一定会退出循环（因为x为红色）；b).一旦进入情况3和情况4，一定会退出循环（因为x为root）。</p>
 <p>删除后调整函数fixAfterDeletion()的具体代码如下，其中用到了上文中提到的rotateLeft()和rotateRight()函数。通过代码我们能够看到，情况3其实是落在情况4内的。情况5～情况8跟前四种情况是对称的，因此图解中并没有画出后四种情况，读者可以参考代码自行理解。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">fixAfterDeletion</span><span class="token punctuation">(</span>Entry<span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
