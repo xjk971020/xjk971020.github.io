@@ -373,7 +373,7 @@
             <div id="articleContent">
                 <h1 id="垃圾回收算法与-JVM-垃圾回收器综述"><a href="#垃圾回收算法与-JVM-垃圾回收器综述" class="headerlink" title="垃圾回收算法与 JVM 垃圾回收器综述"></a>垃圾回收算法与 JVM 垃圾回收器综述</h1><p>我们常说的垃圾回收算法可以分为两部分：对象的查找算法与真正的回收方法。不同回收器的实现细节各有不同，但总的来说基本所有的回收器都会关注如下两个方面：找出所有的存活对象以及清理掉所有的其它对象——也就是那些被认为是废弃或无用的对象。Java 虚拟机规范中对垃圾收集器应该如何实现并没有任何规定，因此不同的厂商、不同版本的虚拟机所提供的垃圾收集器都可能会有很大差别，并且一般都会提供参数供用户根据自己的应用特点和要求组合出各个年代所使用的收集器。其中最主流的四个垃圾回收器分别是：通常用于单 CPU 环境的 Serial GC、Throughput/Parallel GC、CMS GC、G1 GC。</p>
 <p>当我们在讨论垃圾回收器时，往往也会涉及到很多的概念；譬如并行（Parallel）与并发（Concurrent）、Minor GC 与 Major / Full GC。并行指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态；并发指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上。Minor GC 指发生在新生代的垃圾收集动作，因为Java对象大多都具备朝生夕灭的特性，所以Minor GC非常频繁，一般回收速度也比较快；Major GC 指发生在老年代的GC，出现了Major GC，经常会伴随至少一次的Minor GC（但非绝对的，在Parallel Scavenge收集器的收集策略里就有直接进行Major GC的策略选择过程），Major GC的速度一般会比Minor GC慢10倍以上。从不同角度分析垃圾回收器，可以将其分为不同的类型：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/1.jpg" alt></p>
+<p><img src="/images/garbage-collector/1.jpg" alt></p>
 <p>我们最常用的评价垃圾回收器的指标就是吞吐量与停顿时间，停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用 CPU 时间，尽快地完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务；具体的指标列举如下：</p>
 <ul>
 <li>吞吐量：指在应用程序的生命周期内，应用程序所花费的时间和系统总运行时间的比值。系统总运行时间=应用程序耗时+GC 耗时。如果系统运行了 100min，GC 耗时 1min，那么系统的吞吐量就是 (100-1)/100=99%。</li>
@@ -464,11 +464,11 @@ null</code></pre>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="对象存活性判断"><a href="#对象存活性判断" class="headerlink" title="对象存活性判断"></a>对象存活性判断</h2><p>常用的对象存活性判断方法有引用计数法与可达性分析，不过由于引用计数法无法解决对象循环引用的问题，因此主流的 JVM 倾向于使用可达性分析。</p>
 <h3 id="Reference-Counting-引用计数"><a href="#Reference-Counting-引用计数" class="headerlink" title="Reference Counting: 引用计数"></a>Reference Counting: 引用计数</h3><p>引用计数器在微软的 COM 组件技术中、Adobe 的 ActionScript3 种都有使用。引用计数器的原理很简单，对于一个对象 A，只要有任何一个对象引用了 A，则 A 的引用计数器就加 1，当引用失效时，引用计数器就减 1。只要对象 A 的引用计数器的值为 0，则对象 A 就不可能再被使用。引用计数器的实现也非常简单，只需要为每个对象配置一个整形的计数器即可。但是引用计数器有一个严重的问题，即无法处理循环引用的情况。因此，在 Java 的垃圾回收器中没有使用这种算法。一个简单的循环引用问题描述如下：有对象 A 和对象 B，对象 A 中含有对象 B 的引用，对象 B 中含有对象 A 的引用。此时，对象 A 和对象 B 的引用计数器都不为 0。但是在系统中却不存在任何第 3 个对象引用了 A 或 B。也就是说，A 和 B 是应该被回收的垃圾对象，但由于垃圾对象间相互引用，从而使垃圾回收器无法识别，引起内存泄漏。</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/2.jpg" alt></p>
+<p><img src="/images/garbage-collector/2.jpg" alt></p>
 <h3 id="引用树遍历"><a href="#引用树遍历" class="headerlink" title="引用树遍历"></a>引用树遍历</h3><p>所谓的引用树本质上是有根的图结构，它沿着对象的根句柄向下查找到活着的节点，并标记下来；其余没有被标记的节点就是死掉的节点，这些对象就是可以被回收的，或者说活着的节点就是可以被拷贝走的，具体要看所在 HeapSize中 的区域以及算法，它的大致示意图如下图所示（注意这里是指针是单向的）：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/3.jpg" alt></p>
+<p><img src="/images/garbage-collector/3.jpg" alt></p>
 <p>首先，所有回收器都会通过一个标记过程来对存活对象进行统计。JVM 中用到的所有现代 GC 算法在回收前都会先找出所有仍存活的对象。下图中所展示的JVM中的内存布局可以用来很好地阐释这一概念：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/4.jpg" alt></p>
+<p><img src="/images/garbage-collector/4.jpg" alt></p>
 <p>而所谓的GC根对象包括：当前执行方法中的所有本地变量及入参、活跃线程、已加载类中的静态变量、JNI 引用。接下来，垃圾回收器会对内存中的整个对象图进行遍历，它先从 GC 根对象开始，然后是根对象引用的其它对象，比如实例变量。回收器将访问到的所有对象都标记为存活。存活对象在上图中被标记为蓝色。当标记阶段完成了之后，所有的存活对象都已经被标记完了。其它的那些（上图中灰色的那些）也就是GC根对象不可达的对象，也就是说你的应用不会再用到它们了。这些就是垃圾对象，回收器将会在接下来的阶段中清除它们。</p>
 <p>不过那些发现不能到达 GC Roots 的对象并不会立即回收，在真正回收之前，对象至少要被标记两次。当第一次被发现不可达时，该对象会被标记一次，同时调用此对象的 finalize()方法（如果有）；在第二次被发现不可达后，对象被回收。利用 finalisze()方法，对象可以逃离一次被回收的命运，但是只有一次。逃命方法如下，需要在 finalize() 方法中给自己加一个 GCRoots 中的 hook：</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">EscapeFromGC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
@@ -479,15 +479,15 @@ null</code></pre>
       System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"finalize mehtod executed!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       EscapeFromGC<span class="token punctuation">.</span>hook <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<h2 id="通用垃圾回收算法"><a href="#通用垃圾回收算法" class="headerlink" title="通用垃圾回收算法"></a>通用垃圾回收算法</h2><p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/5.jpg" alt></p>
-<h3 id="Mark-Sweep-标记-清除算法"><a href="#Mark-Sweep-标记-清除算法" class="headerlink" title="Mark-Sweep: 标记-清除算法"></a>Mark-Sweep: 标记-清除算法</h3><p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/6.jpg" alt></p>
+<h2 id="通用垃圾回收算法"><a href="#通用垃圾回收算法" class="headerlink" title="通用垃圾回收算法"></a>通用垃圾回收算法</h2><p><img src="/images/garbage-collector/5.jpg" alt></p>
+<h3 id="Mark-Sweep-标记-清除算法"><a href="#Mark-Sweep-标记-清除算法" class="headerlink" title="Mark-Sweep: 标记-清除算法"></a>Mark-Sweep: 标记-清除算法</h3><p><img src="/images/garbage-collector/6.jpg" alt></p>
 <p>标记-清除算法将垃圾回收分为两个阶段：标记阶段和清除阶段。一种可行的实现是，在标记阶段首先通过根节点，标记所有从根节点开始的较大对象。因此，未被标记的对象就是未被引用的垃圾对象。然后，在清除阶段，清除所有未被标记的对象。该算法最大的问题是存在大量的空间碎片，因为回收后的空间是不连续的。在对象的堆空间分配过程中，尤其是大对象的内存分配，不连续的内存空间的工作效率要低于连续的空间。</p>
 <p>从概念上来讲，标记-清除算法使用的方法是最简单的，只需要忽略这些对象便可以了。也就是说当标记阶段完成之后，未被访问到的对象所在的空间都会被认为是空闲的，可以用来创建新的对象。这种方法需要使用一个空闲列表来记录所有的空闲区域以及大小。对空闲列表的管理会增加分配对象时的工作量。这种方法还有一个缺陷就是——虽然空闲区域的大小是足够的，但却可能没有一个单一区域能够满足这次分配所需的大小，因此本次分配还是会失败（在Java中就是一次 OutOfMemoryError）。</p>
-<h3 id="Copying-复制算法"><a href="#Copying-复制算法" class="headerlink" title="Copying: 复制算法"></a>Copying: 复制算法</h3><p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/7.jpg" alt></p>
+<h3 id="Copying-复制算法"><a href="#Copying-复制算法" class="headerlink" title="Copying: 复制算法"></a>Copying: 复制算法</h3><p><img src="/images/garbage-collector/7.jpg" alt></p>
 <p>将现有的内存空间分为两快，每次只使用其中一块，在垃圾回收时将正在使用的内存中的存活对象复制到未被使用的内存块中，之后，清除正在使用的内存块中的所有对象，交换两个内存的角色，完成垃圾回收。如果系统中的垃圾对象很多，复制算法需要复制的存活对象数量并不会太大。因此在真正需要垃圾回收的时刻，复制算法的效率是很高的。又由于对象在垃圾回收过程中统一被复制到新的内存空间中，因此，可确保回收后的内存空间是没有碎片的。该算法的缺点是将系统内存折半。</p>
 <p>Java 的新生代串行垃圾回收器中使用了复制算法的思想。新生代分为 eden 空间、from 空间、to 空间 3 个部分。其中 from 空间和 to 空间可以视为用于复制的两块大小相同、地位相等，且可进行角色互换的空间块。from 和 to 空间也称为 survivor 空间，即幸存者空间，用于存放未被回收的对象。在垃圾回收时，eden 空间中的存活对象会被复制到未使用的 survivor 空间中 (假设是 to)，正在使用的 survivor 空间 (假设是 from) 中的年轻对象也会被复制到 to 空间中 (大对象，或者老年对象会直接进入老年带，如果 to 空间已满，则对象也会直接进入老年代)。此时，eden 空间和 from 空间中的剩余对象就是垃圾对象，可以直接清空，to 空间则存放此次回收后的存活对象。这种改进的复制算法既保证了空间的连续性，又避免了大量的内存空间浪费。</p>
 <p>标记-复制算法与标记-整理算法非常类似，它们都会将所有存活对象重新进行分配。区别在于重新分配的目标地址不同，复制算法是为存活对象分配了另外的内存 区域作为它们的新家。标记复制算法的优点在于标记阶段和复制阶段可以同时进行。它的缺点是需要一块能容纳下所有存活对象的额外的内存空间。</p>
-<h3 id="Mark-Compact-标记-压缩算法"><a href="#Mark-Compact-标记-压缩算法" class="headerlink" title="Mark-Compact: 标记-压缩算法"></a>Mark-Compact: 标记-压缩算法</h3><p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/8.jpg" alt></p>
+<h3 id="Mark-Compact-标记-压缩算法"><a href="#Mark-Compact-标记-压缩算法" class="headerlink" title="Mark-Compact: 标记-压缩算法"></a>Mark-Compact: 标记-压缩算法</h3><p><img src="/images/garbage-collector/8.jpg" alt></p>
 <p>复制算法的高效性是建立在存活对象少、垃圾对象多的前提下的。这种情况在年轻代经常发生，但是在老年代更常见的情况是大部分对象都是存活对象。如果依然使用复制算法，由于存活的对象较多，复制的成本也将很高。</p>
 <p>标记-压缩算法是一种老年代的回收算法，它在标记-清除算法的基础上做了一些优化。也首先需要从根节点开始对所有可达对象做一次标记，但之后，它并不简单地 清理未标记的对象，而是将所有的存活对象压缩到内存的一端。之后，清理边界外所有的空间。这种方法既避免了碎片的产生，又不需要两块相同的内存空间，因此，其性价比比较高。</p>
 <p>标记-压缩算法修复了标记-清除算法的短板——它将所有标记的也就是存活的对象都移动到内存区域的开始位置。这种方法的缺点就是GC暂停的时间会增 长，因为你需要将所有的对象都拷贝到一个新的地方，还得更新它们的引用地址。相对于标记-清除算法，它的优点也是显而易见的——经过整理之后，新对象的分 配只需要通过指针碰撞便能完成（pointer bumping），相当简单。使用这种方法空闲区域的位置是始终可知的，也不会再有碎片的问题了。</p>
@@ -495,9 +495,9 @@ null</code></pre>
 <p>增量算法现代垃圾回收的一个前身，其基本思想是，如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。每次，垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</p>
 <h3 id="Generational-Collecting-分代回收算法"><a href="#Generational-Collecting-分代回收算法" class="headerlink" title="Generational Collecting: 分代回收算法"></a>Generational Collecting: 分代回收算法</h3><p>分代回收器是增量收集的另一个化身，根据垃圾回收对象的特性，不同阶段最优的方式是使用合适的算法用于本阶段的垃圾回收，分代算法即是基于这种思想，它将内存区间根据对象的特点分成几块，根据 每块内存区间的特点，使用不同的回收算法，以提高垃圾回收的效率。以 Hot Spot 虚拟机为例，它将所有的新建对象都放入称为年轻代的内存区域，年轻代的特点是对象会很快回收，因此，在年轻代就选择效率较高的复制算法。当一个对象经过几 次回收后依然存活，对象就会被放入称为老生代的内存空间。在老生代中，几乎所有的对象都是经过几次垃圾回收后依然得以幸存的。因此，可以认为这些对象在一 段时期内，甚至在应用程序的整个生命周期中，将是常驻内存的。如果依然使用复制算法回收老生代，将需要复制大量对象。再加上老生代的回收性价比也要低于新 生代，因此这种做法也是不可取的。根据分代的思想，可以对老年代的回收使用与新生代不同的标记-压缩算法，以提高垃圾回收效率。</p>
 <h3 id="Concurrent-Collecting-并发回收算法"><a href="#Concurrent-Collecting-并发回收算法" class="headerlink" title="Concurrent Collecting: 并发回收算法"></a>Concurrent Collecting: 并发回收算法</h3><p>所谓的并发回收算法即是指垃圾回收器与应用程序能够交替工作，并发回收 器其实也会暂停，但是时间非常短，它并不会在从开始回收寻找、标记、清楚、压缩或拷贝等方式过程完全暂停服务，它发现有几个时间比较长，一个就是标记，因 为这个回收一般面对的是老年代，这个区域一般很大，而一般来说绝大部分对象应该是活着的，所以标记时间很长，还有一个时间是压缩，但是压缩并不一定非要每 一次做完GC都去压缩的，而拷贝呢一般不会用在老年代，所以暂时不考虑；所以他们想出来的办法就是：第一次短暂停机是将所有对象的根指针找到，这个非常容 易找到，而且非常快速，找到后，此时GC开始从这些根节点标记活着的节点（这里可以采用并行），然后待标记完成后，此时可能有新的 内存申请以及被抛弃（java本身没有内存释放这一概念），此时JVM会记录下这个过程中的增量信息，而对于老年代来说，必须要经过多次在 survivor倒腾后才会进入老年代，所以它在这段时间增量一般来说会非常少，而且它被释放的概率前面也说并不大（JVM如果不是完全做Cache，自 己做pageCache而且发生概率不大不小的pageout和pagein是不适合的）；JVM根据这些增量信息快速标记出内部的节点，也是非常快速 的，就可以开始回收了，由于需要杀掉的节点并不多，所以这个过程也非常快，压缩在一定时间后会专门做一次操作，有关暂停时间在Hotspot版本，也就是 SUN的jdk中都是可以配置的，当在指定时间范围内无法回收时，JVM将会对相应尺寸进行调整，如果你不想让它调整，在设置各个区域的大小时，就使用定 量，而不要使用比例来控制；当采用并发回收算法的时候，一般对于老年代区域，不会等待内存小于10%左右的时候才会发起回收，因为并发回收是允许在回收的 时候被分配，那样就有可能来不及了，所以并发回收的时候，JVM可能会在68%左右的时候就开始启动对老年代GC了。</p>
-<h2 id="JVM-垃圾回收器对比"><a href="#JVM-垃圾回收器对比" class="headerlink" title="JVM 垃圾回收器对比"></a>JVM 垃圾回收器对比</h2><p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/9.jpg" alt></p>
+<h2 id="JVM-垃圾回收器对比"><a href="#JVM-垃圾回收器对比" class="headerlink" title="JVM 垃圾回收器对比"></a>JVM 垃圾回收器对比</h2><p><img src="/images/garbage-collector/9.jpg" alt></p>
 <p>1999 年随 JDK1.3.1 一起来的是串行方式的 Serial GC，它是第一款垃圾回收器；此后，JDK1.4 和 J2SE1.3 相继发布。2002 年 2 月 26 日，J2SE1.4 发布；Parallel GC 和Concurrent Mark Sweep （CMS）GC 跟随 JDK1.4.2 一起发布，并且 Parallel GC 在 JDK6 之后成为 HotSpot 默认 GC。这三个垃圾回收器也是各有千秋，Serial GC 适合最小化地使用内存和并行开销的场景、Parallel GC 适合最大化应用程序吞吐量的场景、CMS GC 适合最小化中断或停顿时间的场景。上图即展示了多种垃圾回收器之间的关系；不过随着应用程序所应对的业务越来越庞大、复杂，用户越来越多，没有合适的回收器就不能保证应用程序正常进行，而经常造成 STW 停顿的回收器又跟不上实际的需求，所以才会不断地尝试对搜集器进行优化。Garbage First（G1）GC 正是面向这种业务需求所生，它是一个并行回收器，把堆内存分割为很多不相关的区间（Region）；每个区间可以属于老年代或者年轻代，并且每个年龄代区间可以是物理上不连续的。</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/10.jpg" alt></p>
+<p><img src="/images/garbage-collector/10.jpg" alt></p>
 <p>关于标记阶段有几个关键点是值得注意的：</p>
 <ul>
 <li>开始进行标记前，需要先暂停应用线程，否则如果对象图一直在变化的话是无法真正去遍历它的。暂停应用线程以便 JVM 可以尽情地收拾家务的这种情况又被称之为安全点（Safe Point），这会触发一次Stop The World(STW)暂停。触发安全点的原因有许多，但最常见的应该就是垃圾回收了。</li>
@@ -506,14 +506,14 @@ null</code></pre>
 <p>当标记阶段完成后，GC开始进入下一阶段，删除不可达对象。</p>
 <h3 id="Serial-GC"><a href="#Serial-GC" class="headerlink" title="Serial GC"></a>Serial GC</h3><p>串行回收器主要有两个特点：第一，它仅仅使用单线程进行垃圾回收；第二，它独占式的垃圾回收。在串行回收器进行垃圾回收时，Java 应用程序中的线程都需要暂停，等待垃圾回收的完成，这样给用户体验造成较差效果。虽然如此，串行回收器却是一个成熟、经过长时间生产环境考验的极为高效的 回收器。新生代串行处理器使用复制算法，实现相对简单，逻辑处理特别高效，且没有线程切换的开销。在诸如单 CPU 处理器或者较小的应用内存等硬件平台不是特别优越的场合，它的性能表现可以超过并行回收器和并发回收器。在 HotSpot 虚拟机中，使用-XX：+UseSerialGC 参数可以指定使用新生代串行回收器和老年代串行回收器。当 JVM 在 Client 模式下运行时，它是默认的垃圾回收器。老年代串行回收器使用的是标记-压缩算法。和新生代串行回收器一样，它也是一个串行的、独占式的垃圾回收器。由于老年代垃圾回收通常会使用比新生代垃圾回 收更长的时间，因此，在堆空间较大的应用程序中，一旦老年代串行回收器启动，应用程序很可能会因此停顿几秒甚至更长时间。虽然如此，老年代串行回收器可以 和多种新生代回收器配合使用，同时它也可以作为 CMS 回收器的备用回收器。若要启用老年代串行回收器，可以尝试使用以下参数：-XX:+UseSerialGC: 新生代、老年代都使用串行回收器。</p>
 <p>Serial GC 的工作步骤如下所示：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/11.jpg" alt></p>
+<p><img src="/images/garbage-collector/11.jpg" alt></p>
 <h3 id="ParNew-GC"><a href="#ParNew-GC" class="headerlink" title="ParNew GC"></a>ParNew GC</h3><p>并行回收器是工作在新生代的垃圾回收器，它只简单地将串行回收器多线程化。它的回收策略、算法以及参数和串行回收器一样。<br>并行回收器 也是独占式的回收器，在收集过程中，应用程序会全部暂停。但由于并行回收器使用多线程进行垃圾回收，因此，在并发能力比较强的 CPU 上，它产生的停顿时间要短于串行回收器，而在单 CPU 或者并发能力较弱的系统中，并行回收器的效果不会比串行回收器好，由于多线程的压力，它的实际表现很可能比串行回收器差。开启并行回收器可以使用参数-XX:+UseParNewGC，该参数设置新生代使用并行回收器，老年代使用串行回收器。老年代的并行回收回收器也是一种多线程并发的回收器。和新生代并行回收回收器一样，它也是一种关注吞吐量的回收器。老年代并行回收回收器使用标记-压缩算法，JDK1.6 之后开始启用。</p>
 <h3 id="Parallel-GC"><a href="#Parallel-GC" class="headerlink" title="Parallel GC"></a>Parallel GC</h3><p>Parallel Scavenge 收集器的特点是它的关注点与其他收集器不同，CMS 等收集器的关注点尽可能地缩短垃圾收集时用户线程的停顿时间，而 Parallel Scavenge 收集器的目标则是达到一个可控制的吞吐量（Throughput）。Parallel Old是Parallel Scavenge收集器的老年代版本，使用多线程和“标记－整理”算法。这个收集器是在JDK 1.6中才开始提供的。使用 -XX:+UseParallelOldGC 可以在新生代和老生代都使用并行回收回收器，这是一对非常关注吞吐量的垃圾回收器组合，在对吞吐量敏感的系统中，可以考虑使用。参数 -XX:ParallelGCThreads 也可以用于设置垃圾回收时的线程数量。</p>
 <p>Parallel GC 的工作步骤如下所示：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/12.jpg" alt></p>
+<p><img src="/images/garbage-collector/12.jpg" alt></p>
 <h3 id="CMS-GC"><a href="#CMS-GC" class="headerlink" title="CMS GC"></a>CMS GC</h3><p>CMS( Concurrent Mark-Sweep ) 是以牺牲吞吐量为代价来获得最短回收停顿时间的垃圾回收器，适用于对停顿比较敏感，并且有相对较多存活时间较长的对象（老年代较大）的应用程序；不过 CMS 虽然减少了回收的停顿时间，但是降低了堆空间的利用率。CMS GC 采用了 Mark-Sweep 算法，因此经过CMS收集的堆会产生空间碎片；为了解决堆空间浪费问题，CMS回收器不再采用简单的指针指向一块可用堆空间来为下次对象分配使用。而是把一些未分配的空间汇总成一个列表，当 JVM 分配对象空间的时候，会搜索这个列表找到足够大的空间来存放住这个对象。另一方面，由于 CMS 线程和应用程序线程并发执行，CMS GC 需要更多的 CPU 资源。同时，因为CMS标记阶段应用程序的线程还是在执行的，那么就会有堆空间继续分配的情况，为了保证在CMS回收完堆之前还有空间分配给正在运行的应用程序，必须预留一部分空间。也就是说，CMS不会在老年代满的时候才开始收集。相反，它会尝试更早的开始收集，已避免上面提到的情况：在回收完成之前，堆没有足够空间分配！默认当老年代使用68%的时候，CMS就开始行动了。 – XX:CMSInitiatingOccupancyFraction =n 来设置这个阀值。</p>
 <p>CMS GC 工作步骤如下所示：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/13.jpg" alt></p>
+<p><img src="/images/garbage-collector/13.jpg" alt></p>
 <ul>
 <li>初始标记(STW initial mark)：在这个阶段，需要虚拟机停顿正在执行的任务，官方的叫法STW(Stop The Word)。这个过程从垃圾回收的”根对象”开始，只扫描到能够和”根对象”直接关联的对象，并作标记。所以这个过程虽然暂停了整个JVM，但是很快就完成了。</li>
 <li>并发标记(Concurrent marking)：这个阶段紧随初始标记阶段，在初始标记的基础上继续向下追溯标记。并发标记阶段，应用程序的线程和并发标记的线程并发执行，所以用户不会感受到停顿。</li>
@@ -523,7 +523,7 @@ null</code></pre>
 <li>并发重置(Concurrent reset)：这个阶段，重置CMS回收器的数据结构，等待下一次垃圾回收。</li>
 </ul>
 <h3 id="G1-GC"><a href="#G1-GC" class="headerlink" title="G1 GC"></a>G1 GC</h3><p>G1 GC 是 JDK 1.7 中正式投入使用的用于取代 CMS 的压缩回收器，它虽然没有在物理上隔断新生代与老生代，但是仍然属于分代垃圾回收器；G1 GC 仍然会区分年轻代与老年代，年轻代依然分有 Eden 区与 Survivor 区。G1 GC 首先将堆分为大小相等的 Region，避免全区域的垃圾收集，然后追踪每个 Region 垃圾堆积的价值大小，在后台维护一个优先列表，根据允许的收集时间优先回收价值最大的Region；同时 G1 GC 采用 Remembered Set 来存放 Region 之间的对象引用以及其他回收器中的新生代与老年代之间的对象引用，从而避免全堆扫描。G1 GC 的分区示例如下图所示：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/14.jpg" alt></p>
+<p><img src="/images/garbage-collector/14.jpg" alt></p>
 <p>随着 G1 GC 的出现，Java 垃圾回收器通过引入 Region 的概念，从传统的连续堆内存布局设计，逐步走向了物理上不连续但是逻辑上依旧连续的内存块；这样我们能够将某个 Region 动态地分配给 Eden、Survivor、老年代、大对象空间、空闲区间等任意一个。每个 Region 都有一个关联的 Remembered Set（简称RS），RS 的数据结构是 Hash 表，里面的数据是 Card Table （堆中每 512byte 映射在 card table 1byte）。简单的说RS里面存在的是Region中存活对象的指针。当Region中数据发生变化时，首先反映到Card Table中的一个或多个Card上，RS通过扫描内部的Card Table得知Region中内存使用情况和存活对象。在使用Region过程中，如果Region被填满了，分配内存的线程会重新选择一个新的Region，空闲Region被组织到一个基于链表的数据结构（LinkedList）里面，这样可以快速找到新的Region。</p>
 <p>总结而言，G1 GC 的特性如下：</p>
 <ul>
@@ -534,7 +534,7 @@ null</code></pre>
 <li>可预见性：为了缩短停顿时间，G1建立可预存停顿的模型，这样在用户设置的停顿时间范围内，G1会选择适当的区域进行收集，确保停顿时间不超过用户指定时间。</li>
 </ul>
 <p>G1 GC 的工作步骤如下所示：</p>
-<p><img src="http://pt2ta7frm.bkt.clouddn.com/blog/images/garbage-collector/15.jpg" alt></p>
+<p><img src="/images/garbage-collector/15.jpg" alt></p>
 <ul>
 <li>初始标记（标记一下GC Roots能直接关联的对象并修改TAMS值，需要STW但耗时很短）</li>
 <li>并发标记（从GC Root从堆中对象进行可达性分析找存活的对象，耗时较长但可以与用户线程并发执行）</li>
