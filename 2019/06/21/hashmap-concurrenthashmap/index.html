@@ -348,7 +348,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        12k
+                        11.9k
                     </div>
                     
 
@@ -375,7 +375,7 @@
 <hr>
 <h3 id="Java7-HashMap"><a href="#Java7-HashMap" class="headerlink" title="Java7 HashMap"></a>Java7 HashMap</h3><p>HashMap 是最简单的，一来我们非常熟悉，二来就是它不支持并发操作，所以源码也非常简单。</p>
 <p>大方向上，HashMap 里面是一个<strong>数组</strong>，然后数组中每个元素是一个<strong>单向链表</strong>。</p>
-<p>上图中，每个绿色的实体是嵌套类 Entry 的实例，Entry 包含四个属性：key, value, hash 值和用于单向链表的 next。</p>
+<p>Entry 包含四个属性：key, value, hash 值和用于单向链表的 next。</p>
 <p><strong>capacity：</strong>当前数组容量，始终保持 2^n，可以扩容，扩容后数组大小为当前的 2 倍。</p>
 <p><strong>loadFactor：</strong>负载因子，默认为 0.75。</p>
 <p><strong>threshold：</strong>扩容的阈值，等于 capacity * loadFactor</p>
