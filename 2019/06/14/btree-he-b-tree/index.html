@@ -374,16 +374,16 @@
                 <h1 id="B树和B-树原理及索引应用"><a href="#B树和B-树原理及索引应用" class="headerlink" title="B树和B+树原理及索引应用"></a>B树和B+树原理及索引应用</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="grey">B+树索引是B+树在数据库中的一种实现，是最常见也是数据库中使用最为频繁的一种索引。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B+树中的B代表平衡（balance），而不是二叉（binary），因为B+树是从最早的平衡二叉树演化而来的。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在讲B+树之前必须先了解<strong>二叉查找树</strong>、<strong>平衡二叉树（AVLTree）</strong>和<strong>平衡多路查找树（B-Tree）</strong>，B+树即由这些树逐步优化而来。</font></p>
 <hr>
 <h3 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h3><p>二叉树具有以下性质：左子树的键值小于根的键值，右子树的键值大于根的键值。<br>如下图所示就是一棵二叉查找树，</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree1.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/1.jpg" alt></p>
 <p>对该二叉树的节点进行查找发现深度为1的节点的查找次数为1，深度为2的查找次数为2，深度为n的节点的查找次数为n，因此其平均查找次数为 (1+2+2+3+3+3) / 6 = 2.3次</p>
 <p>二叉查找树可以任意地构造，同样是2,3,5,6,7,8这六个数字，也可以按照下图的方式来构造：</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree2.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/2.jpg" alt></p>
 <p>但是这棵二叉树的查询效率就低了。因此若想二叉树的查询效率尽可能高，需要这棵二叉树是平衡的，从而引出新的定义——平衡二叉树，或称AVL树。</p>
 <hr>
 <h3 id="平衡二叉树（AVL-Tree）"><a href="#平衡二叉树（AVL-Tree）" class="headerlink" title="平衡二叉树（AVL Tree）"></a>平衡二叉树（AVL Tree）</h3><p>平衡二叉树（AVL树）在符合二叉查找树的条件下，还满足任何节点的两个子树的高度最大差为1。下面的两张图片，左边是AVL树，它的任何节点的两个子树的高度差&lt;=1；右边的不是AVL树，其根节点的左子树高度为3，而右子树高度为1；</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree3.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/3.jpg" alt></p>
 <p>如果在AVL树中进行插入或删除节点，可能导致AVL树失去平衡，这种失去平衡的二叉树可以概括为四种姿态：LL（左左）、RR（右右）、LR（左右）、RL（右左）。它们的示意图如下：</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree4.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/4.jpg" alt></p>
 <p>这四种失去平衡的姿态都有各自的定义：</p>
 <ul>
 <li><p><strong>LL</strong>：LeftLeft，也称“左左”。插入或删除一个节点后，根节点的左孩子（Left Child）的左孩子（Left Child）还有非空节点，导致根节点的左子树高度比右子树高度高2，AVL树失去平衡。</p>
@@ -402,26 +402,26 @@
 <li>将新根节点的右孩子作为原根节点的左孩子。</li>
 <li>将原根节点作为新根节点的右孩子。</li>
 </ol>
-<p><img src="/images/B-treeAndB+Tree/B-tree5.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/5.jpg" alt></p>
 <p><strong>RR的旋转：</strong>RR失去平衡的情况下，旋转方法与LL旋转对称，步骤如下：</p>
 <ol>
 <li>将根节点的右孩子作为新根节点。</li>
 <li>将新根节点的左孩子作为原根节点的右孩子。</li>
 <li>将原根节点作为新根节点的左孩子。</li>
 </ol>
-<p><img src="/images/B-treeAndB+Tree/B-tree6.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/6.jpg" alt></p>
 <p><strong>LR的旋转</strong>：LR失去平衡的情况下，需要进行两次旋转，步骤如下：</p>
 <ol>
 <li>围绕根节点的左孩子进行RR旋转。</li>
 <li>围绕根节点进行LL旋转。</li>
 </ol>
-<p><img src="/images/B-treeAndB+Tree/B-tree7.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/7.jpg" alt></p>
 <p><strong>RL的旋转：</strong>RL失去平衡的情况下也需要进行两次旋转，旋转方法与LR旋转对称，步骤如下：</p>
 <ol>
 <li>围绕根节点的右孩子进行LL旋转。</li>
 <li>围绕根节点进行RR旋转。</li>
 </ol>
-<p><img src="/images/B-treeAndB+Tree/B-tree8.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/8.jpg" alt></p>
 <hr>
 <h3 id="平衡多路查找树（B-Tree）"><a href="#平衡多路查找树（B-Tree）" class="headerlink" title="平衡多路查找树（B-Tree）"></a>平衡多路查找树（B-Tree）</h3><p>B-Tree是为磁盘等外存储设备设计的一种<strong>平衡查找树</strong>。因此在讲B-Tree之前先了解下磁盘的相关知识。</p>
 <p>系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。</p>
@@ -443,7 +443,7 @@
 <li>Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)</li>
 </ol>
 <p><strong>B-Tree</strong>中的<strong>每个节点</strong>根据实际情况可以包含<strong>大量的关键字信息</strong>和<strong>分支</strong><br>如下图所示为一个<strong><font color="red">3阶</font></strong>的B-Tree：</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree9.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/9.jpg" alt></p>
 <p>每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围为小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围为大于35。</p>
 <p>模拟查找关键字29的过程：</p>
 <ol>
@@ -465,7 +465,7 @@
 <li>数据记录都存放在叶子节点中。</li>
 </ol>
 <p>将上一节中的B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示：</p>
-<p><img src="/images/B-treeAndB+Tree/B-tree10.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/10.jpg" alt></p>
 <p>通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。</p>
 <p>可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：</p>
 <p>InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为〖10〗^3）。也就是说一个深度为3的B+Tree索引可以维护10^3 * 10^3 * 10^3 = 10亿 条记录。</p>

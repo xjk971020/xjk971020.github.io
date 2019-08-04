@@ -392,7 +392,7 @@
 <li><p>第三次握手：Client收到确认后，检查ack是否为J+1，ACK是否为1，如果正确则将标志位ACK置为1，ack=K+1，并将该数据包发送给Server，Server检查ack是否为K+1，ACK是否为1，如果正确则连接建立成功，Client和Server进入ESTABLISHED状态，完成三次握手，随后Client与Server之间可以开始传输数据了。</p>
 </li>
 </ul>
-<p><img src="/images/jisuanjiwangluo/1.png" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/1.png" alt></p>
 <p><strong>(2). 四次挥手（我要和你断开链接；好的，断吧。我也要和你断开链接；好的，断吧）：</strong></p>
 <ul>
 <li><p>第一次挥手：Client发送一个FIN，用来关闭Client到Server的数据传送，Client进入FIN_WAIT_1状态。</p>
@@ -404,8 +404,8 @@
 <li><p>第四次挥手：Client收到FIN后，Client进入TIME_WAIT状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入CLOSED状态，完成四次挥手。</p>
 </li>
 </ul>
-<p><img src="/images/jisuanjiwangluo/2.png" alt></p>
-<p><strong>(3). 通俗一点的理解就是：</strong><br><img src="/images/jisuanjiwangluo/3.png" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/2.png" alt></p>
+<p><strong>(3). 通俗一点的理解就是：</strong><br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/3.png" alt></p>
 <hr>
 <h4 id="4）为什么-TCP-链接需要三次握手，两次不可以么？"><a href="#4）为什么-TCP-链接需要三次握手，两次不可以么？" class="headerlink" title="4）为什么 TCP 链接需要三次握手，两次不可以么？"></a>4）为什么 TCP 链接需要三次握手，两次不可以么？</h4><p>答：“三次握手” 的目的是为了<strong>防止已失效的链接请求报文</strong>突然又传送到了服务端，因而产生错误。</p>
 <ul>
@@ -508,7 +508,7 @@
 <li><p>TFTP(Trival File Transfer Protocal)：简单文件传输协议，该协议在熟知端口69上使用UDP服务</p>
 </li>
 </ul>
-<p>(3). 图示：<br><img src="/images/jisuanjiwangluo/4.png" alt></p>
+<p>(3). 图示：<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/4.png" alt></p>
 <hr>
 <h4 id="11）TCP-的拥塞避免机制"><a href="#11）TCP-的拥塞避免机制" class="headerlink" title="11）TCP 的拥塞避免机制"></a>11）TCP 的拥塞避免机制</h4><p>答：</p>
 <p>拥塞：对资源的需求超过了可用的资源。若网络中许多资源同时供应不足，网络的性能就要明显变坏，整个网络的吞吐量随之负荷的增大而下降。</p>
@@ -517,9 +517,9 @@
 <p><strong>(1). 慢启动 + 拥塞避免：</strong></p>
 <p>慢启动：不要一开始就发送大量的数据，先探测一下网络的拥塞程度，也就是说由小到大逐渐增加拥塞窗口的大小;</p>
 <p>拥塞避免：拥塞避免算法让拥塞窗口缓慢增长，即每经过一个往返时间RTT就把发送方的拥塞窗口cwnd加1，而不是加倍，这样拥塞窗口按线性规律缓慢增长。</p>
-<p><img src="/images/jisuanjiwangluo/5.png" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/5.png" alt></p>
 <p><strong>(2). 快重传 + 快恢复：</strong></p>
-<p>快重传：<strong>快重传</strong>要求接收方在收到一个 失序的报文段 后就立即发出** 重复确认<strong>（为的是使发送方及早知道有报文段没有到达对方）而不要等到自己发送数据时捎带确认。快重传算法规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段，而不必继续等待设置的重传计时器时间到期。<br><img src="/images/jisuanjiwangluo/6.png" alt><br>快恢复：</strong>快重传**配合使用的还有快恢复算法，当发送方连续收到三个重复确认时，就执行“乘法减小”算法，把ssthresh门限减半，但是接下去并不执行慢开始算法：因为如果网络出现拥塞的话就不会收到好几个重复的确认，所以发送方现在认为网络可能没有出现拥塞。所以此时不执行慢开始算法，而是将cwnd设置为ssthresh的大小，然后执行拥塞避免算法。<br><img src="/images/jisuanjiwangluo/7.png" alt></p>
+<p>快重传：<strong>快重传</strong>要求接收方在收到一个 失序的报文段 后就立即发出** 重复确认<strong>（为的是使发送方及早知道有报文段没有到达对方）而不要等到自己发送数据时捎带确认。快重传算法规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段，而不必继续等待设置的重传计时器时间到期。<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/6.png" alt><br>快恢复：</strong>快重传**配合使用的还有快恢复算法，当发送方连续收到三个重复确认时，就执行“乘法减小”算法，把ssthresh门限减半，但是接下去并不执行慢开始算法：因为如果网络出现拥塞的话就不会收到好几个重复的确认，所以发送方现在认为网络可能没有出现拥塞。所以此时不执行慢开始算法，而是将cwnd设置为ssthresh的大小，然后执行拥塞避免算法。<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/7.png" alt></p>
 <hr>
 <h4 id="12）浏览器中输入：“www-xxx-com”-之后都发生了什么？请详细阐述。"><a href="#12）浏览器中输入：“www-xxx-com”-之后都发生了什么？请详细阐述。" class="headerlink" title="12）浏览器中输入：“www.xxx.com” 之后都发生了什么？请详细阐述。"></a>12）浏览器中输入：“<a href="http://www.xxx.com”" target="_blank" rel="noopener">www.xxx.com”</a> 之后都发生了什么？请详细阐述。</h4><p>解析：经典的网络协议问题。</p>
 <p>答：</p>
@@ -557,8 +557,8 @@
 <hr>
 <h4 id="14）Session、Cookie-与-Application"><a href="#14）Session、Cookie-与-Application" class="headerlink" title="14）Session、Cookie 与 Application"></a>14）Session、Cookie 与 Application</h4><p>答：Cookie和Session都是客户端与服务器之间保持状态的解决方案，具体来说，cookie机制采用的是在客户端保持状态的方案，而session机制采用的是在服务器端保持状态的方案。</p>
 <p><strong>(1). Cookie 及其相关 API ：</strong></p>
-<p>Cookie实际上是一小段的文本信息。客户端请求服务器，如果服务器需要记录该用户状态，就使用response向客户端浏览器颁发一个Cookie，而客户端浏览器会把Cookie保存起来。当浏览器再请求该网站时，浏览器把请求的网址连同该Cookie一同提交给服务器，服务器检查该Cookie，以此来辨认用户状态。服务器还可以根据需要修改Cookie的内容。<br><img src="/images/jisuanjiwangluo/8.png" alt><br><img src="/images/jisuanjiwangluo/9.png" alt><br><strong>(2). Session 及其相关 API：</strong></p>
-<p>同样地，会话状态也可以保存在服务器端。客户端请求服务器，如果服务器记录该用户状态，就获取Session来保存状态，这时，如果服务器已经为此客户端创建过session，服务器就按照sessionid把这个session检索出来使用；如果客户端请求不包含sessionid，则为此客户端创建一个session并且生成一个与此session相关联的sessionid，并将这个sessionid在本次响应中返回给客户端保存。保存这个sessionid的方式可以采用** cookie机制 <strong>，这样在交互过程中浏览器可以自动的按照规则把这个标识发挥给服务器；若浏览器禁用Cookie的话，可以通过 **URL重写</strong>机制 将sessionid传回服务器。<br><img src="/images/jisuanjiwangluo/10.png" alt><br><strong>(3). Session 与 Cookie 的对比：</strong></p>
+<p>Cookie实际上是一小段的文本信息。客户端请求服务器，如果服务器需要记录该用户状态，就使用response向客户端浏览器颁发一个Cookie，而客户端浏览器会把Cookie保存起来。当浏览器再请求该网站时，浏览器把请求的网址连同该Cookie一同提交给服务器，服务器检查该Cookie，以此来辨认用户状态。服务器还可以根据需要修改Cookie的内容。<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/8.png" alt><br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/9.png" alt><br><strong>(2). Session 及其相关 API：</strong></p>
+<p>同样地，会话状态也可以保存在服务器端。客户端请求服务器，如果服务器记录该用户状态，就获取Session来保存状态，这时，如果服务器已经为此客户端创建过session，服务器就按照sessionid把这个session检索出来使用；如果客户端请求不包含sessionid，则为此客户端创建一个session并且生成一个与此session相关联的sessionid，并将这个sessionid在本次响应中返回给客户端保存。保存这个sessionid的方式可以采用** cookie机制 <strong>，这样在交互过程中浏览器可以自动的按照规则把这个标识发挥给服务器；若浏览器禁用Cookie的话，可以通过 **URL重写</strong>机制 将sessionid传回服务器。<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/10.png" alt><br><strong>(3). Session 与 Cookie 的对比：</strong></p>
 <ul>
 <li><p>实现机制：Session的实现常常依赖于Cookie机制，通过Cookie机制回传SessionID；</p>
 </li>
@@ -688,12 +688,12 @@
 <p>需要注意的是，在有些应用中是允许html标签出现的，甚至是javascript代码出现。因此，我们在过滤数据的时候需要仔细分析哪些数据是有特殊要求（例如输出需要html代码、javascript代码拼接、或者此表单直接允许使用等等），然后区别处理！</p>
 <hr>
 <h4 id="20）OSI-网络体系结构与-TCP-IP-协议模型"><a href="#20）OSI-网络体系结构与-TCP-IP-协议模型" class="headerlink" title="20）OSI 网络体系结构与 TCP/IP 协议模型"></a>20）OSI 网络体系结构与 TCP/IP 协议模型</h4><p>答：OSI 是一个理论上的网络通信模型，而 TCP/IP 则是实际上的网络通信标准。但是，它们的初衷是一样的，都是为了使得两台计算机能够像两个知心朋友那样能够互相准确理解对方的意思并做出优雅的回应。现在，我们对 OSI 七层模型的各层进行简要的介绍：</p>
-<h2 id><a href="#" class="headerlink" title></a><img src="/images/jisuanjiwangluo/11.png" alt></h2><h6 id="1-物理层"><a href="#1-物理层" class="headerlink" title="1). 物理层"></a>1). 物理层</h6><p>参考模型的最低层，也是OSI模型的第一层，实现了相邻计算机节点之间比特流的透明传送，并尽可能地屏蔽掉具体传输介质和物理设备的差异，使其上层(数据链路层)不必关心网络的具体传输介质。</p>
+<h2 id><a href="#" class="headerlink" title></a><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/11.png" alt></h2><h6 id="1-物理层"><a href="#1-物理层" class="headerlink" title="1). 物理层"></a>1). 物理层</h6><p>参考模型的最低层，也是OSI模型的第一层，实现了相邻计算机节点之间比特流的透明传送，并尽可能地屏蔽掉具体传输介质和物理设备的差异，使其上层(数据链路层)不必关心网络的具体传输介质。</p>
 <hr>
 <h6 id="2-数据链路层（data-link-layer）"><a href="#2-数据链路层（data-link-layer）" class="headerlink" title="2). 数据链路层（data link layer）"></a>2). 数据链路层（data link layer）</h6><p>接收来自物理层的位流形式的数据，并封装成帧，传送到上一层；同样，也将来自上层的数据帧，拆装为位流形式的数据转发到物理层。这一层在物理层提供的比特流的基础上，通过差错控制、流量控制方法，使有差错的物理线路变为无差错的数据链路，即提供可靠的通过物理介质传输数据的方法。</p>
 <hr>
 <h6 id="3-网络层"><a href="#3-网络层" class="headerlink" title="3). 网络层"></a>3). 网络层</h6><p>将网络地址翻译成对应的物理地址，并通过路由选择算法为分组通过通信子网选择最适当的路径。</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title></a><img src="/images/jisuanjiwangluo/12.png" alt></h2><h6 id="4-传输层（transport-layer）"><a href="#4-传输层（transport-layer）" class="headerlink" title="4). 传输层（transport layer）"></a>4). 传输层（transport layer）</h6><p>在源端与目的端之间提供可靠的透明数据传输，使上层服务用户不必关系通信子网的实现细节。在协议栈中，传输层位于网络层之上，传输层协议为不同主机上运行的进程提供逻辑通信，而网络层协议为不同主机提供逻辑通信，如下图所示。<br><img src="/images/jisuanjiwangluo/13.png" alt><br>实际上，网络层可以看作是传输层的一部分，其为传输层提供服务。但对于终端系统而言，网络层对它们而言是透明的，它们知道传输层的存在，也就是说，在逻辑上它们认为是传输层为它们提供了端对端的通信，这也是分层思想的妙处。</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title></a><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/12.png" alt></h2><h6 id="4-传输层（transport-layer）"><a href="#4-传输层（transport-layer）" class="headerlink" title="4). 传输层（transport layer）"></a>4). 传输层（transport layer）</h6><p>在源端与目的端之间提供可靠的透明数据传输，使上层服务用户不必关系通信子网的实现细节。在协议栈中，传输层位于网络层之上，传输层协议为不同主机上运行的进程提供逻辑通信，而网络层协议为不同主机提供逻辑通信，如下图所示。<br><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/13.png" alt><br>实际上，网络层可以看作是传输层的一部分，其为传输层提供服务。但对于终端系统而言，网络层对它们而言是透明的，它们知道传输层的存在，也就是说，在逻辑上它们认为是传输层为它们提供了端对端的通信，这也是分层思想的妙处。</p>
 <hr>
 <p>5). 会话层（Session Layer）</p>
 <p>会话层是OSI模型的第五层，是用户应用程序和网络之间的接口，负责在网络中的两节点之间建立、维持和终止通信。</p>
@@ -715,7 +715,7 @@
 <li>D类地址：以1110开头，第一个字节范围为224~239；</li>
 <li>E类地址：以1111开头，保留地址</li>
 </ul>
-<p><img src="/images/jisuanjiwangluo/14.png" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/jisuanjiwangluo/14.png" alt></p>
 <hr>
 <p><strong>1). A类地址：1字节的网络地址 + 3字节主机地址，网络地址的最高位必须是“0”</strong></p>
 <p>一个A类IP地址是指， 在IP地址的四段号码中，第一段号码为网络号码，剩下的三段号码为本地计算机的号码。如果用二进制表示IP地址的话，A类IP地址就由1字节的网络地址和3字节主机地址组成，网络地址的最高位必须是“0”。A类IP地址中网络的标识长度为8位，主机标识的长度为24位，A类网络地址数量较少，有126个网络，每个网络可以容纳主机数达1600多万台。</p>

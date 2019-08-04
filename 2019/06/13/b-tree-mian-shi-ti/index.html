@@ -394,9 +394,9 @@ B+树索引数据有序，能够进行范围查询
 <li>IO一次读数据是从磁盘上读的，磁盘容量是固定的，取数据量大小是固定的，非叶子节点不存储数据，节点小，磁盘IO次数就少。</li>
 </ol>
 <p><font color="green"><strong>1.MYISAM</strong></font></p>
-<p><img src="/images/B-tree/1.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-tree/1.jpg" alt></p>
 <p><font color="green"><strong>2. INNODB</strong></font></p>
-<p><img src="/images/B-tree/2.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/b-tree/2.jpg" alt></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InnoDB索引和MyISAM最大的区别是它只有一个数据文件，在InnoDB中，表数据文件本身就是按B+Tree组织的一个索引结构，这棵树的叶节点数据域保存了完整的数据记录。所以我们又把它的主索引叫做聚集索引。而它的辅助索引和MyISAM也会有所不同，它的辅助索引都是将主键作为数据域。所以，这样当我们查找的时候通过辅助索引要先找到主键，然后通过主索引再找到对于的主键，得到信息。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyISAM表索引在处理文本索引时更具优势，而INNODB表索引在其它类型上更具效率优势，同时MySQL高并发需要事务场景时，只能使用INNODB表。</p>
 <h3 id="6-为什么数据库索引不用红黑树而用B-树？"><a href="#6-为什么数据库索引不用红黑树而用B-树？" class="headerlink" title="6. 为什么数据库索引不用红黑树而用B+树？"></a>6. 为什么数据库索引不用红黑树而用B+树？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;红黑树当插入删除元素的时候会进行频繁的变色与旋转（左旋，右旋），来保证红黑树的性质，浪费时间。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;但是当数据量较小，数据完全可以放入内存中，不需要进行磁盘IO，这时候，红黑树时间复杂度比B+树低。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;比如TreeSet TreeMap 和HashMap （jdk1.8）就是使用红黑树作为底层数据结构，以及linux中进程的调度。</p>

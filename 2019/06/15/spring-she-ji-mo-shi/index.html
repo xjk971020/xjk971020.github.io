@@ -458,7 +458,7 @@ Design Patterns(设计模式) 表示面向对象软件开发中最好的计算�
 <hr>
 <h3 id="代理设计模式"><a href="#代理设计模式" class="headerlink" title="代理设计模式"></a>代理设计模式</h3><h4 id="代理模式在-AOP-中的应用"><a href="#代理模式在-AOP-中的应用" class="headerlink" title="代理模式在 AOP 中的应用"></a>代理模式在 AOP 中的应用</h4><p>AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。</p>
 <p><font color="red"><strong>Spring AOP</strong></font> 就是基于动态代理的，如果要代理的对象，实现了某个接口，那么Spring AOP会使用JDK Proxy，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候Spring AOP会使用Cglib ，这时候Spring AOP会使用 Cglib 生成一个被代理对象的子类来作为代理，如下图所示：</p>
-<p><img src="/images/spring-she-ji-mo-shi/spring-design-pattern2.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/spring-design-pattern/2.jpg" alt></p>
 <p>当然你也可以使用 AspectJ ,Spring AOP 已经集成了AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。</p>
 <p>使用 AOP 之后我们可以把一些通用功能抽象出来，在需要用到的地方直接使用即可，这样大大简化了代码量。我们需要增加新功能时也方便，这样也提高了系统扩展性。日志功能、事务管理等等场景都用到了 AOP 。</p>
 <h4 id="Spring-AOP-和-AspectJ-AOP-有什么区别"><a href="#Spring-AOP-和-AspectJ-AOP-有什么区别" class="headerlink" title="Spring AOP 和 AspectJ AOP 有什么区别?"></a>Spring AOP 和 AspectJ AOP 有什么区别?</h4><p><font color="red"><strong>Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。</strong></font>Spring AOP 基于代理(Proxying)，而 AspectJ 基于字节码操作(Bytecode Manipulation)。</p>
@@ -466,7 +466,7 @@ Design Patterns(设计模式) 表示面向对象软件开发中最好的计算�
 <p>如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择 AspectJ ，它比Spring AOP 快很多。</p>
 <hr>
 <h3 id="模板方法"><a href="#模板方法" class="headerlink" title="模板方法"></a>模板方法</h3><p>模板方法模式是一种行为设计模式，它定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。 模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤的实现方式。</p>
-<p><img src="/images/spring-she-ji-mo-shi/spring-design-pattern3.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/spring-design-pattern/3.jpg" alt></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">Template</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">//这是我们的模板方法</span>
     <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">TemplateMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
@@ -511,7 +511,7 @@ Design Patterns(设计模式) 表示面向对象软件开发中最好的计算�
 <li><p><font color="red">ContextClosedEvent</font>：<font color="red">ApplicationContext</font> 关闭后触发的事件。</p>
 </li>
 </ul>
-<p><img src="/images/spring-she-ji-mo-shi/spring-design-pattern4.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/spring-design-pattern/4.jpg" alt></p>
 <h5 id="事件监听者角色"><a href="#事件监听者角色" class="headerlink" title="事件监听者角色"></a>事件监听者角色</h5><p><font color="red">ApplicationListener</font> 充当了事件监听者角色，它是一个接口，里面只定义了一个 <font color="red">onApplicationEvent（）</font>方法来处理<font color="red">ApplicationEvent</font>。<font color="red">ApplicationListener</font>接口类源码如下，可以看出接口定义看出接口中的事件只要实现了<font color="red"> ApplicationEvent</font>就可以了。所以，在 Spring中我们只要实现<font color="red"> ApplicationListener</font> 接口实现 <font color="red">onApplicationEvent()</font> 方法即可完成监听事件。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>context<span class="token punctuation">;</span>
 <span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>EventListener<span class="token punctuation">;</span>
@@ -610,7 +610,7 @@ Design Patterns(设计模式) 表示面向对象软件开发中最好的计算�
 <p>假如我们再增加一个 <font color="red">Controller</font>类型就要在上面代码中再加入一行 判断语句，这种形式就使得程序难以维护，也违反了设计模式中的开闭原则 – 对扩展开放，对修改关闭。</p>
 <hr>
 <h3 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h3><p>装饰者模式可以动态地给对象添加一些额外的属性或行为。相比于使用继承，装饰者模式更加灵活。简单点儿说就是当我们需要修改原有的功能，但我们又不愿直接去修改原有的代码时，设计一个Decorator套在原有代码外面。其实在 JDK 中就有很多地方用到了装饰者模式，比如 <font color="red">InputStream</font>家族， <font color="red">InputStream</font> 类下有  <font color="red">FileInputStream </font>(读取文件)、 <font color="red">BufferedInputStream</font> (增加缓存,使读取文件速度大大提升)等子类都在不修改 <font color="red">InputStream</font> 代码的情况下扩展了它的功能。</p>
-<p><img src="/images/spring-she-ji-mo-shi/spring-design-pattern5.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/spring-design-pattern/5.jpg" alt></p>
 <p>Spring 中配置 DataSource 的时候，DataSource 可能是不同的数据库和数据源。我们能否根据客户的需求在少修改原有类的代码下动态切换不同的数据源？这个时候就要用到装饰者模式(这一点我自己还没太理解具体原理)。Spring 中用到的包装器模式在类名上含有 <font color="red">Wrapper</font>或者 <font color="red">Decorator</font>。这些类基本上都是动态地给一个对象添加一些额外的职责。</p>
 <hr>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Spring 框架中用到了哪些设计模式：</p>
