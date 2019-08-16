@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="BTree和B+Tree, Cathetine&#39;s Blog">
-    <meta name="description" content="B树和B+树原理及索引应用&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;B+树索引是B+树在数据库中的一种实现，是最常见也是数据库中使用最为频繁的一种索引。&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp">
+    <meta name="keywords" content="解决哈希冲突, Cathetine&#39;s Blog">
+    <meta name="description" content="解决哈希冲突的三种方法一、拉链法上篇博文我们举的例子，HashMap，HashSet其实都是采用的拉链法来解决哈希冲突的，就是在每个位桶实现的时候，我们采用链表（jdk1.8之后采用链表+红黑树）的数据结构来去存取发生哈希冲突的输入域的关键">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>BTree和B+Tree | Cathetine&#39;s Blog</title>
+    <title>解决哈希冲突 | Cathetine&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -219,13 +219,13 @@
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        BTree和B+Tree
+                        解决哈希冲突
                     </div>
                 </div>
             </div>
@@ -341,21 +341,21 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-06-14
+                    2019-08-16
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        3k
+                        1.2k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        10 分
+                        3 分
                     </div>
                     
                 
@@ -371,106 +371,26 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="B树和B-树原理及索引应用"><a href="#B树和B-树原理及索引应用" class="headerlink" title="B树和B+树原理及索引应用"></a>B树和B+树原理及索引应用</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="grey">B+树索引是B+树在数据库中的一种实现，是最常见也是数据库中使用最为频繁的一种索引。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B+树中的B代表平衡（balance），而不是二叉（binary），因为B+树是从最早的平衡二叉树演化而来的。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在讲B+树之前必须先了解<strong>二叉查找树</strong>、<strong>平衡二叉树（AVLTree）</strong>和<strong>平衡多路查找树（B-Tree）</strong>，B+树即由这些树逐步优化而来。</font></p>
-<hr>
-<h3 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h3><p>二叉树具有以下性质：左子树的键值小于根的键值，右子树的键值大于根的键值。<br>如下图所示就是一棵二叉查找树，</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/1.jpg" alt></p>
-<p>对该二叉树的节点进行查找发现深度为1的节点的查找次数为1，深度为2的查找次数为2，深度为n的节点的查找次数为n，因此其平均查找次数为 (1+2+2+3+3+3) / 6 = 2.3次</p>
-<p>二叉查找树可以任意地构造，同样是2,3,5,6,7,8这六个数字，也可以按照下图的方式来构造：</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/2.jpg" alt></p>
-<p>但是这棵二叉树的查询效率就低了。因此若想二叉树的查询效率尽可能高，需要这棵二叉树是平衡的，从而引出新的定义——平衡二叉树，或称AVL树。</p>
-<hr>
-<h3 id="平衡二叉树（AVL-Tree）"><a href="#平衡二叉树（AVL-Tree）" class="headerlink" title="平衡二叉树（AVL Tree）"></a>平衡二叉树（AVL Tree）</h3><p>平衡二叉树（AVL树）在符合二叉查找树的条件下，还满足任何节点的两个子树的高度最大差为1。下面的两张图片，左边是AVL树，它的任何节点的两个子树的高度差&lt;=1；右边的不是AVL树，其根节点的左子树高度为3，而右子树高度为1；</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/3.jpg" alt></p>
-<p>如果在AVL树中进行插入或删除节点，可能导致AVL树失去平衡，这种失去平衡的二叉树可以概括为四种姿态：LL（左左）、RR（右右）、LR（左右）、RL（右左）。它们的示意图如下：</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/4.jpg" alt></p>
-<p>这四种失去平衡的姿态都有各自的定义：</p>
-<ul>
-<li><p><strong>LL</strong>：LeftLeft，也称“左左”。插入或删除一个节点后，根节点的左孩子（Left Child）的左孩子（Left Child）还有非空节点，导致根节点的左子树高度比右子树高度高2，AVL树失去平衡。</p>
-</li>
-<li><p><strong>RR</strong>：RightRight，也称“右右”。插入或删除一个节点后，根节点的右孩子（Right Child）的右孩子（Right Child）还有非空节点，导致根节点的右子树高度比左子树高度高2，AVL树失去平衡。</p>
-</li>
-<li><p><strong>LR</strong>：LeftRight，也称“左右”。插入或删除一个节点后，根节点的左孩子（Left Child）的右孩子（Right Child）还有非空节点，导致根节点的左子树高度比右子树高度高2，AVL树失去平衡。</p>
-</li>
-<li><p><strong>RL</strong>：RightLeft，也称“右左”。插入或删除一个节点后，根节点的右孩子（Right Child）的左孩子（Left Child）还有非空节点，导致根节点的右子树高度比左子树高度高2，AVL树失去平衡。</p>
-</li>
-</ul>
-<p>AVL树失去平衡之后，可以通过旋转使其恢复平衡。下面分别介绍四种失去平衡的情况下对应的旋转方法。</p>
-<p><strong>LL的旋转：</strong>LL失去平衡的情况下，可以通过一次旋转让AVL树恢复平衡。步骤如下：</p>
-<ol>
-<li>将根节点的左孩子作为新根节点。</li>
-<li>将新根节点的右孩子作为原根节点的左孩子。</li>
-<li>将原根节点作为新根节点的右孩子。</li>
-</ol>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/5.jpg" alt></p>
-<p><strong>RR的旋转：</strong>RR失去平衡的情况下，旋转方法与LL旋转对称，步骤如下：</p>
-<ol>
-<li>将根节点的右孩子作为新根节点。</li>
-<li>将新根节点的左孩子作为原根节点的右孩子。</li>
-<li>将原根节点作为新根节点的左孩子。</li>
-</ol>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/6.jpg" alt></p>
-<p><strong>LR的旋转</strong>：LR失去平衡的情况下，需要进行两次旋转，步骤如下：</p>
-<ol>
-<li>围绕根节点的左孩子进行RR旋转。</li>
-<li>围绕根节点进行LL旋转。</li>
-</ol>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/7.jpg" alt></p>
-<p><strong>RL的旋转：</strong>RL失去平衡的情况下也需要进行两次旋转，旋转方法与LR旋转对称，步骤如下：</p>
-<ol>
-<li>围绕根节点的右孩子进行LL旋转。</li>
-<li>围绕根节点进行RR旋转。</li>
-</ol>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/8.jpg" alt></p>
-<hr>
-<h3 id="平衡多路查找树（B-Tree）"><a href="#平衡多路查找树（B-Tree）" class="headerlink" title="平衡多路查找树（B-Tree）"></a>平衡多路查找树（B-Tree）</h3><p>B-Tree是为磁盘等外存储设备设计的一种<strong>平衡查找树</strong>。因此在讲B-Tree之前先了解下磁盘的相关知识。</p>
-<p>系统从磁盘读取数据到内存时是以磁盘块（block）为基本单位的，位于同一个磁盘块中的数据会被一次性读取出来，而不是需要什么取什么。</p>
-<p>InnoDB存储引擎中有页（Page）的概念，页是其磁盘管理的最小单位。InnoDB存储引擎中默认每个页的大小为16KB，可通过参数innodb_page_size将页的大小设置为4K、8K、16K，在MySQL中可通过如下命令查看页的大小：</p>
-<blockquote>
-<p>mysql&gt; show variables like ‘innodb_page_size’;1</p>
-</blockquote>
-<p>而系统一个磁盘块的存储空间往往没有这么大，因此InnoDB每次申请磁盘空间时都会是若干地址连续磁盘块来达到页的大小16KB。InnoDB在把磁盘数据读入到磁盘时会以页为基本单位，在查询数据时如果一个页中的每条数据都能有助于定位数据记录的位置，这将会减少磁盘I/O次数，提高查询效率。</p>
-<p>B-Tree结构的数据可以让系统高效的找到数据所在的磁盘块。为了描述B-Tree，首先定义一条记录为一个二元组[key, data] ，key为记录的键值，对应表中的主键值，data为一行记录中除主键外的数据。对于不同的记录，key值互不相同。</p>
-<p><strong>一棵m阶的B-Tree有如下特性：</strong></p>
-<ol>
-<li>每个节点最多有m个孩子。</li>
-<li>除了根节点和叶子节点外，其它每个节点至少有Ceil(m/2)个孩子。</li>
-<li>若根节点不是叶子节点，则至少有2个孩子</li>
-<li>所有叶子节点都在同一层，且不包含其它关键字信息</li>
-<li>每个非终端节点包含n个关键字信息（P0,P1,…Pn, k1,…kn）</li>
-<li>关键字的个数n满足：ceil(m/2)-1 &lt;= n &lt;= m-1</li>
-<li>ki(i=1,…n)为关键字，且关键字升序排序。</li>
-<li>Pi(i=1,…n)为指向子树根节点的指针。P(i-1)指向的子树的所有节点关键字均小于ki，但都大于k(i-1)</li>
-</ol>
-<p><strong>B-Tree</strong>中的<strong>每个节点</strong>根据实际情况可以包含<strong>大量的关键字信息</strong>和<strong>分支</strong><br>如下图所示为一个<strong><font color="red">3阶</font></strong>的B-Tree：</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/9.jpg" alt></p>
-<p>每个节点占用一个盘块的磁盘空间，一个节点上有两个升序排序的关键字和三个指向子树根节点的指针，指针存储的是子节点所在磁盘块的地址。两个关键词划分成的三个范围域对应三个指针指向的子树的数据的范围域。以根节点为例，关键字为17和35，P1指针指向的子树的数据范围为小于17，P2指针指向的子树的数据范围为17~35，P3指针指向的子树的数据范围为大于35。</p>
-<p>模拟查找关键字29的过程：</p>
-<ol>
-<li>根据根节点找到磁盘块1，读入内存。【磁盘I/O操作第1次】</li>
-<li>比较关键字29在区间（17,35），找到磁盘块1的指针P2。</li>
-<li>根据P2指针找到磁盘块3，读入内存。【磁盘I/O操作第2次】</li>
-<li>比较关键字29在区间（26,30），找到磁盘块3的指针P2。</li>
-<li>根据P2指针找到磁盘块8，读入内存。【磁盘I/O操作第3次】</li>
-<li>在磁盘块8中的关键字列表中找到关键字29。</li>
-</ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分析上面过程，发现需要3次磁盘I/O操作，和3次内存查找操作。由于内存中的关键字是一个有序表结构，可以利用二分法查找提高效率。而3次磁盘I/O操作是影响整个B-Tree查找效率的决定因素。B-Tree相对于AVLTree缩减了节点个数，使每次磁盘I/O取到内存的数据都发挥了作用，从而提高了查询效率。</p>
-<hr>
-<h3 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B+Tree"></a>B+Tree</h3><p>B+Tree是在B-Tree基础上的一种优化，使其更适合实现外存储索引结构，InnoDB存储引擎就是用B+Tree实现其索引结构。</p>
-<p>从上一节中的B-Tree结构图中可以看到每个节点中不仅包含数据的key值，还有data值。而每一个页的存储空间是有限的，如果data数据较大时将会导致每个节点（即一个页）能存储的key的数量很小，当存储的数据量很大时同样会导致B-Tree的深度较大，增大查询时的磁盘I/O次数，进而影响查询效率。在B+Tree中，所有数据记录节点都是按照键值大小顺序存放在同一层的叶子节点上，而非叶子节点上只存储key值信息，这样可以大大加大每个节点存储的key值数量，降低B+Tree的高度。</p>
-<p><strong>B+Tree相对于B-Tree有几点不同：</strong></p>
-<ol>
-<li>非叶子节点只存储键值信息。</li>
-<li>所有叶子节点之间都有一个链指针。</li>
-<li>数据记录都存放在叶子节点中。</li>
-</ol>
-<p>将上一节中的B-Tree优化，由于B+Tree的非叶子节点只存储键值信息，假设每个磁盘块能存储4个键值及指针信息，则变成B+Tree后其结构如下图所示：</p>
-<p><img src="http://cdn.cathetine.cn/blog/images/b-treeAndb+tree/10.jpg" alt></p>
-<p>通常在B+Tree上有两个头指针，一个指向根节点，另一个指向关键字最小的叶子节点，而且所有叶子节点（即数据节点）之间是一种链式环结构。因此可以对B+Tree进行两种查找运算：一种是对于主键的范围查找和分页查找，另一种是从根节点开始，进行随机查找。</p>
-<p>可能上面例子中只有22条数据记录，看不出B+Tree的优点，下面做一个推算：</p>
-<p>InnoDB存储引擎中页的大小为16KB，一般表的主键类型为INT（占用4个字节）或BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的一个节点）中大概存储16KB/(8B+8B)=1K个键值（因为是估值，为方便计算，这里的K取值为〖10〗^3）。也就是说一个深度为3的B+Tree索引可以维护10^3 * 10^3 * 10^3 = 10亿 条记录。</p>
-<p>实际情况中每个节点可能不能填充满，因此在数据库中，B+Tree的高度一般都在2~4层。MySQL的InnoDB存储引擎在设计时是将根节点常驻内存的，也就是说查找某一键值的行记录时最多只需要1~3次磁盘I/O操作。</p>
-<p>数据库中的B+Tree索引可以分为<strong>聚集索引（clustered index）</strong>和<strong>辅助索引（secondary index）</strong>。上面的B+Tree示例图在数据库中的实现即为聚集索引，聚集索引的B+Tree中的叶子节点存放的是整张表的行记录数据。辅助索引与聚集索引的区别在于辅助索引的叶子节点并不包含行记录的全部数据，而是存储相应行数据的聚集索引键，即主键。当通过辅助索引来查询数据时，InnoDB存储引擎会遍历辅助索引找到主键，然后再通过主键在聚集索引中找到完整的行记录数据</p>
+                <h1 id="解决哈希冲突的三种方法"><a href="#解决哈希冲突的三种方法" class="headerlink" title="解决哈希冲突的三种方法"></a>解决哈希冲突的三种方法</h1><h3 id="一、拉链法"><a href="#一、拉链法" class="headerlink" title="一、拉链法"></a>一、拉链法</h3><p>上篇博文我们举的例子，HashMap，HashSet其实都是采用的拉链法来解决哈希冲突的，就是在每个位桶实现的时候，我们采用链表（jdk1.8之后采用链表+红黑树）的数据结构来去存取发生哈希冲突的输入域的关键字（也就是被哈希函数映射到同一个位桶上的关键字）。首先来看使用拉链法解决哈希冲突的几个操作：</p>
+<p>①插入操作：在发生哈希冲突的时候，我们输入域的关键字去映射到位桶（实际上是实现位桶的这个数据结构，链表或者红黑树）中去的时候，我们先检查带插入元素x是否出现在表中，很明显，这个查找所用的次数不会超过装载因子（n/m:n为输入域的关键字个数，m为位桶的数目），它是个常数，所以插入操作的最坏时间复杂度为O(1)的。</p>
+<p>②查询操作：和①一样，在发生哈希冲突的时候，我们去检索的时间复杂度不会超过装载因子，也就是检索数据的时间复杂度也是O(1)的</p>
+<p>③删除操作：如果在拉链法中我们想要使用链表这种数据结构来实现位桶，那么这个链表一定是双向链表，因为在删除一个元素x的时候，需要更改x的前驱元素的next指针的属性，把x从链表中删除。这个操作的时间复杂度也是O(1)的。</p>
+<p>与开放定址法相比，拉链法有如下几个优点：</p>
+<p>①拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</p>
+<p>②由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</p>
+<p>③开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；</p>
+<p>④在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。</p>
+<p><strong>拉链法的缺点</strong></p>
+<p>指针需要额外的空间，故当结点规模较小时，开放定址法较为节省空间，而若将节省的指针空间用来扩大散列表的规模，可使装填因子变小，这又减少了开放定址法中的冲突，从而提高平均查找速度。</p>
+<p>使用例子：HashMap</p>
+<h3 id="二、开发地址法"><a href="#二、开发地址法" class="headerlink" title="二、开发地址法"></a>二、开发地址法</h3><p>开放地址法有个非常关键的特征，就是所有输入的元素全部存放在哈希表里，也就是说，位桶的实现是不需要任何的链表来实现的，换句话说，也就是这个哈希表的装载因子不会超过1。它的实现是在插入一个元素的时候，先通过哈希函数进行判断，若是发生哈希冲突，就以当前地址为基准，根据再寻址的方法（探查序列），去寻找下一个地址，若发生冲突再去寻找，直至找到一个为空的地址为止。所以这种方法又称为再散列法。</p>
+<p>有几种常用的探查序列的方法：</p>
+<h4 id="①线性探查"><a href="#①线性探查" class="headerlink" title="①线性探查"></a>①线性探查</h4><p>dii=1，2，3，…，m-1；这种方法的特点是：冲突发生时，顺序查看表中下一单元，直到找出一个空单元或查遍全表。</p>
+<p>（使用例子：ThreadLocal里面的ThreadLocalMap）</p>
+<h4 id="②二次探查"><a href="#②二次探查" class="headerlink" title="②二次探查"></a>②二次探查</h4><p>di=12，-12，22，-22，…，k2，-k2    ( k&lt;=m/2 )；这种方法的特点是：冲突发生时，在表的左右进行跳跃式探测，比较灵活。</p>
+<h4 id="③-伪随机探测"><a href="#③-伪随机探测" class="headerlink" title="③ 伪随机探测"></a>③ 伪随机探测</h4><p>di=伪随机数序列；具体实现时，应建立一个伪随机数发生器，（如i=(i+p) % m），生成一个位随机序列，并给定一个随机数做起点，每次去加上这个伪随机数++就可以了。</p>
+<h3 id="三、再散列法"><a href="#三、再散列法" class="headerlink" title="三、再散列法"></a>三、再散列法</h3><p>再散列法其实很简单，就是再使用哈希函数去散列一个输入的时候，输出是同一个位置就再次散列，直至不发生冲突位置</p>
+<p>缺点：每次冲突都要重新散列，计算时间增加。</p>
 
             </div>
             <hr/>
@@ -611,7 +531,7 @@
                     </span>
                     <a href="http://yoursite.com" class="b-link-green">Cathetine's Blog</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2019/06/14/btree-he-b-tree/" class="b-link-green">BTree和B+Tree</a>
+                    <a href="/2019/08/16/jie-jue-ha-xi-chong-tu/" class="b-link-green">解决哈希冲突</a>
                 </p>
             </div>
         </div>
@@ -632,38 +552,39 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/06/15/spring-she-ji-mo-shi/">
+                <a href="/2019/08/16/jie-jue-ha-xi-chong-tu/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="spring-design-pattern">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="解决哈希冲突">
                         
-                        <span class="card-title">spring-design-pattern</span>
+                        <span class="card-title">解决哈希冲突</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
-                    <div class="summary">谈谈Spring中都用到了哪些设计模式?JDK 中用到了那些设计模式?Spring 中用到了那些设计模式?这两个问题，在面试中比较常见。
-Design Patterns(设计模式) 表示面向对象软件开发中最好的计算机编程实践。 Spring</div>
+                    <div class="summary">解决哈希冲突的三种方法一、拉链法上篇博文我们举的例子，HashMap，HashSet其实都是采用的拉链法来解决哈希冲突的，就是在每个位桶实现的时候，我们采用链表（jdk1.8之后采用链表+红黑树）的数据结构来去存取发生哈希冲突的输入域的关键</div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-06-15
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-16
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/spring/" class="post-category" target="_blank">
-                                    spring
+                            <a href="/categories/数据结构/" class="post-category" target="_blank">
+                                    数据结构
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -682,32 +603,29 @@ Design Patterns(设计模式) 表示面向对象软件开发中最好的计算�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/06/13/b-tree-mian-shi-ti/">
+                <a href="/2019/08/07/java-dong-tai-dai-li/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="B-tree面试题">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="java-动态代理">
                         
-                        <span class="card-title">B-tree面试题</span>
+                        <span class="card-title">java-动态代理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
-                    <div class="summary">B树，B+树，红黑树，数据库常见面试题1. 数据库索引有哪些，优缺点？
-hash索引和B+树索引
-hash索引等值查询效率高，但是不能排序，因此不能进行范围查询
-B+树索引数据有序，能够进行范围查询
-
-2. 为什么不用二叉查找树作为数据库索</div>
+                    <div class="summary">Java 代理Java 代理模式实现方式，主要有如下五种方法
+静态代理，工程师编辑代理类代码，实现代理模式；在编译期就生成了代理类。
+基于 JDK 实现动态代理，通过jdk提供的工具方法Proxy.newProxyInstance动态构建全</div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-06-13
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-07
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/数据结构/" class="post-category" target="_blank">
-                                    数据结构
+                            <a href="/categories/Java基础知识/" class="post-category" target="_blank">
+                                    Java基础知识
                                 </a>
                             
                             
@@ -717,8 +635,8 @@ B+树索引数据有序，能够进行范围查询
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/面试知识点/" target="_blank">
-                        <span class="chip bg-color">面试知识点</span>
+                    <a href="/tags/Java基础/" target="_blank">
+                        <span class="chip bg-color">Java基础</span>
                     </a>
                     
                 </div>
