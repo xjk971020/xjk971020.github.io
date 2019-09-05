@@ -4,8 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="解决哈希冲突, Cathetine&#39;s Blog">
-    <meta name="description" content="解决哈希冲突的三种方法一、拉链法上篇博文我们举的例子，HashMap，HashSet其实都是采用的拉链法来解决哈希冲突的，就是在每个位桶实现的时候，我们采用链表（jdk1.8之后采用链表+红黑树）的数据结构来去存取发生哈希冲突的输入域的关键">
+    <meta name="keywords" content="jvm调优, Cathetine&#39;s Blog">
+    <meta name="description" content="优化Java虚拟机总结
+我们最常用的评价虚拟机性能的指标就是吞吐量与停顿时间，停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用 CPU 时间，尽快地完成程序的运算任务，主要适合在后台运">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>解决哈希冲突 | Cathetine&#39;s Blog</title>
+    <title>jvm调优 | Cathetine&#39;s Blog</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -219,13 +220,13 @@
 
 
 
-<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+<div class="bg-cover post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        解决哈希冲突
+                        jvm调优
                     </div>
                 </div>
             </div>
@@ -315,25 +316,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/面试知识点/" target="_blank">
-                                <span class="chip bg-color">面试知识点</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fa fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/数据结构/" class="post-category" target="_blank">
-                                数据结构
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -341,21 +329,21 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-16
+                    2019-09-05
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        1.2k
+                        3.4k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        3 分
+                        12 分
                     </div>
                     
                 
@@ -371,26 +359,129 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="解决哈希冲突的三种方法"><a href="#解决哈希冲突的三种方法" class="headerlink" title="解决哈希冲突的三种方法"></a>解决哈希冲突的三种方法</h1><h3 id="一、拉链法"><a href="#一、拉链法" class="headerlink" title="一、拉链法"></a>一、拉链法</h3><p>上篇博文我们举的例子，HashMap，HashSet其实都是采用的拉链法来解决哈希冲突的，就是在每个位桶实现的时候，我们采用链表（jdk1.8之后采用链表+红黑树）的数据结构来去存取发生哈希冲突的输入域的关键字（也就是被哈希函数映射到同一个位桶上的关键字）。首先来看使用拉链法解决哈希冲突的几个操作：</p>
-<p>①插入操作：在发生哈希冲突的时候，我们输入域的关键字去映射到位桶（实际上是实现位桶的这个数据结构，链表或者红黑树）中去的时候，我们先检查带插入元素x是否出现在表中，很明显，这个查找所用的次数不会超过装载因子（n/m:n为输入域的关键字个数，m为位桶的数目），它是个常数，所以插入操作的最坏时间复杂度为O(1)的。</p>
-<p>②查询操作：和①一样，在发生哈希冲突的时候，我们去检索的时间复杂度不会超过装载因子，也就是检索数据的时间复杂度也是O(1)的</p>
-<p>③删除操作：如果在拉链法中我们想要使用链表这种数据结构来实现位桶，那么这个链表一定是双向链表，因为在删除一个元素x的时候，需要更改x的前驱元素的next指针的属性，把x从链表中删除。这个操作的时间复杂度也是O(1)的。</p>
-<p>与开放定址法相比，拉链法有如下几个优点：</p>
-<p>①拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</p>
-<p>②由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</p>
-<p>③开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；</p>
-<p>④在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。</p>
-<p><strong>拉链法的缺点</strong></p>
-<p>指针需要额外的空间，故当结点规模较小时，开放定址法较为节省空间，而若将节省的指针空间用来扩大散列表的规模，可使装填因子变小，这又减少了开放定址法中的冲突，从而提高平均查找速度。</p>
-<p>使用例子：HashMap</p>
-<h3 id="二、开发地址法"><a href="#二、开发地址法" class="headerlink" title="二、开发地址法"></a>二、开发地址法</h3><p>开放地址法有个非常关键的特征，就是所有输入的元素全部存放在哈希表里，也就是说，位桶的实现是不需要任何的链表来实现的，换句话说，也就是这个哈希表的装载因子不会超过1。它的实现是在插入一个元素的时候，先通过哈希函数进行判断，若是发生哈希冲突，就以当前地址为基准，根据再寻址的方法（探查序列），去寻找下一个地址，若发生冲突再去寻找，直至找到一个为空的地址为止。所以这种方法又称为再散列法。</p>
-<p>有几种常用的探查序列的方法：</p>
-<h4 id="①线性探查"><a href="#①线性探查" class="headerlink" title="①线性探查"></a>①线性探查</h4><p>dii=1，2，3，…，m-1；这种方法的特点是：冲突发生时，顺序查看表中下一单元，直到找出一个空单元或查遍全表。</p>
-<p>（使用例子：ThreadLocal里面的ThreadLocalMap）</p>
-<h4 id="②二次探查"><a href="#②二次探查" class="headerlink" title="②二次探查"></a>②二次探查</h4><p>di=12，-12，22，-22，…，k2，-k2    ( k&lt;=m/2 )；这种方法的特点是：冲突发生时，在表的左右进行跳跃式探测，比较灵活。</p>
-<h4 id="③-伪随机探测"><a href="#③-伪随机探测" class="headerlink" title="③ 伪随机探测"></a>③ 伪随机探测</h4><p>di=伪随机数序列；具体实现时，应建立一个伪随机数发生器，（如i=(i+p) % m），生成一个位随机序列，并给定一个随机数做起点，每次去加上这个伪随机数++就可以了。</p>
-<h3 id="三、再散列法"><a href="#三、再散列法" class="headerlink" title="三、再散列法"></a>三、再散列法</h3><p>再散列法其实很简单，就是再使用哈希函数去散列一个输入的时候，输出是同一个位置就再次散列，直至不发生冲突位置</p>
-<p>缺点：每次冲突都要重新散列，计算时间增加。</p>
+                <h1 id="优化Java虚拟机总结"><a href="#优化Java虚拟机总结" class="headerlink" title="优化Java虚拟机总结"></a>优化Java虚拟机总结</h1><hr>
+<p>我们最常用的评价虚拟机性能的指标就是吞吐量与停顿时间，停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用 CPU 时间，尽快地完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务，具体的指标列举如下：</p>
+<ul>
+<li>吞吐量：指在应用程序的生命周期内，应用程序所花费的时间和系统总运行时间的比值。系统总运行时间=应用程序耗时+GC 耗时。如果系统运行了 100min，GC 耗时 1min，那么系统的吞吐量就是 (100-1)/100=99%。</li>
+<li>停顿时间：指垃圾回收器正在运行时，应用程序的暂停时间。对于独占回收器而言，停顿时间可能会比较长。使用并发的回收器时，由于垃圾回收器和应用程序交替运行，程序的停顿时间会变短，但是，由于其效率很可能不如独占垃圾回收器，故系统的吞吐量可能会较低。</li>
+</ul>
+<h2 id="常用调优方法"><a href="#常用调优方法" class="headerlink" title="常用调优方法"></a><strong>常用调优方法</strong></h2><h3 id="1、将新对象预留在新生代"><a href="#1、将新对象预留在新生代" class="headerlink" title="1、将新对象预留在新生代"></a><strong>1、将新对象预留在新生代</strong></h3><p>由于 Full GC 的成本要远远高于 Minor GC ，因此尽可能将对象分配在新生代，在JVM 调优中，可以为应用程序分配一个合理的新生代空间，以最大限度避免新对象直接进去老年代。</p>
+<p><font color="red">注意：由于新生代垃圾回收的速度高于老年代回收，因此，将年轻对象预留在新生代有利于提高整体的 GC 效率</font></p>
+<h3 id="2、大对象进入老年代"><a href="#2、大对象进入老年代" class="headerlink" title="2、大对象进入老年代"></a><strong>2、大对象进入老年代</strong></h3><p>大对象占用空间多，直接放入新生代中会扰乱新生代GC，新生代空间不足将会把大量的较小的年轻代对象移入到老年代中，这对GC来说是相当不利的。如果有短命大对象，对GC来说将会是一场灾难，原本存放于老年代的永久对象，被短命大对象塞满，扰乱了分代内存回收的基本思路，因此，在开发过程中，尽可能避免使用短命的大对象。使用参数 -XX：PretenureSizeThreshold 设置大对象直接进入老年代的阀值，当对象超过这个阀值时，将直接在老年代中分配。其中， -XX：PretenureSizeThreshold 只对串行收集器和新生代并行收集器有效，并行回收收集器不识别这个参数。</p>
+<p><font color="red">注意：短命的大对象对垃圾回收是一场灾难，目前木有一种特别好的回收方法处理这个问题，因此尽可能避免使用短命的大对象。</font></p>
+<h3 id="3、设置对象进入老年代的年龄"><a href="#3、设置对象进入老年代的年龄" class="headerlink" title="3、设置对象进入老年代的年龄"></a><strong>3、设置对象进入老年代的年龄</strong></h3><p>在堆中每个对象都有自己的年龄，如果对象在 eden 区，经过一次 GC 后还存活，则被移动到 survivor 区中，对象年龄加 1，以后每经过一次 GC 依然存活的，对象年龄就加 1。当对象年龄达到阀值时，就移动到老年代，这个阀值用以下参数设置：</p>
+<p><font color="red">-XX：MaxTenuringThreshold：默认值是15，这个参数是指定进入老年代的最大年龄值，对象实际进入老年代的年龄是 JVM 在运行时根据内存使用情况动态计算的。</font></p>
+<p>如果希望对象尽可能长地留在新生代中，可以设置一个较大的阀值。</p>
+<h3 id="4、吞吐量优先设置"><a href="#4、吞吐量优先设置" class="headerlink" title="4、吞吐量优先设置"></a><strong>4、吞吐量优先设置</strong></h3><p>机器配置是 4G 内存 和 32 核 CPU，配置参数如下：</p>
+<ul>
+<li><p><strong>-Xms3800m  -Xmx3800m</strong>（堆的初始值和最大值一样)</p>
+</li>
+<li><p><strong>-Xmn2g</strong>（新生代大小）</p>
+</li>
+<li><p><strong>-Xss128k</strong>（线程栈大小，减少它使剩余的系统内存支持更多的线程）</p>
+</li>
+<li><p><strong>-XX：+UseParallelGC</strong>（新生代使用并行回收收集器）</p>
+</li>
+<li><p><strong>-XX：ParallelGCThreads=20</strong>（垃圾回收的线程数）</p>
+</li>
+<li><p><strong>-XX：+UseParallelOldGC</strong> （老年代使用并行回收收集器）</p>
+</li>
+</ul>
+<h3 id="5、降低停顿案例"><a href="#5、降低停顿案例" class="headerlink" title="5、降低停顿案例"></a><strong>5、降低停顿案例</strong></h3><p>为了降低应用软件在垃圾回收时的停顿，首先考虑的使用关注系统停顿的 CMS 回收器，为了减少 Full GC 的次数，应尽可能将对象预留在新生代，新生代 Minor GC 的成本远远小于老年代的 Full GC</p>
+<ul>
+<li><p><strong>-Xms3800m  -Xmx3800m</strong>（堆的初始值和最大值一样</p>
+</li>
+<li><p><strong>-Xmn2g</strong>（新生代大小）</p>
+</li>
+<li><p><strong>-Xss128k</strong>（线程栈大小，减少它使剩余的系统内存支持更多的线程）</p>
+</li>
+<li><p><strong>-XX：ParallelGCThreads=20</strong>（垃圾回收的线程数）</p>
+</li>
+<li><p><strong>-XX：+UseConcMarkSweepGC</strong>（老年代使用 CMS 收集器）</p>
+</li>
+<li><p><strong>-XX：+UseParNewGC</strong>（新生代使用并行收集器）</p>
+</li>
+<li><p><strong>-XX：SurvivorRatio=8</strong>（设置 eden ： survivor = 8 : 1）</p>
+</li>
+<li><p><strong>-XX：TargetSurvivorRatio</strong>（设置 survivor 的使用率为 90%，默认是50%，提高了survivor 区的使用率，当存放的对象超过这个数值，则对象会向老年代压缩）</p>
+</li>
+<li><p><strong>-XX：MaxTenuringThreshold=31</strong>（设置年轻对晋升到老年代的最大年龄是31，默认是15，设为31是尽可能地将对象留在新生代）**</p>
+</li>
+</ul>
+<h2 id="常用JVM参数"><a href="#常用JVM参数" class="headerlink" title="常用JVM参数"></a><strong>常用JVM参数</strong></h2><h3 id="堆设置"><a href="#堆设置" class="headerlink" title="堆设置"></a><strong>堆设置</strong></h3><ul>
+<li><p>-Xmx3550m：设置JVM最大堆内存为3550M。</p>
+</li>
+<li><p>-Xms3550m：设置JVM初始堆内存为3550M。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</p>
+</li>
+<li><p>-Xss128k：设置每个线程的栈大小。JDK5.0以后每个线程栈大小为1M，之前每个线程栈大小为256K。应当根据应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+</li>
+<li><p>-Xmn2g：设置堆内存年轻代大小为2G。整个堆内存大小=年轻代大小+年老代大小+持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8。<br>-XX:PermSize=256M：设置堆内存持久代初始值为256M。(貌似是Eclipse等IDE的初始化参数)</p>
+</li>
+<li><p>-XX:MaxNewSize=size：新生成的对象能占用内存的最大值。</p>
+</li>
+<li><p>-XX:MaxPermSize=512M：设置持久代最大值为512M。</p>
+</li>
+<li><p>-XX:NewRatio=4：设置堆内存年轻代（包括Eden和两个Survivor区）与堆内存年老代的比值（除去持久代）。设置为4，则年轻代所占与年老代所占的比值为1:4。</p>
+</li>
+<li><p>-XX:SurvivorRatio=4：设置堆内存年轻代中Eden区与Survivor区大小的比值。设置为4，则两个Survivor区（JVM堆内存年轻代中默认有2个Survivor区）与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6。</p>
+</li>
+<li><p>-XX:MaxTenuringThreshold=7：表示一个对象如果在救助空间（Survivor区）移动7次还没有被回收就放入年老代。</p>
+<p>如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代，对于年老代比较多的应用，这样做可以提高效率。</p>
+<p>如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象在年轻代存活时间，增加对象在年轻代即被回收的概率。</p>
+</li>
+</ul>
+<h3 id="回收器选择"><a href="#回收器选择" class="headerlink" title="回收器选择"></a><strong>回收器选择</strong></h3><p>JVM给了三种选择：串行收集器、并行收集器、并发收集器，但是串行收集器只适用于小数据量的情况，所以这里的选择主要针对并行收集器和并发收集器。</p>
+<p>默认情况下，JDK5.0以前都是使用串行收集器，如果想使用其他收集器需要在启动时加入相应参数。JDK5.0以后，JVM会根据当前系统配置进行智能判断。</p>
+<h3 id="串行收集器"><a href="#串行收集器" class="headerlink" title="串行收集器"></a><strong>串行收集器</strong></h3><ul>
+<li>-XX:+UseSerialGC：设置串行收集器</li>
+</ul>
+<h3 id="并行收集器-吞吐量优先"><a href="#并行收集器-吞吐量优先" class="headerlink" title="并行收集器(吞吐量优先)"></a><strong>并行收集器(吞吐量优先)</strong></h3><ul>
+<li>-XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。</li>
+<li>-XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。</li>
+<li>-XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。</li>
+<li>-XX:MaxGCPauseMillis=100：设置每次年轻代垃圾回收的最长时间（单位毫秒），如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。</li>
+<li>-XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低响应时间或者收集频率等。</li>
+</ul>
+<p>此参数建议使用并行收集器时，一直打开。</p>
+<h3 id="并发收集器-响应时间优先"><a href="#并发收集器-响应时间优先" class="headerlink" title="并发收集器(响应时间优先)"></a><strong>并发收集器(响应时间优先)</strong></h3><p>-XX:+UseParNewGC：设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。</p>
+<p>CMS，全称ConcurrentLowPauseCollector，是jdk1.4后期版本开始引入的新gc算法，在jdk5和jdk6中得到了进一步改进，它的主要适合场景是对响应时间的重要性需求大于对吞吐量的要求，能够承受垃圾回收线程和应用线程共享处理器资源，并且应用中存在比较多的长生命周期的对象的应用。CMS是用于对tenuredgeneration的回收，也就是年老代的回收，目标是尽量减少应用的暂停时间，减少FullGC发生的几率，利用和应用程序线程并发的垃圾回收线程来标记清除年老代。</p>
+<p>-XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了。所以，此时年轻代大小最好用-Xmn设置。<br>-XX:CMSFullGCsBeforeCompaction=：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此参数设置运行次FullGC以后对内存空间进行压缩、整理。<br>-XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除内存碎片。<br>-XX:+CMSIncrementalMode：设置为增量收集模式。一般适用于单CPU情况。<br>-XX:CMSInitiatingOccupancyFraction=70：表示年老代空间到70%时就开始执行CMS，确保年老代有足够的空间接纳来自年轻代的对象。</p>
+<p>注：如果使用throughputcollector和concurrentlowpausecollector这两种垃圾收集器，需要适当的挺高内存大小，为多线程做准备。</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a><strong>其它</strong></h3><ul>
+<li>-XX:+ScavengeBeforeFullGC：新生代GC优先于FullGC执行。</li>
+<li>-XX:-DisableExplicitGC：禁止调用System.gc()，但JVM的gc仍然有效。</li>
+<li>-XX:+MaxFDLimit：最大化文件描述符的数量限制。</li>
+<li>-XX:+UseThreadPriorities：启用本地线程优先级API，即使java.lang.Thread.setPriority()生效，反之无效。</li>
+<li>-XX:SoftRefLRUPolicyMSPerMB=0：“软引用”的对象在最后一次被访问后能存活0毫秒（默认为1秒）。</li>
+<li>-XX:TargetSurvivorRatio=90：允许90%的Survivor空间被占用（默认为50%）。提高对于Survivor的使用率——超过就会尝试垃圾回收。</li>
+</ul>
+<h3 id="辅助信息"><a href="#辅助信息" class="headerlink" title="辅助信息"></a><strong>辅助信息</strong></h3><ul>
+<li>-XX:-CITime：打印消耗在JIT编译的时间</li>
+<li>-XX:ErrorFile=./hs_err_pid.log：保存错误日志或者数据到指定文件中</li>
+<li>-XX:-ExtendedDTraceProbes：开启solaris特有的dtrace探针</li>
+<li>-XX:HeapDumpPath=./java_pid.hprof：指定导出堆信息时的路径或文件名</li>
+<li>-XX:-HeapDumpOnOutOfMemoryError：当首次遭遇内存溢出时导出此时堆中相关信息</li>
+<li>-XX:OnError=”;”：出现致命ERROR之后运行自定义命令</li>
+<li>-XX:OnOutOfMemoryError=”;”：当首次遭遇内存溢出时执行自定义命令</li>
+<li>-XX:-PrintClassHistogram：遇到Ctrl-Break后打印类实例的柱状信息，与jmap-histo功能相同</li>
+<li>-XX:-PrintConcurrentLocks：遇到Ctrl-Break后打印并发锁的相关信息，与jstack-l功能相同</li>
+<li>-XX:-PrintCommandLineFlags：打印在命令行中出现过的标记</li>
+<li>-XX:-PrintCompilation：当一个方法被编译时打印相关信息</li>
+<li>-XX:-PrintGC：每次GC时打印相关信息</li>
+<li>-XX:-PrintGCDetails：每次GC时打印详细信息</li>
+<li>-XX:-PrintGCTimeStamps：打印每次GC的时间戳</li>
+<li>-XX:-TraceClassLoading：跟踪类的加载信息</li>
+<li>-XX:-TraceClassLoadingPreorder：跟踪被引用到的所有类的加载信息</li>
+<li>-XX:-TraceClassResolution：跟踪常量池</li>
+<li>-XX:-TraceClassUnloading：跟踪类的卸载信息</li>
+<li>-XX:-TraceLoaderConstraints：跟踪类加载器约束的相关信息</li>
+</ul>
+<h3 id="快照（堆-Dump）"><a href="#快照（堆-Dump）" class="headerlink" title="快照（堆 Dump）"></a><strong>快照（堆 Dump）</strong></h3><p>在性能问题排查中，分析堆快照（Dump）是必不可少的一环。获取程序的堆快照文件有多种方法，下面介绍一种常用的方法，即使用 -XX：+HeapDumpOnOutOfMemoryError 参数在程序发生 OOM 时，导出应用程序的当前堆快照。这是一种非常有效的方法，因为当程序发生 OOM 退出系统时，一些瞬时信息都随着程序的终止而消失，而重现 OOM 问题往往比较困难或者耗时，因此当发生 OOM 时，将堆信息保存到文件中是至关重要的，通过下面的参数设置：</p>
+<p><strong>-XX：+HeapDumpOnOutOfMemoryError（开启堆快照）</strong></p>
+<p><strong>-XX：HeapDumpPath=C:/m.hprof（保存文件到哪个目录）</strong></p>
+<p>导出的 Dump 文件可以通过 Visual VM 等多种工具查看分析，进而定位问题</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a><strong>错误处理</strong></h3><p>系统发生 OOM 错误时，JVM 在错误发生时运行一段第三方脚本，重置系统，设置参数如下：</p>
+<p><strong>-XX：OnOutOfMemoryError=C:\reset.bat</strong></p>
 
             </div>
             <hr/>
@@ -531,7 +622,7 @@
                     </span>
                     <a href="http://yoursite.com" class="b-link-green">Cathetine's Blog</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/2019/08/16/jie-jue-ha-xi-chong-tu/" class="b-link-green">解决哈希冲突</a>
+                    <a href="/2019/09/05/jvm-diao-you/" class="b-link-green">jvm调优</a>
                 </p>
             </div>
         </div>
@@ -552,9 +643,45 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2019/09/05/jvm-diao-you/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="jvm调优">
+                        
+                        <span class="card-title">jvm调优</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary">优化Java虚拟机总结
+我们最常用的评价虚拟机性能的指标就是吞吐量与停顿时间，停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用 CPU 时间，尽快地完成程序的运算任务，主要适合在后台运</div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-user fa-fw"></i>
+                            Cathetine
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2019/08/27/tcp-hua-dong-chuang-kou-yu-yong-sai-chuang-kou/">
                     <div class="card-image">
@@ -569,9 +696,9 @@
                     <div class="summary">TCP之流量控制(滑动窗口）和 拥塞控制（拥塞控制的工作过程）一、流量控制1.什么是流量控制
 Sender won’t overflow receiver’s buffer by transmitting too much, too fas</div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -589,53 +716,6 @@ Sender won’t overflow receiver’s buffer by transmitting too much, too fas</d
                     
                     <a href="/tags/TCP-IP族/" target="_blank">
                         <span class="chip bg-color">TCP/IP族</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2019/08/07/java-dong-tai-dai-li/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="java-动态代理">
-                        
-                        <span class="card-title">java-动态代理</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary">Java 代理Java 代理模式实现方式，主要有如下五种方法
-静态代理，工程师编辑代理类代码，实现代理模式；在编译期就生成了代理类。
-基于 JDK 实现动态代理，通过jdk提供的工具方法Proxy.newProxyInstance动态构建全</div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-07
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Java基础知识/" class="post-category" target="_blank">
-                                    Java基础知识
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Java基础/" target="_blank">
-                        <span class="chip bg-color">Java基础</span>
                     </a>
                     
                 </div>
