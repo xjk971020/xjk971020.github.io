@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly summary 1">
+
+
+
+
+  <meta name="keywords" content="汇编语言,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/11/assembly-summary-1/">
+
+
+<meta name="description" content="前言: 本博客下的汇编语言总结博文皆是基于王爽老师的汇编语言进行总结。 第一章  基础知识总结引言 基本了解硬件系统的结构,包括CPU, 内存, 总线； 利用硬件系统的编程结构和指令集，有效灵活地控制系统进行工作。  1.1 机器语言 机器语言是机器指令的集合。电子计算机的机器指令是一系列二进制数字。计算机将之转换为一系列高低电平脉冲信号来驱动硬件工作的。所有高级语言编写的程序经过最终都是转化成0">
+<meta name="keywords" content="汇编语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly summary 1">
+<meta property="og:url" content="http://yoursite.com/2020/03/11/assembly-summary-1/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="前言: 本博客下的汇编语言总结博文皆是基于王爽老师的汇编语言进行总结。 第一章  基础知识总结引言 基本了解硬件系统的结构,包括CPU, 内存, 总线； 利用硬件系统的编程结构和指令集，有效灵活地控制系统进行工作。  1.1 机器语言 机器语言是机器指令的集合。电子计算机的机器指令是一系列二进制数字。计算机将之转换为一系列高低电平脉冲信号来驱动硬件工作的。所有高级语言编写的程序经过最终都是转化成0">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-26T13:15:22.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly summary 1">
+<meta name="twitter:description" content="前言: 本博客下的汇编语言总结博文皆是基于王爽老师的汇编语言进行总结。 第一章  基础知识总结引言 基本了解硬件系统的结构,包括CPU, 内存, 总线； 利用硬件系统的编程结构和指令集，有效灵活地控制系统进行工作。  1.1 机器语言 机器语言是机器指令的集合。电子计算机的机器指令是一系列二进制数字。计算机将之转换为一系列高低电平脉冲信号来驱动硬件工作的。所有高级语言编写的程序经过最终都是转化成0">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly summary 1 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly summary 1
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 11 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>前言: 本博客下的汇编语言总结博文皆是基于王爽老师的汇编语言进行总结。</p>
+<h1 id="第一章-基础知识总结"><a href="#第一章-基础知识总结" class="headerlink" title="第一章  基础知识总结"></a>第一章  基础知识总结</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>基本了解硬件系统的结构,包括CPU, 内存, 总线；</li>
+<li>利用硬件系统的编程结构和指令集，有效灵活地控制系统进行工作。</li>
+</ul>
+<h2 id="1-1-机器语言"><a href="#1-1-机器语言" class="headerlink" title="1.1 机器语言"></a>1.1 机器语言</h2><ul>
+<li>机器语言是机器指令的集合。电子计算机的机器指令是一系列二进制数字。计算机将之转换为一系列高低电平脉冲信号来驱动硬件工作的。所有高级语言编写的程序经过最终都是转化成01序列的二进制机器语言才能被系统运行。</li>
+</ul>
+<h2 id="1-2-汇编语言的产生"><a href="#1-2-汇编语言的产生" class="headerlink" title="1.2 汇编语言的产生"></a>1.2 汇编语言的产生</h2><ul>
+<li>由于机器语言指令都是由01组成,难以编写,记忆和维护程序.所以汇编语言为了解决这一问题产生。汇编语言的主体是汇编指令，汇编指令是机器指令的助记符。</li>
+<li><strong>寄存器：</strong> CPU中存储数据的器件，一个CPU中有多个寄存器。</li>
+</ul>
+<h2 id="1-3-汇编语言的组成"><a href="#1-3-汇编语言的组成" class="headerlink" title="1.3 汇编语言的组成"></a>1.3 汇编语言的组成</h2><ul>
+<li><strong>1、汇编指令</strong>(机器码的助记符，有对应的机器码)；</li>
+<li><strong>2、伪指令</strong>(由编译器执行)和<strong>其他符号</strong>(由编译器识别)。</li>
+</ul>
+<h2 id="1-4-存储器"><a href="#1-4-存储器" class="headerlink" title="1.4 存储器"></a>1.4 存储器</h2><ul>
+<li>CPU工作需要指令和数据，指令和数据存储在存储器中，存储器包括内存，显存等。</li>
+</ul>
+<h2 id="1-5-指令和数据"><a href="#1-5-指令和数据" class="headerlink" title="1.5 指令和数据"></a>1.5 指令和数据</h2><ul>
+<li>在内存或者磁盘中存储的都是为二进制信息，<strong>指令和数据由我们设定(通过总线进行消息的传递)</strong>。</li>
+</ul>
+<h2 id="1-6-存储单元"><a href="#1-6-存储单元" class="headerlink" title="1.6 存储单元"></a>1.6 存储单元</h2><ul>
+<li><p>存储器被划分为若干个存储单元，每个存储单元从0开始顺序编号。</p>
+</li>
+<li><p>B、KB、MB、GB、TB等单位。</p>
+</li>
+<li><p>提问:8086CPU中数据、栈和代码存储空间为什么不能大于64KB?</p>
+<p>答: 因为这是个16位的CPU，16位的CPU只能支持存储2^16 byte大小的数据，即2^16 byte的数据，经过换算，2^16 byte=2^6 kb。</p>
+<p>常用换算:</p>
+<p>1 byte = 8 bit (1比特 = 8个位)</p>
+<p>1 kb = 1024 byte</p>
+<p>1 kb = 8096 bit</p>
+<p>1 字 = 2 byte (16个位)</p>
+</li>
+</ul>
+<h2 id="1-7-CPU对存储器的读写"><a href="#1-7-CPU对存储器的读写" class="headerlink" title="1.7 CPU对存储器的读写"></a>1.7 CPU对存储器的读写</h2><ul>
+<li><strong>CPU要对数据进行读写，必须和外部器件进行以下三类信息的交互：</strong><ul>
+<li><strong>1、存储单元的地址</strong>(地址信息)；</li>
+<li><strong>2、器件的选择、读或写命令</strong>(控制信息)；</li>
+<li><strong>3、读或写的数据</strong>(数据信息) 。</li>
+</ul>
+</li>
+<li>总线是连接CPU和其他芯片的导线，逻辑上分为<strong>地址总线</strong>、<strong>数据总线</strong>、<strong>控制总线</strong>。</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/汇编语言/">汇编语言</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/17/hui-bian-mo-ban/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">汇编模板</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/05/xian-cheng-chi-she-zhi/">
+        <span class="next-text nav-default">线程池使用</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

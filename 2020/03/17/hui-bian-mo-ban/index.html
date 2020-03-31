@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="汇编模板">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/17/hui-bian-mo-ban/">
+
+
+<meta name="description" content="汇编语言编码框架.486 .model flat, stdcall  option casemap:none  includelib \masm32\lib\kernel32.lib includelib \masm32\lib\user32.lib includelib \masm32\lib\gdi32.lib  include \masm32\include\kernel32.inc inc">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编模板">
+<meta property="og:url" content="http://yoursite.com/2020/03/17/hui-bian-mo-ban/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="汇编语言编码框架.486 .model flat, stdcall  option casemap:none  includelib \masm32\lib\kernel32.lib includelib \masm32\lib\user32.lib includelib \masm32\lib\gdi32.lib  include \masm32\include\kernel32.inc inc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-21T14:24:24.749Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="汇编模板">
+<meta name="twitter:description" content="汇编语言编码框架.486 .model flat, stdcall  option casemap:none  includelib \masm32\lib\kernel32.lib includelib \masm32\lib\user32.lib includelib \masm32\lib\gdi32.lib  include \masm32\include\kernel32.inc inc">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 汇编模板 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          汇编模板
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 17 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="汇编语言编码框架"><a href="#汇编语言编码框架" class="headerlink" title="汇编语言编码框架"></a>汇编语言编码框架</h2><pre class=" language-asm"><code class="language-asm">.486
+.model flat, stdcall
+
+option casemap:none
+
+includelib \masm32\lib\kernel32.lib
+includelib \masm32\lib\user32.lib
+includelib \masm32\lib\gdi32.lib
+
+include \masm32\include\kernel32.inc
+include \masm32\include\user32.inc
+include \masm32\include\gdi32.inc
+include \masm32\include\windows.inc
+
+.data
+// 变量
+.code
+start:
+// 代码
+
+end start</code></pre>
+<ul>
+<li><p><strong>.486</strong></p>
+<p>告诉汇编器应该生成486处理的伪代码，也可以使用.386。</p>
+</li>
+<li><p><strong>.model flat, stdcall</strong></p>
+<p>使用平坦内存模式并使用stdcall调用习惯（stdcall指函数的参数从右往左压入，即最后的参数先压入，且函数在结束时清栈），这几乎是所有Windows API函数和dll的标准</p>
+</li>
+<li><p><strong>option casemap :none</strong></p>
+<p>控制字符的映射为大写。为使“Windows.inc”文件正常工作，这里应用为“none”</p>
+</li>
+<li><p><strong>includelib include</strong></p>
+<p>为了使用Windows API的函数, 需要导入dll文件。这里由静态库(.lib)完成，它们使系统能在内存的动态基地址处动态的载入dll。<code>Includelib \masm32\lib\kernel32.lib</code>我们不只需要包含静态库，还需要包含<code>.inc</code>文件，这是由l2inc工具根据库文件自动生成的。<code>include \masm32\include\kernel32.inc</code> 特殊的包含文件<code>Windows.inc</code>，其中包含了Windows API的所有常量和结构的定义。</p>
+</li>
+<li><p><strong>.data</strong></p>
+<p>定义变量的地方</p>
+</li>
+<li><p><strong>.code</strong></p>
+<p>代码区域</p>
+</li>
+<li><p><strong>start … end start</strong></p>
+<p>表示程序的开始/结束标签。这里不一定要用start， 可以使用任何单词和“end”语句后相同的标签。</p>
+</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/22/assembly-summary-12/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-12</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/11/assembly-summary-1/">
+        <span class="next-text nav-default">assembly summary 1</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

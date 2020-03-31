@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-12">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/22/assembly-summary-12/">
+
+
+<meta name="description" content="十二、内中断引言 中断是CPU处理外部突发事件的一个重要技术。它能使CPU在运行过程中对外部事件发出的中断请求及时进行处理，处理完成后又立即返回，根据保存的代码段信息进行CPU原来的工作。引起中断的原因或是说发出中断请求的来源叫做中断源。根据中断源的不同，可以把中断分为硬件中断和软件中断两大类，而硬件中断又可以分为外部中断和内部中断两类。 外部中断一般是指由计算器外部设备发出的中断请求。如：键盘中">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-12">
+<meta property="og:url" content="http://yoursite.com/2020/03/22/assembly-summary-12/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="十二、内中断引言 中断是CPU处理外部突发事件的一个重要技术。它能使CPU在运行过程中对外部事件发出的中断请求及时进行处理，处理完成后又立即返回，根据保存的代码段信息进行CPU原来的工作。引起中断的原因或是说发出中断请求的来源叫做中断源。根据中断源的不同，可以把中断分为硬件中断和软件中断两大类，而硬件中断又可以分为外部中断和内部中断两类。 外部中断一般是指由计算器外部设备发出的中断请求。如：键盘中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/12-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/12-2.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/12-3.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/12-4.jpg">
+<meta property="og:updated_time" content="2020-03-23T02:30:18.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-12">
+<meta name="twitter:description" content="十二、内中断引言 中断是CPU处理外部突发事件的一个重要技术。它能使CPU在运行过程中对外部事件发出的中断请求及时进行处理，处理完成后又立即返回，根据保存的代码段信息进行CPU原来的工作。引起中断的原因或是说发出中断请求的来源叫做中断源。根据中断源的不同，可以把中断分为硬件中断和软件中断两大类，而硬件中断又可以分为外部中断和内部中断两类。 外部中断一般是指由计算器外部设备发出的中断请求。如：键盘中">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/12-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-12 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-12
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 22 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="十二、内中断"><a href="#十二、内中断" class="headerlink" title="十二、内中断"></a>十二、内中断</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>中断是CPU处理外部突发事件的一个重要技术。它能使CPU在运行过程中对外部事件发出的中断请求及时进行处理，处理完成后又立即返回，根据保存的代码段信息进行CPU原来的工作。引起中断的原因或是说发出中断请求的来源叫做中断源。根据中断源的不同，可以把中断分为硬件中断和软件中断两大类，而硬件中断又可以分为外部中断和内部中断两类。</li>
+<li>外部中断一般是指由计算器外部设备发出的中断请求。如：键盘中断、打印机中断、定时器中断等。外部中断是可以屏蔽的中断，也即是说利用中断控制器可以屏蔽这些外部设备的中断请求。</li>
+<li>内部中断是指因硬件出错(如突然掉电)或运算出错(如除数为0、单步中断)所引起的中断。内部中断是不可屏蔽的。</li>
+<li>软件中断其实并不是真正的中断，它们只是可被调用执行的一般程序，以及DOS的系统功能调用(int 21)等都是软件中断。</li>
+<li>中断的优先权：<ul>
+<li>1、除法出错、溢出中断、软件中断；</li>
+<li>2、不可屏蔽中断；</li>
+<li>3、可屏蔽中断；</li>
+<li>4、单步中断。</li>
+</ul>
+</li>
+<li>中断信息中包含有标识中断源的类型码。根据CPU的设计，中断源类型码的作用就是用来定位中断处理程序。</li>
+</ul>
+<h2 id="12-1-内中断的产生"><a href="#12-1-内中断的产生" class="headerlink" title="12.1 内中断的产生"></a>12.1 内中断的产生</h2><ul>
+<li>8086CPU内部有以下情况发生时将产生相应的中断信息：<ul>
+<li>1、除法错误；</li>
+<li>2、单步执行；</li>
+<li>3、执行into指令；</li>
+<li>4、执行int指令。</li>
+</ul>
+</li>
+<li>8086CPU中的中断类型码如下：<ul>
+<li>1、除法错误：0</li>
+<li>2、单步执行：1</li>
+<li>3、执行into指令：4</li>
+<li>4、执行int指令，该指令格式为int n，n为立即数是提供给CPU的中断类型码。</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-2-中断处理程序"><a href="#12-2-中断处理程序" class="headerlink" title="12.2 中断处理程序"></a>12.2 中断处理程序</h2><ul>
+<li>CPU在收到中断信息后立即去执行该中断信息的处理程序。</li>
+</ul>
+<h2 id="12-3-中断向量表"><a href="#12-3-中断向量表" class="headerlink" title="12.3 中断向量表"></a>12.3 中断向量表</h2><ul>
+<li>中断向量列表就是中断向量(中断处理程序的入口地址)的列表，其在内存中保存，存放着256个中断源所对应的中断处理程序的入口。8086PC机中断向量表放在内存地址0处。从内存0000:0000到0000:03FF的1024(一个物理地址是由段地址和偏移地址构成，要用4个字节来存放)个单元中存放着中断向量表。</li>
+<li>CPU用8位的中断类型码通过中断向量表找到相应的中断处理程序的入口地址。中断向量表中存放的就是各个类型的处理程序的地址，8位的类型码是个索引。</li>
+</ul>
+<h2 id="12-4-中断过程"><a href="#12-4-中断过程" class="headerlink" title="12.4 中断过程"></a>12.4 中断过程</h2><ul>
+<li>用中断码在中断向量表中找到中断处理程序的入口地址，用它来设置CS和IP，使CPU执行中断程序。用中断类型码找到中断向量并用它设置CS和IP，这个工作室由CPU的硬件自动完成的，这个工作的过程被称为中断过程。</li>
+<li>8086CPU的中断过程：<ul>
+<li>1、从中断信息中取得中断类型码；</li>
+<li>2、标志寄存器的值入栈，以保护标志位；</li>
+<li>3、设置标志寄存器的第8位TF和第9位IF的值为0；</li>
+<li>4、CS的内容入栈，IP的内容入栈；</li>
+<li>5、从内存地址为中断类型码* 4和中断类型码 *4+2的两个字单元中读取中断处理程序的入口地址设置IP和CS。</li>
+<li>在最后一步完成后，CPU开始执行由程序员编写的中断处理程序。</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-5-中断处理程序和iret指令"><a href="#12-5-中断处理程序和iret指令" class="headerlink" title="12.5 中断处理程序和iret指令"></a>12.5 中断处理程序和iret指令</h2><ul>
+<li>常规的步骤<ul>
+<li>1、保存用到的寄存器；</li>
+<li>2、处理中断；</li>
+<li>3、 恢复用到的寄存器；</li>
+<li>4、 用iret指令返回。</li>
+</ul>
+</li>
+<li>iret指令的功能为相应的按顺序恢复之前保存起来的IP、CS地址和标志位寄存器。用汇编语法描述为：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">pop IP
+pop CS
+popf</code></pre>
+<h2 id="12-6-除法错误中断的处理"><a href="#12-6-除法错误中断的处理" class="headerlink" title="12.6 除法错误中断的处理"></a>12.6 除法错误中断的处理</h2><ul>
+<li>当CPU执行div等除法指令的时候，如果发生了除法溢出错误，将产生中断类型码为0的中断信息，CPU将检测到这个信息然后引发中断过程，转去执行0号中断所对应的中断处理程序。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg
+
+    codesg segment
+    start:
+            mov ax,1000h
+            mov bh,1    
+            div bh
+    codesg ends
+
+end </code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-1.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-2.jpg" alt></p>
+<h2 id="12-7-编程处理0号中断"><a href="#12-7-编程处理0号中断" class="headerlink" title="12.7 编程处理0号中断"></a>12.7 编程处理0号中断</h2><ul>
+<li><p>改变0号中断处理程序的功能，在屏幕中间显示字然后再返回操作系统。</p>
+<ul>
+<li><p>当发生除法溢出时产生0号中断信息，引发中断过程。</p>
+<p>此时CPU将进行以下工作(中断过程):</p>
+<ul>
+<li>当中断0发生时，CPU将转去执行中断处理程序。</li>
+<li>先进行相关处理，然后向显示缓冲区送字符串，最后返回。</li>
+</ul>
+</li>
+<li><p>改变后的中断处理程序应该放在内存中，因为除法溢出随时可能发生，CPU随时都可能将CS:IP指向改变后的中断处理程序的入口执行程序。</p>
+</li>
+<li><p>把程序存入内存，修改向量表(即将内存地址登记在中断向量表的对应表项中)，中断时调用这个内存。</p>
+<blockquote>
+<p>除法溢出对应的中断类型码为0，它的中断处理程序的入口地址应该从0* 4+2地址单元开始存放，段地址存放在0* 4+2字单元中，偏移地址存放在0*4字单元中。也就是改变后的中断处理程序的段地址0存放在0000:0002字单元中，偏移地址200H存放在0000:0000字单元中。如果要显示的字符串在程序的data段中，那么程序执行完成后返回，它所占用的内存空间被系统释放，在其中存放的信息也可能被别的信息覆盖。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+          code segment
+          start:
+                  mov ax,cs
+                  mov ds,ax
+                  mov si,offset do0;设置ds:si指向源地址
+                  mov ax,0
+                  mov es,ax
+                  mov di,200h;设置es:di指向目的地址
+                  mov cx,offset do0end - offset do0;设置cx为传输长度，编译器可以识别加减乘除运算符
+                  cld;设置传输方向为正
+                  rep movsb
+
+                  mov ax,0;设置中断向量表
+                  mov es,ax
+                  mov word ptr es:[0*4],200h
+                  mov word ptr es:[0*4+2],0
+
+                  mov ax,4c00h
+                  int 21h
+              do0:
+                  jmp short do0start
+                  db"welcome to masm!";在代码段中存储数据
+              do0start:
+                  mov ax,cs
+                  mov ds,ax
+                  mov si,202h;jmp short do0start这条指令栈两个字节
+                  ;显示字符串，设置es:di指向字符串
+                  mov ax,0b800h;显存空间，直接显示在显示器上
+                  mov es,ax
+                  mov di,12*160+36*2;这只es:di指向显存空间的中间位置
+                  mov cx,16;设置cx为字符串(welcome to masm！)长度
+              s:
+                  mov al,[si]
+                  mov es:[di],al
+                  inc si
+                  add di,1
+                  mov al,02h
+                  mov es:[di],al
+                  add di,1
+                  loop s
+
+                  mov ax,4c00h
+                  int 21h
+              do0end:
+                  nop
+
+          code ends
+end start</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-3.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-4.jpg" alt></p>
+<h2 id="12-8-单步中断"><a href="#12-8-单步中断" class="headerlink" title="12.8 单步中断"></a>12.8 单步中断</h2><ul>
+<li>CPU执行完一条指令之后，如果检测到标志寄存器的TF位为1，则产生单步中断引发中断过程。单步中断的中断类型码为1，它所引发的中断过程如下：<ul>
+<li>1、取得中断类型码；</li>
+<li>2、标志寄存器入栈，TF、IF设置为0；</li>
+<li>3、CS、IP入栈；</li>
+<li>4、指向指定类型码的中断向量表。</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-9-响应中断的特殊情况"><a href="#12-9-响应中断的特殊情况" class="headerlink" title="12.9 响应中断的特殊情况"></a>12.9 响应中断的特殊情况</h2><ul>
+<li><p>在有些情况下CPU在执行完当前指令后，即便是发生了中断也不会响应。</p>
+<blockquote>
+<p>在执行完向ss寄存器传送数据的指令后，即便检测到了中断信号CPU也不会响应。因为ss:sp指向栈顶，对他们的设置应该连续完成。如果在执行完设置ss指令后CPU响应中断引发中断过程，要在栈中压入标志寄存器、CS和IP的值。而ss改变，sp并未改变则ss:sp指向不是正确的栈顶将引发错误。</p>
+</blockquote>
+</li>
+<li><p>我们要将栈顶设置为1000:0，不应该隔开</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>应该</th>
+<th>不应该</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mov ax,1000h</td>
+<td>mov ax,1000h</td>
+</tr>
+<tr>
+<td>mov ss,ax</td>
+<td>mov ss,ax</td>
+</tr>
+<tr>
+<td>mov sp,0</td>
+<td>mov ax,0</td>
+</tr>
+<tr>
+<td>mov ax,0</td>
+<td>mov sp,0</td>
+</tr>
+</tbody></table>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/03/17/hui-bian-mo-ban/">
+        <span class="next-text nav-default">汇编模板</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

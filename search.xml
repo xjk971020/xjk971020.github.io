@@ -4,6 +4,69 @@
   
     
     <entry>
+      <title>assembly-summary-12</title>
+      <link href="/2020/03/22/assembly-summary-12/"/>
+      <url>/2020/03/22/assembly-summary-12/</url>
+      
+        <content type="html"><![CDATA[<h1 id="十二、内中断"><a href="#十二、内中断" class="headerlink" title="十二、内中断"></a>十二、内中断</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul><li>中断是CPU处理外部突发事件的一个重要技术。它能使CPU在运行过程中对外部事件发出的中断请求及时进行处理，处理完成后又立即返回，根据保存的代码段信息进行CPU原来的工作。引起中断的原因或是说发出中断请求的来源叫做中断源。根据中断源的不同，可以把中断分为硬件中断和软件中断两大类，而硬件中断又可以分为外部中断和内部中断两类。</li><li>外部中断一般是指由计算器外部设备发出的中断请求。如：键盘中断、打印机中断、定时器中断等。外部中断是可以屏蔽的中断，也即是说利用中断控制器可以屏蔽这些外部设备的中断请求。</li><li>内部中断是指因硬件出错(如突然掉电)或运算出错(如除数为0、单步中断)所引起的中断。内部中断是不可屏蔽的。</li><li>软件中断其实并不是真正的中断，它们只是可被调用执行的一般程序，以及DOS的系统功能调用(int 21)等都是软件中断。</li><li>中断的优先权：<ul><li>1、除法出错、溢出中断、软件中断；</li><li>2、不可屏蔽中断；</li><li>3、可屏蔽中断；</li><li>4、单步中断。</li></ul></li><li>中断信息中包含有标识中断源的类型码。根据CPU的设计，中断源类型码的作用就是用来定位中断处理程序。</li></ul><h2 id="12-1-内中断的产生"><a href="#12-1-内中断的产生" class="headerlink" title="12.1 内中断的产生"></a>12.1 内中断的产生</h2><ul><li>8086CPU内部有以下情况发生时将产生相应的中断信息：<ul><li>1、除法错误；</li><li>2、单步执行；</li><li>3、执行into指令；</li><li>4、执行int指令。</li></ul></li><li>8086CPU中的中断类型码如下：<ul><li>1、除法错误：0</li><li>2、单步执行：1</li><li>3、执行into指令：4</li><li>4、执行int指令，该指令格式为int n，n为立即数是提供给CPU的中断类型码。</li></ul></li></ul><h2 id="12-2-中断处理程序"><a href="#12-2-中断处理程序" class="headerlink" title="12.2 中断处理程序"></a>12.2 中断处理程序</h2><ul><li>CPU在收到中断信息后立即去执行该中断信息的处理程序。</li></ul><h2 id="12-3-中断向量表"><a href="#12-3-中断向量表" class="headerlink" title="12.3 中断向量表"></a>12.3 中断向量表</h2><ul><li>中断向量列表就是中断向量(中断处理程序的入口地址)的列表，其在内存中保存，存放着256个中断源所对应的中断处理程序的入口。8086PC机中断向量表放在内存地址0处。从内存0000:0000到0000:03FF的1024(一个物理地址是由段地址和偏移地址构成，要用4个字节来存放)个单元中存放着中断向量表。</li><li>CPU用8位的中断类型码通过中断向量表找到相应的中断处理程序的入口地址。中断向量表中存放的就是各个类型的处理程序的地址，8位的类型码是个索引。</li></ul><h2 id="12-4-中断过程"><a href="#12-4-中断过程" class="headerlink" title="12.4 中断过程"></a>12.4 中断过程</h2><ul><li>用中断码在中断向量表中找到中断处理程序的入口地址，用它来设置CS和IP，使CPU执行中断程序。用中断类型码找到中断向量并用它设置CS和IP，这个工作室由CPU的硬件自动完成的，这个工作的过程被称为中断过程。</li><li>8086CPU的中断过程：<ul><li>1、从中断信息中取得中断类型码；</li><li>2、标志寄存器的值入栈，以保护标志位；</li><li>3、设置标志寄存器的第8位TF和第9位IF的值为0；</li><li>4、CS的内容入栈，IP的内容入栈；</li><li>5、从内存地址为中断类型码* 4和中断类型码 *4+2的两个字单元中读取中断处理程序的入口地址设置IP和CS。</li><li>在最后一步完成后，CPU开始执行由程序员编写的中断处理程序。</li></ul></li></ul><h2 id="12-5-中断处理程序和iret指令"><a href="#12-5-中断处理程序和iret指令" class="headerlink" title="12.5 中断处理程序和iret指令"></a>12.5 中断处理程序和iret指令</h2><ul><li>常规的步骤<ul><li>1、保存用到的寄存器；</li><li>2、处理中断；</li><li>3、 恢复用到的寄存器；</li><li>4、 用iret指令返回。</li></ul></li><li>iret指令的功能为相应的按顺序恢复之前保存起来的IP、CS地址和标志位寄存器。用汇编语法描述为：</li></ul><pre class=" language-asm"><code class="language-asm">pop IPpop CSpopf</code></pre><h2 id="12-6-除法错误中断的处理"><a href="#12-6-除法错误中断的处理" class="headerlink" title="12.6 除法错误中断的处理"></a>12.6 除法错误中断的处理</h2><ul><li>当CPU执行div等除法指令的时候，如果发生了除法溢出错误，将产生中断类型码为0的中断信息，CPU将检测到这个信息然后引发中断过程，转去执行0号中断所对应的中断处理程序。</li></ul><pre class=" language-asm"><code class="language-asm">assume cs:codesg    codesg segment    start:            mov ax,1000h            mov bh,1                div bh    codesg endsend </code></pre><p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-1.jpg" alt></p><p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-2.jpg" alt></p><h2 id="12-7-编程处理0号中断"><a href="#12-7-编程处理0号中断" class="headerlink" title="12.7 编程处理0号中断"></a>12.7 编程处理0号中断</h2><ul><li><p>改变0号中断处理程序的功能，在屏幕中间显示字然后再返回操作系统。</p><ul><li><p>当发生除法溢出时产生0号中断信息，引发中断过程。</p><p>此时CPU将进行以下工作(中断过程):</p><ul><li>当中断0发生时，CPU将转去执行中断处理程序。</li><li>先进行相关处理，然后向显示缓冲区送字符串，最后返回。</li></ul></li><li><p>改变后的中断处理程序应该放在内存中，因为除法溢出随时可能发生，CPU随时都可能将CS:IP指向改变后的中断处理程序的入口执行程序。</p></li><li><p>把程序存入内存，修改向量表(即将内存地址登记在中断向量表的对应表项中)，中断时调用这个内存。</p><blockquote><p>除法溢出对应的中断类型码为0，它的中断处理程序的入口地址应该从0* 4+2地址单元开始存放，段地址存放在0* 4+2字单元中，偏移地址存放在0*4字单元中。也就是改变后的中断处理程序的段地址0存放在0000:0002字单元中，偏移地址200H存放在0000:0000字单元中。如果要显示的字符串在程序的data段中，那么程序执行完成后返回，它所占用的内存空间被系统释放，在其中存放的信息也可能被别的信息覆盖。</p></blockquote></li></ul></li></ul><pre class=" language-asm"><code class="language-asm">assume cs:code          code segment          start:                  mov ax,cs                  mov ds,ax                  mov si,offset do0;设置ds:si指向源地址                  mov ax,0                  mov es,ax                  mov di,200h;设置es:di指向目的地址                  mov cx,offset do0end - offset do0;设置cx为传输长度，编译器可以识别加减乘除运算符                  cld;设置传输方向为正                  rep movsb                  mov ax,0;设置中断向量表                  mov es,ax                  mov word ptr es:[0*4],200h                  mov word ptr es:[0*4+2],0                  mov ax,4c00h                  int 21h              do0:                  jmp short do0start                  db"welcome to masm!";在代码段中存储数据              do0start:                  mov ax,cs                  mov ds,ax                  mov si,202h;jmp short do0start这条指令栈两个字节                  ;显示字符串，设置es:di指向字符串                  mov ax,0b800h;显存空间，直接显示在显示器上                  mov es,ax                  mov di,12*160+36*2;这只es:di指向显存空间的中间位置                  mov cx,16;设置cx为字符串(welcome to masm！)长度              s:                  mov al,[si]                  mov es:[di],al                  inc si                  add di,1                  mov al,02h                  mov es:[di],al                  add di,1                  loop s                  mov ax,4c00h                  int 21h              do0end:                  nop          code endsend start</code></pre><p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-3.jpg" alt></p><p><img src="http://cdn.cathetine.cn/blog/images/assembly/12-4.jpg" alt></p><h2 id="12-8-单步中断"><a href="#12-8-单步中断" class="headerlink" title="12.8 单步中断"></a>12.8 单步中断</h2><ul><li>CPU执行完一条指令之后，如果检测到标志寄存器的TF位为1，则产生单步中断引发中断过程。单步中断的中断类型码为1，它所引发的中断过程如下：<ul><li>1、取得中断类型码；</li><li>2、标志寄存器入栈，TF、IF设置为0；</li><li>3、CS、IP入栈；</li><li>4、指向指定类型码的中断向量表。</li></ul></li></ul><h2 id="12-9-响应中断的特殊情况"><a href="#12-9-响应中断的特殊情况" class="headerlink" title="12.9 响应中断的特殊情况"></a>12.9 响应中断的特殊情况</h2><ul><li><p>在有些情况下CPU在执行完当前指令后，即便是发生了中断也不会响应。</p><blockquote><p>在执行完向ss寄存器传送数据的指令后，即便检测到了中断信号CPU也不会响应。因为ss:sp指向栈顶，对他们的设置应该连续完成。如果在执行完设置ss指令后CPU响应中断引发中断过程，要在栈中压入标志寄存器、CS和IP的值。而ss改变，sp并未改变则ss:sp指向不是正确的栈顶将引发错误。</p></blockquote></li><li><p>我们要将栈顶设置为1000:0，不应该隔开</p></li></ul><table><thead><tr><th>应该</th><th>不应该</th></tr></thead><tbody><tr><td>mov ax,1000h</td><td>mov ax,1000h</td></tr><tr><td>mov ss,ax</td><td>mov ss,ax</td></tr><tr><td>mov sp,0</td><td>mov ax,0</td></tr><tr><td>mov ax,0</td><td>mov sp,0</td></tr></tbody></table>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 编译原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>汇编模板</title>
+      <link href="/2020/03/17/hui-bian-mo-ban/"/>
+      <url>/2020/03/17/hui-bian-mo-ban/</url>
+      
+        <content type="html"><![CDATA[<h2 id="汇编语言编码框架"><a href="#汇编语言编码框架" class="headerlink" title="汇编语言编码框架"></a>汇编语言编码框架</h2><pre class=" language-asm"><code class="language-asm">.486.model flat, stdcalloption casemap:noneincludelib \masm32\lib\kernel32.libincludelib \masm32\lib\user32.libincludelib \masm32\lib\gdi32.libinclude \masm32\include\kernel32.incinclude \masm32\include\user32.incinclude \masm32\include\gdi32.incinclude \masm32\include\windows.inc.data// 变量.codestart:// 代码end start</code></pre><ul><li><p><strong>.486</strong></p><p>告诉汇编器应该生成486处理的伪代码，也可以使用.386。</p></li><li><p><strong>.model flat, stdcall</strong></p><p>使用平坦内存模式并使用stdcall调用习惯（stdcall指函数的参数从右往左压入，即最后的参数先压入，且函数在结束时清栈），这几乎是所有Windows API函数和dll的标准</p></li><li><p><strong>option casemap :none</strong></p><p>控制字符的映射为大写。为使“Windows.inc”文件正常工作，这里应用为“none”</p></li><li><p><strong>includelib include</strong></p><p>为了使用Windows API的函数, 需要导入dll文件。这里由静态库(.lib)完成，它们使系统能在内存的动态基地址处动态的载入dll。<code>Includelib \masm32\lib\kernel32.lib</code>我们不只需要包含静态库，还需要包含<code>.inc</code>文件，这是由l2inc工具根据库文件自动生成的。<code>include \masm32\include\kernel32.inc</code> 特殊的包含文件<code>Windows.inc</code>，其中包含了Windows API的所有常量和结构的定义。</p></li><li><p><strong>.data</strong></p><p>定义变量的地方</p></li><li><p><strong>.code</strong></p><p>代码区域</p></li><li><p><strong>start … end start</strong></p><p>表示程序的开始/结束标签。这里不一定要用start， 可以使用任何单词和“end”语句后相同的标签。</p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 汇编 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 编译原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>assembly summary 1</title>
+      <link href="/2020/03/11/assembly-summary-1/"/>
+      <url>/2020/03/11/assembly-summary-1/</url>
+      
+        <content type="html"><![CDATA[<p>前言: 本博客下的汇编语言总结博文皆是基于王爽老师的汇编语言进行总结。</p><h1 id="第一章-基础知识总结"><a href="#第一章-基础知识总结" class="headerlink" title="第一章  基础知识总结"></a>第一章  基础知识总结</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul><li>基本了解硬件系统的结构,包括CPU, 内存, 总线；</li><li>利用硬件系统的编程结构和指令集，有效灵活地控制系统进行工作。</li></ul><h2 id="1-1-机器语言"><a href="#1-1-机器语言" class="headerlink" title="1.1 机器语言"></a>1.1 机器语言</h2><ul><li>机器语言是机器指令的集合。电子计算机的机器指令是一系列二进制数字。计算机将之转换为一系列高低电平脉冲信号来驱动硬件工作的。所有高级语言编写的程序经过最终都是转化成01序列的二进制机器语言才能被系统运行。</li></ul><h2 id="1-2-汇编语言的产生"><a href="#1-2-汇编语言的产生" class="headerlink" title="1.2 汇编语言的产生"></a>1.2 汇编语言的产生</h2><ul><li>由于机器语言指令都是由01组成,难以编写,记忆和维护程序.所以汇编语言为了解决这一问题产生。汇编语言的主体是汇编指令，汇编指令是机器指令的助记符。</li><li><strong>寄存器：</strong> CPU中存储数据的器件，一个CPU中有多个寄存器。</li></ul><h2 id="1-3-汇编语言的组成"><a href="#1-3-汇编语言的组成" class="headerlink" title="1.3 汇编语言的组成"></a>1.3 汇编语言的组成</h2><ul><li><strong>1、汇编指令</strong>(机器码的助记符，有对应的机器码)；</li><li><strong>2、伪指令</strong>(由编译器执行)和<strong>其他符号</strong>(由编译器识别)。</li></ul><h2 id="1-4-存储器"><a href="#1-4-存储器" class="headerlink" title="1.4 存储器"></a>1.4 存储器</h2><ul><li>CPU工作需要指令和数据，指令和数据存储在存储器中，存储器包括内存，显存等。</li></ul><h2 id="1-5-指令和数据"><a href="#1-5-指令和数据" class="headerlink" title="1.5 指令和数据"></a>1.5 指令和数据</h2><ul><li>在内存或者磁盘中存储的都是为二进制信息，<strong>指令和数据由我们设定(通过总线进行消息的传递)</strong>。</li></ul><h2 id="1-6-存储单元"><a href="#1-6-存储单元" class="headerlink" title="1.6 存储单元"></a>1.6 存储单元</h2><ul><li><p>存储器被划分为若干个存储单元，每个存储单元从0开始顺序编号。</p></li><li><p>B、KB、MB、GB、TB等单位。</p></li><li><p>提问:8086CPU中数据、栈和代码存储空间为什么不能大于64KB?</p><p>答: 因为这是个16位的CPU，16位的CPU只能支持存储2^16 byte大小的数据，即2^16 byte的数据，经过换算，2^16 byte=2^6 kb。</p><p>常用换算:</p><p>1 byte = 8 bit (1比特 = 8个位)</p><p>1 kb = 1024 byte</p><p>1 kb = 8096 bit</p><p>1 字 = 2 byte (16个位)</p></li></ul><h2 id="1-7-CPU对存储器的读写"><a href="#1-7-CPU对存储器的读写" class="headerlink" title="1.7 CPU对存储器的读写"></a>1.7 CPU对存储器的读写</h2><ul><li><strong>CPU要对数据进行读写，必须和外部器件进行以下三类信息的交互：</strong><ul><li><strong>1、存储单元的地址</strong>(地址信息)；</li><li><strong>2、器件的选择、读或写命令</strong>(控制信息)；</li><li><strong>3、读或写的数据</strong>(数据信息) 。</li></ul></li><li>总线是连接CPU和其他芯片的导线，逻辑上分为<strong>地址总线</strong>、<strong>数据总线</strong>、<strong>控制总线</strong>。</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 汇编语言 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>线程池使用</title>
       <link href="/2019/09/05/xian-cheng-chi-she-zhi/"/>
       <url>/2019/09/05/xian-cheng-chi-she-zhi/</url>
