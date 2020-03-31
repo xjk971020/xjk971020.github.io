@@ -175,31 +175,6 @@
     
     
     <entry>
-      <title>汇编模板</title>
-      <link href="/2020/03/17/hui-bian-mo-ban/"/>
-      <url>/2020/03/17/hui-bian-mo-ban/</url>
-      
-        <content type="html"><![CDATA[<h2 id="汇编语言编码框架"><a href="#汇编语言编码框架" class="headerlink" title="汇编语言编码框架"></a>汇编语言编码框架</h2><pre class=" language-asm"><code class="language-asm">.486.model flat, stdcalloption casemap:noneincludelib \masm32\lib\kernel32.libincludelib \masm32\lib\user32.libincludelib \masm32\lib\gdi32.libinclude \masm32\include\kernel32.incinclude \masm32\include\user32.incinclude \masm32\include\gdi32.incinclude \masm32\include\windows.inc.data// 变量.codestart:// 代码end start</code></pre><ul><li><p><strong>.486</strong></p><p>告诉汇编器应该生成486处理的伪代码，也可以使用.386。</p></li><li><p><strong>.model flat, stdcall</strong></p><p>使用平坦内存模式并使用stdcall调用习惯（stdcall指函数的参数从右往左压入，即最后的参数先压入，且函数在结束时清栈），这几乎是所有Windows API函数和dll的标准</p></li><li><p><strong>option casemap :none</strong></p><p>控制字符的映射为大写。为使“Windows.inc”文件正常工作，这里应用为“none”</p></li><li><p><strong>includelib include</strong></p><p>为了使用Windows API的函数, 需要导入dll文件。这里由静态库(.lib)完成，它们使系统能在内存的动态基地址处动态的载入dll。<code>Includelib \masm32\lib\kernel32.lib</code>我们不只需要包含静态库，还需要包含<code>.inc</code>文件，这是由l2inc工具根据库文件自动生成的。<code>include \masm32\include\kernel32.inc</code> 特殊的包含文件<code>Windows.inc</code>，其中包含了Windows API的所有常量和结构的定义。</p></li><li><p><strong>.data</strong></p><p>定义变量的地方</p></li><li><p><strong>.code</strong></p><p>代码区域</p></li><li><p><strong>start … end start</strong></p><p>表示程序的开始/结束标签。这里不一定要用start， 可以使用任何单词和“end”语句后相同的标签。</p></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> 汇编 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 编译原理 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>assembly-summary-6</title>
       <link href="/2020/03/16/assembly-summary-6/"/>
       <url>/2020/03/16/assembly-summary-6/</url>
