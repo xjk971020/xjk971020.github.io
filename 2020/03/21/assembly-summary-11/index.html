@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-11">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/21/assembly-summary-11/">
+
+
+<meta name="description" content="第十一章、标志寄存器引言 CPU内部的寄存器中有一种特殊的寄存器： 1、用来存储相关指令的某些执行结果； 2、用来为CPU执行相关指令提供行为依据； 3、用来控制CPU的相关工作方式。   8086 CPU的标志寄存器只有16位，其中存储的信息通常被称为程序状态字(PSW)。 本章中的标志寄存器(以下简称为flag)。某些指令将影响标志寄存器中的多个标志位，这些被影响的标记位比较全面地记录指令的执">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-11">
+<meta property="og:url" content="http://yoursite.com/2020/03/21/assembly-summary-11/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第十一章、标志寄存器引言 CPU内部的寄存器中有一种特殊的寄存器： 1、用来存储相关指令的某些执行结果； 2、用来为CPU执行相关指令提供行为依据； 3、用来控制CPU的相关工作方式。   8086 CPU的标志寄存器只有16位，其中存储的信息通常被称为程序状态字(PSW)。 本章中的标志寄存器(以下简称为flag)。某些指令将影响标志寄存器中的多个标志位，这些被影响的标记位比较全面地记录指令的执">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-2.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-3.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-4.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-5.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-6.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-7.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-8.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:44:06.557Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-11">
+<meta name="twitter:description" content="第十一章、标志寄存器引言 CPU内部的寄存器中有一种特殊的寄存器： 1、用来存储相关指令的某些执行结果； 2、用来为CPU执行相关指令提供行为依据； 3、用来控制CPU的相关工作方式。   8086 CPU的标志寄存器只有16位，其中存储的信息通常被称为程序状态字(PSW)。 本章中的标志寄存器(以下简称为flag)。某些指令将影响标志寄存器中的多个标志位，这些被影响的标记位比较全面地记录指令的执">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/11-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-11 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-11
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 21 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第十一章、标志寄存器"><a href="#第十一章、标志寄存器" class="headerlink" title="第十一章、标志寄存器"></a>第十一章、标志寄存器</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>CPU内部的寄存器中有一种特殊的寄存器：<ul>
+<li>1、用来存储相关指令的某些执行结果；</li>
+<li>2、用来为CPU执行相关指令提供行为依据；</li>
+<li>3、用来控制CPU的相关工作方式。</li>
+</ul>
+</li>
+<li>8086 CPU的标志寄存器只有16位，其中存储的信息通常被称为程序状态字(PSW)。</li>
+<li>本章中的标志寄存器(以下简称为flag)。某些指令将影响标志寄存器中的多个标志位，这些被影响的标记位比较全面地记录指令的执行结果，为相关的处理提供了所需的依据。</li>
+<li>flag寄存器是按位起作用的，每一位都有专门的含义，记录特定的信息，与其他寄存器不一样。</li>
+<li>8086 CPU的flag寄存器的结构：</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-1.jpg" alt></p>
+<ul>
+<li>flag的1、3、5、12、13、14、15位在8086 CPU中没有使用，而0、2、4、6、7、8、9、10、11位都具有特殊的含义。</li>
+</ul>
+<h2 id="11-1-ZF-zero-flag-标志"><a href="#11-1-ZF-zero-flag-标志" class="headerlink" title="11.1 ZF(zero flag)标志"></a>11.1 ZF(zero flag)标志</h2><ul>
+<li>flag的第6位是ZF，零标志位，它记录相关指令执行后，结果为0，ZF=1(记录下是0这样的肯定信息)，结果不为0，ZF=0(表示结果非0)。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,1
+    sub ax,1
+
+    mov ax,1
+    and ax,0
+    ;指令执行后，结果为0，则ZF=1
+
+    mov ax,2
+    sub ax,1
+
+    mov ax,1
+    or ax,0
+    ;指令执行后，结果为1，则ZF=0</code></pre>
+<ul>
+<li>在8086CPU中,add、sub、mul、div、inc、or、and等它们大多都是运算(逻辑运算或是算术运算)指令，是影响标志寄存器的，而mov、push、pop等传送指令对标志寄存器一般没有影响，因为不会产生结果。</li>
+</ul>
+<h2 id="11-2-PF标志"><a href="#11-2-PF标志" class="headerlink" title="11.2 PF标志"></a>11.2 PF标志</h2><ul>
+<li>flag的第2位是PF，奇偶标志位，记录指令执行后结果所有的二进制位中1的个数。为偶数，PF=1，为奇数PF=0</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov al,1
+    add al,10
+    ;执行结果为00001011B，有3个1，则PF=0
+
+    mov al,1
+    or al,10
+    ;执行后结果为00000011B，有2个1，则PF=1</code></pre>
+<h2 id="11-3-SF-sign-flag-标志"><a href="#11-3-SF-sign-flag-标志" class="headerlink" title="11.3 SF(sign flag)标志"></a>11.3 SF(sign flag)标志</h2><ul>
+<li>flag的第7位是SF符号标志位，记录指令执行后结果为负则SF=1，结果为正，SF=0。<strong>如果我们将数据当作无符号数来运算，SF的值没有意义，虽然相关的指令影响了它的值。</strong></li>
+<li>有符号数与补码<ul>
+<li>计算机默认把负数用补码记录。</li>
+<li>00000001B，可以看作无符号数1，也可以看作符号数+1；</li>
+<li>10000001B，可以看作无符号数129，也可以看作有符号数-127。</li>
+</ul>
+</li>
+<li>补码</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov al,10000001B
+add al,1
+;执行指令后al的值是10000010B，无符号数130，有符号数-126</code></pre>
+<h2 id="11-4-CF-carry-flag-标志"><a href="#11-4-CF-carry-flag-标志" class="headerlink" title="11.4 CF(carry flag)标志"></a>11.4 CF(carry flag)标志</h2><ul>
+<li>flag的第0位是CF，进位标志位。一般情况下，在进行无符号运算的时候，它记录了运算结果的最高有效位向更高位的进位值或从更高位的借位值。对于位数为N的无符号数，其对应的二进制信息的最高位为N-1位的最高有效位，假想存在第N位。</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-2.jpg" alt></p>
+<ul>
+<li>两个8位的数据运算可能产生进位或者借位，由于这个进位值在8位数中无法保存，8086CPU就用flag的CF位来记录这个进位值。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov al,98h
+    add al,al;执行后(al)=30h，cf=1，cf记录了从最高有效位向更高位的进位值
+    add al,al;执行后(al)=60h，cf=0，cf记录了从更高有效位向更高位的进位值
+
+    mov al,97h
+    sub al,98h;执行后(al)=ffh，cf=1，cf记录了向更高位的借位值
+    sub al,al;执行后(al)=0，cf=0，cf记录了向更高位的借位值</code></pre>
+<h2 id="11-5-OF-overflow-flag-标志"><a href="#11-5-OF-overflow-flag-标志" class="headerlink" title="11.5 OF(overflow flag)标志"></a>11.5 OF(overflow flag)标志</h2><ul>
+<li>如果运算结果超出了机器所能表达的范围(对于8位有符号数，机器所能表达的范围是-128~127)将产生溢出，对有符号数而言。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+    code segment
+
+    start:
+            mov al,01100010b
+            add al,01100011b
+
+            mov ax,4c00h
+            int 21h
+    code ends
+end </code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-3.jpg" alt></p>
+<pre class=" language-asm"><code class="language-asm">    assume cs:code
+
+    code segment
+
+    start:
+            mov al,10001000b
+            add al,11110000b
+
+            mov ax,4c00h
+            int 21h
+    code ends
+    end</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-4.jpg" alt></p>
+<pre class=" language-assembly"><code class="language-assembly">assume cs:code
+
+    code segment
+    start:
+            mov al,98h
+            add al,al
+            add al,al
+
+            mov ax,4c00h
+            int 21h
+    code ends
+end</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-5.jpg" alt></p>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+    code segment
+    start:
+            mov al,97h
+            sub al,98h
+            add al,al
+
+            mov ax,4c00h
+            int 21h
+    code ends
+end</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-6.jpg" alt></p>
+<ul>
+<li><strong>CF是对无符号数运算有意义的标志位，而OF是对有符号数运算有意义的标志位；</strong> CPU用CF位来记录无符号数运算是否产生了进位，用OF位来记录有符号数是否产生了溢出。用SF位来记录结果的符号</li>
+</ul>
+<pre class=" language-asmlinenums=0"><code class="language-asmlinenums=0">    mov al,98d
+    add al,99d
+    ;对于无符号数运算，98+99没有进位，CF=0
+    ;对于有符号数运算，98+99发生溢出，OF=1</code></pre>
+<h2 id="11-6-adc指令"><a href="#11-6-adc指令" class="headerlink" title="11.6 adc指令"></a>11.6 adc指令</h2><ul>
+<li><strong>adc是带有进位加法指令，利用了CF位上记录的进位值。格式:adc操作对象1，操作对象2，功能：操作对象1=操作对象1+操作对象2+CF。</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,2
+    mov bx,1
+    sub bx,ax
+    adx ax,1
+    ;执行后 (ax)=4，相当于计算(ax)+1+CF=2+1+1+4
+
+    mov ax,1
+    add ax,ax
+    adc ax,3
+    ;执行后(ax)=5，相当于执行(ax)+3+CF=2+3+0=5
+
+    mov al,98H
+    add al,al
+    adx al,3
+    ;执行后 (ax)=34H，相当于执行(ax)+3+CF=30H+3+1=34H</code></pre>
+<ul>
+<li>由adc指令前面的指令决定在执行adc指令的时候加上的CF的值的含义，关键在于所加上的CF的值是被什么指令设置的。如果CF的值是被sub指令设置的，那么它的含义就是借位值；如果是被add指令设置的，那么它的含义就是进位值。加法运算先是低位相加，再高位相加加上低位相加产生的进位值。</li>
+<li>编程：计算1EF000H+201000H,结果存放在AX(高16位)和BX(低16位)中。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,001EH
+    mov bx,0F000H
+    add bx,1000H
+    adc ax,0020H</code></pre>
+<ul>
+<li>编程：1EF0001000H+2010001EF0H,结果存放在AX(高16位)、BX(次16位)中和cx(低16位)。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,001EH
+    mov bx,0F000H
+    mov cx,1000H
+    add cx,1EF0H
+    add bx,1000H
+    adc ax,0020H</code></pre>
+<ul>
+<li>编程：对两个128位数据进行相加</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code,ds:data
+    data segment
+            db 16 dup(88H)
+            db 16 dup(11H)
+    data ends
+
+    code segment
+    start:
+            mov ax,data
+            mov ds,ax
+            mov si,0
+            mov di,16
+
+            mov cx,8
+            call add128
+
+            mov ax,4C00H
+            int 21H
+    add128:
+            push ax
+            push cx
+            push si
+            push di
+
+            sub ax,ax;将CF设置为0
+        s:
+            mov ax,[si]
+            adc ax,[di]
+            mov [si],ax
+            inc si;不能用add si,2代替
+            inc si;因为会影响cf位
+            inc di;而loop和inc不会影响
+            inc di
+
+            loop s
+
+             pop di
+             pop si
+             pop cx
+             pop ax
+             ret
+    code ends
+end</code></pre>
+<h2 id="11-7-sbb指令"><a href="#11-7-sbb指令" class="headerlink" title="11.7 sbb指令"></a>11.7 sbb指令</h2><ul>
+<li><strong>sbb是带借位减法指令，利用了CF位上记录的借位值。格式：sbb 操作对象1,操作对象2，功能是：操作对象1=操作对象1-操作对象2-CF。</strong></li>
+<li>利用sbb指令我们可以对任意大的数据进行减法运算。sbb和adc是基于同样的思想设计的两条指令，在应用思路上sbb和adc类似。</li>
+<li>编程：计算003E1000H-00202000H，结果放在ax、bx中</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov bx,1000H
+    mov ax,003EH
+    sbb bx,2000H
+    sbb ax,0020H</code></pre>
+<h2 id="11-8-cmp指令"><a href="#11-8-cmp指令" class="headerlink" title="11.8 cmp指令"></a>11.8 cmp指令</h2><ul>
+<li>cmp是比较指令，功能上相当于减法指令，只是不保存结果。格式：cmp 操作对象1,操作对象2.功能：计算操作对象1-操作对象2但不保存结果，仅仅是根据计算结果对标志寄存器进行设置。</li>
+<li>cmp指令运算执行后通过做减法将对标志寄存器产生影响，其他相关指令通过识别这些被影响的标志寄存器位来得知比较结果。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    cmp ax,ax
+    ;执行后结果为0，ZF=1,PF=1,SF=0,CF=0,OF=0
+
+    mov ax,8
+    mov bx,3
+    cmp ax,bx
+    ;执行后ax、bx的值不变，ZF=0,PF=1,SF=0,CF=0,OF=0
+    cmp ax,bx</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-7.jpg" alt></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/11-8.jpg" alt></p>
+<ul>
+<li><p>CPU在执行cmp指令时也包含了对无符号数运算和进行有符号数运算，所以利用cmp指令可以对无符号数进行比较也可以对有符号数进行比较。</p>
+</li>
+<li><p>单纯地考察SF的值不可能知道结果的正负。因为SF记录的只是可以在计算机中存放的相应位数的结果的正负</p>
+<p>(例如：add ah， al执行后，SF记录的是ah中的8位二进制信息所表示的数据的正负)。</p>
+<p>如果没有溢出发生的话，实际结果的正负和逻辑上真正结果的正负就一致了。</p>
+<p>。例如：22H(34)-0A0H(-96)=130=82H(是-126的补码)，SF=1。</p>
+<ul>
+<li><strong>1、如果SF=1或SF=0，OF=0，逻辑上真正结果的正负=实际结果的正负。</strong></li>
+<li><strong>2、如果SF=1或SF=0，OF=1，逻辑上真正结果的负正=实际结果的正负。</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="11-9-检测比较结果的条件转移指令"><a href="#11-9-检测比较结果的条件转移指令" class="headerlink" title="11.9 检测比较结果的条件转移指令"></a>11.9 检测比较结果的条件转移指令</h2><ul>
+<li>与cmp相配使用，根据cmp指令的比较结果(cmp指令执行后相关标志位的值)进行工作的指令。</li>
+<li>cmp指令可以同时进行两种比较，无符号数比较和有符号数比较，所以根据cmp指令的比较结果进行转移的指令也分为两种：<ul>
+<li>根据无符号数的比较结果进行转移的条件转移指令，它们检测ZF、CF的值；</li>
+<li>根据有符号数的比较结果进行转移的条件转移指令，它们检测SF、OF、ZF的值。</li>
+</ul>
+</li>
+<li><strong>它们所检测的标志位都是cmp指令进行无符号数比较时候记录比较结果的标志位。</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>含义</th>
+<th>检测的相关标志位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>je</td>
+<td>等于则转移</td>
+<td>ZF=1</td>
+</tr>
+<tr>
+<td>jne</td>
+<td>不等于则转移</td>
+<td>ZF=0</td>
+</tr>
+<tr>
+<td>jb</td>
+<td>低于则转移</td>
+<td>CF=1</td>
+</tr>
+<tr>
+<td>jnb</td>
+<td>不低于则转移</td>
+<td>CF=0</td>
+</tr>
+<tr>
+<td>ja</td>
+<td>高于则转移</td>
+<td>CF=0 and ZF=0</td>
+</tr>
+<tr>
+<td>jna</td>
+<td>不高于则转移</td>
+<td>CF=1 or ZF=1</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>j</th>
+<th>e</th>
+<th>ne</th>
+<th>b</th>
+<th>nb</th>
+<th>a</th>
+<th>na</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jump</td>
+<td>equal</td>
+<td>not equal</td>
+<td>below</td>
+<td>not below</td>
+<td>above</td>
+<td>not above</td>
+</tr>
+</tbody></table>
+<ul>
+<li>编程：如果ah的值等于bh则ah的值等于ah的值加ah的值，否则ah的值等于ah的值加上bh的值。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">        cmp ah,bh
+        je s;ZF=1则跳转
+        add ah,bh
+        jmp short ok
+    s:
+        add ah,bh
+    ok:ret</code></pre>
+<ul>
+<li><strong>je检测的是ZF的位置，不管je前面是什么指令，只要CPU执行je指令时，ZF=1那么就发生转移。</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">        mov ax,0
+        mov ax,0
+        je s
+        inc ax
+    s:
+        inc ax
+    ;执行后ax的值等于1，add ax,0使得ZF=1，所以je指令将进行转移。</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/22/assembly-summary-12/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-12</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/21/assembly-summary-10/">
+        <span class="next-text nav-default">assembly-summary-10</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

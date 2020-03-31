@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-15">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/23/assembly-summary-15/">
+
+
+<meta name="description" content="十五、外中断15.1接口芯片和端口 CPU通过端口和外设进行联系。在PC系统的接口卡和主板上，装有各种接口芯片。这些外设接口芯片的内部有若干寄存器，CPU将这些寄存器当作端口来访问。外设的输入不直接送入内存和CPU，而是送入相关的接口芯片的端口中；CPU向外设的输出也不是直接送入到外设而是先送入端口再由相关的芯片送到外设。  15.2外中断信息 外中断源有两类：  1、可屏蔽中断 可屏蔽中断是CP">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-15">
+<meta property="og:url" content="http://yoursite.com/2020/03/23/assembly-summary-15/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="十五、外中断15.1接口芯片和端口 CPU通过端口和外设进行联系。在PC系统的接口卡和主板上，装有各种接口芯片。这些外设接口芯片的内部有若干寄存器，CPU将这些寄存器当作端口来访问。外设的输入不直接送入内存和CPU，而是送入相关的接口芯片的端口中；CPU向外设的输出也不是直接送入到外设而是先送入端口再由相关的芯片送到外设。  15.2外中断信息 外中断源有两类：  1、可屏蔽中断 可屏蔽中断是CP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/15-1.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:44:19.994Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-15">
+<meta name="twitter:description" content="十五、外中断15.1接口芯片和端口 CPU通过端口和外设进行联系。在PC系统的接口卡和主板上，装有各种接口芯片。这些外设接口芯片的内部有若干寄存器，CPU将这些寄存器当作端口来访问。外设的输入不直接送入内存和CPU，而是送入相关的接口芯片的端口中；CPU向外设的输出也不是直接送入到外设而是先送入端口再由相关的芯片送到外设。  15.2外中断信息 外中断源有两类：  1、可屏蔽中断 可屏蔽中断是CP">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/15-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-15 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-15
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 23 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="十五、外中断"><a href="#十五、外中断" class="headerlink" title="十五、外中断"></a>十五、外中断</h1><h2 id="15-1接口芯片和端口"><a href="#15-1接口芯片和端口" class="headerlink" title="15.1接口芯片和端口"></a>15.1接口芯片和端口</h2><ul>
+<li>CPU通过端口和外设进行联系。在PC系统的接口卡和主板上，装有各种接口芯片。这些外设接口芯片的内部有若干寄存器，CPU将这些寄存器当作端口来访问。外设的输入不直接送入内存和CPU，而是送入相关的接口芯片的端口中；CPU向外设的输出也不是直接送入到外设而是先送入端口再由相关的芯片送到外设。</li>
+</ul>
+<h2 id="15-2外中断信息"><a href="#15-2外中断信息" class="headerlink" title="15.2外中断信息"></a>15.2外中断信息</h2><ul>
+<li><p>外中断源有两类：</p>
+<ul>
+<li>1、可屏蔽中断<ul>
+<li>可屏蔽中断是CPU可以不响应的外中断。CPU是否响应可屏蔽中断要看标志寄存器的IF位的设置。</li>
+</ul>
+</li>
+<li>2、不可屏蔽中断</li>
+</ul>
+</li>
+<li><p>当CPU检测到可屏蔽中断信息时：</p>
+<ul>
+<li>如果IF=1，则CPU在执行完当前指令后响应中断引发中断过程。</li>
+<li>如果IF=0，则不响应可屏蔽中断。</li>
+<li>内中断过程</li>
+</ul>
+</li>
+<li><blockquote>
+<p>可屏蔽中断所引发的中断过程，除在第一步的实现上有所不同外，基本上和内中断的中断过程相同。因为可屏蔽中断信息来自于CPU外部，中断类型码是通过数据总线送入CPU的；而内中断的中断类型码是在CPU内部产生的。在中断过程中将IF置0的原因是在进入中断处理程序后禁止其他的可屏蔽中断。</p>
+</blockquote>
+</li>
+<li><p>8086CPU提供的设置IF的指令如下：</p>
+<ul>
+<li>sti，设置IF=1；</li>
+<li>cli，设置IF=0.</li>
+</ul>
+</li>
+<li><p>不可屏蔽中断是CPU必须响应的外中断。当CPU检测到不可屏蔽中断信息时，则在执行完当前指令后立即响应引发中断过程。对于8086CPU不可屏蔽的中断类型码固定为2。所以中断过程中不需要取中断类型码。几乎所有外设引发的外中断都是可屏蔽中断。</p>
+</li>
+<li><p>不可屏蔽中断过程：</p>
+<ul>
+<li>1、标志寄存器入栈，IF=0，TF=0’</li>
+<li>2、CS和IP入栈；</li>
+<li>3、(IP)=(8)，(CS)=(0AH)</li>
+</ul>
+</li>
+</ul>
+<h2 id="15-3PC机及键盘的处理过程"><a href="#15-3PC机及键盘的处理过程" class="headerlink" title="15.3PC机及键盘的处理过程"></a>15.3PC机及键盘的处理过程</h2><ul>
+<li><p>键盘输入的处理过程：</p>
+<ul>
+<li><p>1、键盘输入产生扫描码；</p>
+</li>
+<li><p>2、扫描码送入60h端口；</p>
+</li>
+<li><p>3、引发9号中断；</p>
+</li>
+<li><p>4、执行int 9中断例程。</p>
+</li>
+<li><blockquote>
+<p>前三步由硬件系统自动完成，第四步用户可以修改int 9中断程序。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>按下一个键产生的扫描码称为通码，松开一个键产生的扫描码称为断码。扫描码被送入主板上的相关接口芯片端口地址为60h的寄存器中。</p>
+</li>
+<li><p>扫描码长度为一个字节，通码的第7位为0，断码的第7位为1。即断码=通码+80h。</p>
+</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/15-1.jpg" alt></p>
+<ul>
+<li>bios提供了int 9中断例程，用来进行基本键盘输入处理，主要的工作如下：<ul>
+<li>1、读出60h端口中的扫描码；</li>
+<li>2、如果是字符键的扫描码就将它和它所对应的字符码(ASCII码)送入内存中的bios键盘缓冲区；<ul>
+<li>键盘的输入到达60h端口时相关的芯片就会向CPU发出中断类型码为9的可屏蔽中断信息。</li>
+<li>CPU检测到该中断信息后，如果IF=1，则响应中断，引发中断过程，转去执行int 9中断例程。</li>
+<li>如果是控制键(如ctrl)和切换键(如capslock)的扫描码，则将其转变为状态字节(用为进制位记录控制键和切换键状态的字节)写入内存中存储状态字节的单元</li>
+</ul>
+</li>
+<li>3、键盘系统进行相关的控制。如向相关芯片发出应答信息。</li>
+</ul>
+</li>
+<li>bios键盘缓冲区是系统启动后mbios用于存放int 9中断例程所接收的键盘输入的内存区。该内存可以存储15个键盘输入，在bios键盘缓冲区中一个键盘输入用一个字单元存放，高位字节存放扫描码，低位字节存放字符码。0040:17单元存储键盘状态字节该字节记录了控制键和切换键的状态<ul>
+<li>0:置1表表示按下右shift键</li>
+<li>1:置1表表示按下左shift键</li>
+<li>2:置1表表示按下ctrl</li>
+<li>3:置1表表示按下alt</li>
+<li>4:置1表表示按下scroll指示灯亮</li>
+<li>5:置1表表示按下numlock，小键盘输入的是数字</li>
+<li>6:置1表表示按下capslock，输入大写字母</li>
+<li>7:置1表表示按下insert。处于删除状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="15-4编写int-9中断"><a href="#15-4编写int-9中断" class="headerlink" title="15.4编写int 9中断"></a>15.4编写int 9中断</h2><ul>
+<li>键盘输入的处理过程</li>
+<li>编程：在屏幕中间依次显示让人看清的a~z，按下esc键后改变显示的颜色。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;显示字符
+code segment
+    start:
+            mov ax,0b800h
+            mov es,ax
+            mov ah,'a'
+        s:
+            mov es:[160*12+40*2],ah
+            inc ax
+            cmp ah,'z'
+            jna s
+            mov ax,4c00h
+            int 21h
+    code ends
+end start
+
+;延迟显示字符
+assume cs:code
+    stack segment
+            db 128 dup(0)
+    stack ends
+
+    code segment
+    start:
+            mov ax,stack
+            mov ss,ax
+            mov sp,128
+            mov ax,0b800h
+            mov es,ax
+            mov ah,'a'
+        s:
+            mov es:[160*12+40*2],ah
+            call delay
+            inc ah
+            cmp ah,'z'
+            jna s
+
+            mov ax,4c00h
+            int 21h
+
+        delay:
+            push ax
+            push dx
+            mov dx,1000h;循环10000000次，延迟的时间和CPU的计算能力成反比
+            mov ax,0
+        s1:
+            sub ax,1
+            sbb dx,0
+            cmp ax,0
+            jne s1
+            cmp dx,0
+            jne s1
+            pop dx
+            pop ax
+            ret
+    code ends
+end start
+    ;实现IF=0，TF=0步骤
+    pushf
+    pop ax
+    and ah,11111100b
+    push ax
+    popf123456</code></pre>
+<ul>
+<li>int指令在执行时CPU进行的工作</li>
+<li>完整程序</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+    stack segment
+            db 128 dup(0)
+    stack ends
+
+    data segment
+            dw 0,0
+    data ends
+
+    code segment
+    start:
+            mov ax,stack
+            mov ss,ax
+            mov sp,128
+            mov ax,data
+            mov ds,ax
+            mov ax,0
+            mov es,ax
+
+            push es:[9*4]
+            pop ds:[0]
+            push es:[9*4+2]
+            pop ds:[2];将原来的int9中断例程的入口地址保存
+
+            mov word ptr es:[9*4],offset int9
+            mov es:[9*4+2],cs;在中断向量表中设置新的int 9中断例程的入口地址
+
+            mov ax,0b800h
+            mov es,ax
+            mov ah,'a'
+
+        s:
+            mov es:[160*12+40*2],ah
+            call delay
+            inc ah
+            cmp ah,'z'
+            jna s
+            mov ax,0
+            mov es,ax
+
+            push ds:[0]
+            pop es:[9*4]
+            push ds:[2]
+            pop es:[9*4+2];将中断向量表中int9中断例程的入口恢复为原来的地址
+
+            mov ax,4c00h
+            int 21h
+
+        delay:
+            push ax
+            push dx
+            mov dx,1000h;循环10000000次，延迟的时间和CPU的计算能力成反比
+            mov ax,0
+        s1:
+            sub ax,1
+            sbb dx,0
+            cmp ax,0
+            jne s1
+            cmp dx,0
+            jne s1
+            pop dx
+            pop ax
+            ret
+
+            ;新的int 9中断例程
+
+        int9:
+            push ax
+            push bx
+            push es
+
+            in al,60h
+
+            pushf
+            pop bx
+            and bh,11111100b
+            push bx
+            popf
+            call dword ptr ds:[0];对int指令进行模拟，调用原来的int9中断例程
+
+            cmp al,1;esc键盘扫描码
+            jne int9ret
+
+            mov ax,0b800h
+            mov es,ax
+            inc byte ptr es:[160*12+40*2+1];改变颜色
+
+        int9ret:
+            pop es
+            pop bx
+            pop ax
+            iret
+
+    code ends
+end start</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/03/23/assembly-summary-14/">
+        <span class="next-text nav-default">assembly-summary-14</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

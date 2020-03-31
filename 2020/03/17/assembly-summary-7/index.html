@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-7">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/17/assembly-summary-7/">
+
+
+<meta name="description" content="第七章、更灵活的定位内存地址的方法7.1 and和or指令 and指令：逻辑与指令，按位进行与运算。  and两个同时为真的结果才为真。    mov al,01100011B and al,00111011B ;执行后 al=00100011B123  可用and指令将操作对象的相应位设为0，其他位不变  and al,10111111B;将al第六位设为0 and al,01111111B;将">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-7">
+<meta property="og:url" content="http://yoursite.com/2020/03/17/assembly-summary-7/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第七章、更灵活的定位内存地址的方法7.1 and和or指令 and指令：逻辑与指令，按位进行与运算。  and两个同时为真的结果才为真。    mov al,01100011B and al,00111011B ;执行后 al=00100011B123  可用and指令将操作对象的相应位设为0，其他位不变  and al,10111111B;将al第六位设为0 and al,01111111B;将">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-2.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-3.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-4.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-5.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-6.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-7.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-8.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-9.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:43:57.031Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-7">
+<meta name="twitter:description" content="第七章、更灵活的定位内存地址的方法7.1 and和or指令 and指令：逻辑与指令，按位进行与运算。  and两个同时为真的结果才为真。    mov al,01100011B and al,00111011B ;执行后 al=00100011B123  可用and指令将操作对象的相应位设为0，其他位不变  and al,10111111B;将al第六位设为0 and al,01111111B;将">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/7-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-7 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-7
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 17 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第七章、更灵活的定位内存地址的方法"><a href="#第七章、更灵活的定位内存地址的方法" class="headerlink" title="第七章、更灵活的定位内存地址的方法"></a>第七章、更灵活的定位内存地址的方法</h1><h2 id="7-1-and和or指令"><a href="#7-1-and和or指令" class="headerlink" title="7.1 and和or指令"></a>7.1 and和or指令</h2><ul>
+<li><p>and指令：逻辑与指令，按位进行与运算。</p>
+<blockquote>
+<p>and两个同时为真的结果才为真。</p>
+</blockquote>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov al,01100011B
+and al,00111011B
+;执行后 al=00100011B123</code></pre>
+<ul>
+<li>可用and指令将操作对象的相应位设为0，其他位不变</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">and al,10111111B;将al第六位设为0
+and al,01111111B;将al第七位设为0
+and al,11111110B;将al第0位设为0123</code></pre>
+<ul>
+<li>or指令：逻辑或指令，按位进行或运算。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov al,01100011B
+and al,00111011B
+;执行后 al=01111011B123</code></pre>
+<ul>
+<li>可用or指令将操作对象的相应位设为1，其他位不变</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">and al,01000000B;将al第六位设为1
+and al,10000000B;将al第七位设为1
+and al,00000001B;将al第0位设为1</code></pre>
+<h2 id="7-2-关于ASCII码"><a href="#7-2-关于ASCII码" class="headerlink" title="7.2 关于ASCII码"></a>7.2 关于ASCII码</h2><p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-1.jpg" alt="ASCII码表"></p>
+<ul>
+<li>将字符的ascii码写入显存屏幕就显示出相关的字符。</li>
+</ul>
+<h2 id="7-3-以字符形式给出数据"><a href="#7-3-以字符形式给出数据" class="headerlink" title="7.3 以字符形式给出数据"></a>7.3 以字符形式给出数据</h2><ul>
+<li>用‘’的方式指明数据是以字符的形式给出的。<strong>例如’A’</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code,ds:data
+
+data segment
+        db 'unIx'
+        db 'foRK'
+data ends
+
+    code segment
+    start:  mov al,'a'
+            mov bx,'b'
+
+            mov ax,4c00h
+            int 21h
+code ends
+end start</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-2.jpg" alt="73 ascii"></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-3.jpg" alt="以字符形式给出数据"></p>
+<h2 id="7-4-大小写转换的问题"><a href="#7-4-大小写转换的问题" class="headerlink" title="7.4 大小写转换的问题"></a>7.4 大小写转换的问题</h2><ul>
+<li><strong>大写字母比小写字母ASCII大32(20H)。</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>大写</th>
+<th>二进制</th>
+<th>小写</th>
+<th>二进制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>01000001</td>
+<td>a</td>
+<td>01100001</td>
+</tr>
+<tr>
+<td>B</td>
+<td>01000010</td>
+<td>b</td>
+<td>01100010</td>
+</tr>
+<tr>
+<td>C</td>
+<td>01000011</td>
+<td>c</td>
+<td>01100011</td>
+</tr>
+<tr>
+<td>D</td>
+<td>01000100</td>
+<td>d</td>
+<td>01100100</td>
+</tr>
+</tbody></table>
+<ul>
+<li>从第0位开始计算，大写字母ASCII码第五位为0，小写字母ASCII码第五位为1。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;大小写转换
+assume cs:codesg,ds:datasg
+datasg segment
+db'BaSiC'
+db'iNfOfMaTiOn'
+datasg ends
+
+codesg segment
+    start:  mov ax,datasg
+            mov ds,ax;设置ds执行datasg段
+            mov bx,0;设置(bx)=0，ds:bx指向'BaSiC'的第一个字母
+            mov cx,5;设置循环次数，因为BaSiC有5个字母
+              s:mov al,[bx];将ASCII码从ds:bx所指向的单元中取出
+            and al,11011111B;口岸al中ASCII码的第5个位置变为0，变为大写字母
+            mov [bx],al;转变后将ASCII码写回单元
+            inc bx;(bx)加1，ds:bx指向下一个字母
+            loop x
+            mov bx,5;设置(bx)=5，ds:bx指向'iNfOfMaTiOn'的第一个字母
+            mov cx,11
+             s0:mov al,[bx]
+            or al,00100000B
+            mov [bx],al
+            inc bx
+            loop s0
+
+            mov ax,4c00H
+            int 21H
+codesg ends
+end start</code></pre>
+<h2 id="7-5-bx-idata"><a href="#7-5-bx-idata" class="headerlink" title="7.5 [bx+idata]"></a>7.5 [bx+idata]</h2><ul>
+<li>[bx+idata]表示的是一个内存单元，它的偏移地址为bx+idata</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;[bx+idata]可以写成以下格式
+mov ax,[200+bx]
+mov ax,200[bx]
+mov ax,[bx].2001234
+;使用debug查看内存
+mov ax,2000H
+mov ds:ax
+mov bx,1000H
+mov ax,[bx]
+mov cx,[bx+1]
+add cx,[bx+2]1234567</code></pre>
+<h2 id="7-6-用-bx-idata-的方式进行数组的处理"><a href="#7-6-用-bx-idata-的方式进行数组的处理" class="headerlink" title="7.6 用[bx+idata]的方式进行数组的处理"></a>7.6 用[bx+idata]的方式进行数组的处理</h2><ul>
+<li>用[bx+idata]的方式进行数组处理</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;改进大小写转换程序
+assume cs:codesg,ds:datasg
+datasg segment
+db'BaSiC'
+db'iNfOfMaTiOn'
+datasg ends
+
+codesg segment
+    start:  mov ax,datasg
+            mov ds,ax;设置ds执行datasg段
+            mov bx,0;设置(bx)=0，ds:bx指向'BaSiC'的第一个字母
+            mov cx,5;设置循环次数，因为BaSiC有5个字母
+          s:mov al,[bx+0];将ASCII码从ds:bx所指向的单元中取出
+            and al,11011111B;口岸al中ASCII码的第5个位置变为0，变为大写字母
+            mov [bx],al;转变后将ASCII码写回单元
+            mov [bx+5];定位第二个字符串的字符
+            or al,00100000B
+            mov [bx+5],al
+            inc bx
+            loop s
+
+            mov ax,4c00H
+            int 21H
+codesg ends
+end start</code></pre>
+<ul>
+<li>C语言的形式</li>
+</ul>
+<pre class=" language-c"><code class="language-c">    include<span class="token operator">&lt;</span>stdio<span class="token punctuation">.</span>h<span class="token operator">></span>
+
+    <span class="token keyword">char</span> a<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">"BaSiC"</span><span class="token punctuation">;</span>
+    <span class="token keyword">char</span> b<span class="token punctuation">[</span><span class="token number">11</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">"iNfOfMaTiOn"</span><span class="token punctuation">;</span>
+    <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+        i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">do</span>
+        <span class="token punctuation">{</span>
+            a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">&amp;</span><span class="token number">0xDF</span><span class="token punctuation">;</span>
+            b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">|</span><span class="token number">0x20</span><span class="token punctuation">;</span>
+            i<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">while</span><span class="token punctuation">(</span>i<span class="token operator">&lt;</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+<h2 id="7-7-SI和DI"><a href="#7-7-SI和DI" class="headerlink" title="7.7 SI和DI"></a>7.7 SI和DI</h2><ul>
+<li><strong>SI和DI在8086CPU中和bx功能相近，充当BX的扩充，但是不能分成两个8位寄存器来使用。[SI]段地址默认也是在DS中。</strong></li>
+<li>下面的指令实现了相同的功能</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov bx,0
+mov ax,[bx]
+
+mov si,0
+mov ax,[si]
+
+mov di,0
+mov ax,[di]
+;-------------
+;下面的三组指令也实现了另一个组相同的功能
+;-------------
+mov bx,0
+mov ax,[bx+123]
+
+mov si,0
+mov ax,[si+123]
+
+mov di,0
+mov ax,[di+123]</code></pre>
+<ul>
+<li>一般ds:si指向要复制的原始空间，ds:di指向复制的目的空间。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;用DI和SI实现复制到它后面的数据区中
+assume cs:codesg,ds:datasg
+datasg segment
+db'welcome to asm!'
+db'................'
+datasg ends
+
+codesg segment
+    start  :mov ax,datasg
+            mov ds,ax
+            mov si,0
+            mov di,16
+            mov cx,8
+          s:mov ax,[si]
+            mov [di],ax
+            add si,2
+            add di,2
+            loop s
+
+            mov ax,4c00h
+            int 21H
+;------
+;用数组的思维[bx(si或di)+idata]的方式优化程序
+;------
+assume cs:codesg,ds:datasg
+datasg segment
+db'welcome to asm!'
+db'................'
+datasg ends
+
+codesg segment
+    start  :mov ax,datasg
+            mov ds,ax
+            mov si,0
+            mov cx,8
+          s:mov ax,[si];第一个字符串的的第一个元素
+            mov [si+16],ax;目标字符串的第二个元素
+            add si,2
+            loop s
+
+            mov ax,4c00h
+            int 21H
+codesg ends
+end start</code></pre>
+<h2 id="7-8-bx-si-和-bx-di"><a href="#7-8-bx-si-和-bx-di" class="headerlink" title="7.8 [bx+si]和[bx+di]"></a>7.8 [bx+si]和[bx+di]</h2><pre class=" language-asm"><code class="language-asm">    mov ax,2000h
+    mov ds,ax
+    mov bx,1000h
+    mov si,0
+    mov ax,[bx+si]
+    inc si
+    mov cx,[bx+si]
+    inc si
+    mov di,si
+    mov ax,[bx+di]</code></pre>
+<h2 id="7-9-bx-si-idata-和-bx-di-idata"><a href="#7-9-bx-si-idata-和-bx-di-idata" class="headerlink" title="7.9 [bx+si+idata]和[bx+di+idata]"></a>7.9 [bx+si+idata]和[bx+di+idata]</h2><ul>
+<li>常数后要加.<strong>例如</strong>[bx+si].idata或者[bx].idata[si]</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,2000h
+    mov ds,ax
+    mov bx,1000h
+    mov si,0
+    mov ax,[bx+2+si]
+    inc si
+    mov cx,[bx+si+2]
+    inc si
+    mov di,si
+    mov ax,[bx+di+2]</code></pre>
+<h2 id="7-10-不同的寻址方式的灵活应用"><a href="#7-10-不同的寻址方式的灵活应用" class="headerlink" title="7.10 不同的寻址方式的灵活应用"></a>7.10 不同的寻址方式的灵活应用</h2><ul>
+<li>编程将数据段中每一个单词的头一个字母改为大写字母。</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-4.jpg" alt="数据段中的数据存储结构_2"></p>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:datasg
+datasg segment
+    db'1. file          ';长度刚好都是16个字节
+    db'2. edit          '
+    db'3. search        '
+    db'4. view          '
+    db'5. options       '
+    db'6. help          '
+datasg ends
+
+codesg segment
+      start:
+            mov ax,datasg
+            mov ds,ax
+            mov bx,0
+            mov cx,6
+          s:    
+            mov al,[bx+3]
+            and al,11011111B
+            mov [bx+3],al
+            add bx,16
+            loop s
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+<ul>
+<li>编程将数据段中每个单词改为大写字母</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-5.jpg" alt="数据段中的数据存储结构2"></p>
+<pre class=" language-asm"><code class="language-asm">;有bug，问题在于cx的使用，进行二重循环，只用一个循环计数器，造成在进行内层的时候覆盖了外层循环的循环计数值。
+assume cs:codesg,ds:datasg
+datasg segment
+    db 'ibm             '
+    db 'dec             '
+    db 'dos             '
+    db 'vax             '
+datasg ends
+
+codesg segment
+      start:mov ax,datasg
+            mov ds,ax
+            mov bx,0;用bx来定位行
+            mov cx,4
+         s0:mov si,0;用si来定位列
+            mov cx,3
+          s:mov al,[bx+si]
+            and al,11011111B
+            mov [bx+si],al
+            inc si
+            loop s
+            add bx,16
+            loop s0
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+<ul>
+<li>程序没有返回到cmd</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-6.jpg" alt="712bug"></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-7.jpg" alt="712bug1"></p>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-8.jpg" alt="712bug2"></p>
+<pre class=" language-asm"><code class="language-asm">loop s;三次循环后cx等于0了
+add bx,16
+loop s0;先是cx=cx-1再判断时候等于0，此时cx=FFFF不为0再循环，变成死循环了123</code></pre>
+<ul>
+<li>因为loop是和cx一起使用的，不能多用个寄存器来解决loop循环次数的问题。解决的方法是在每次开始内层循环时用dx将外层循环cx的值保存起来，在执行外层循环的loop指令前再回复外层循环的cx的数值。</li>
+<li>改进后程序</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:datasg
+    datasg segment
+    db 'ibm             '
+    db 'dec             '
+    db 'dos             '
+    db 'vax             '
+datasg ends
+
+codesg segment
+      start:
+            mov ax,datasg
+            mov ds,ax
+            mov bx,0;用bx来定会行
+            mov cx,4
+         s0:
+            mov dx,cx;用dx寄存器来临时存放外层cx的值
+            mov si,0;用si来定位列
+            mov cx,3
+          s:
+            mov al,[bx+si]
+            and al,11011111B
+            mov [bx+si],al
+            inc si
+            loop s
+            add bx,16
+            mov cx,dx;在进行外层循环的时候回复cx的值
+            loop s0
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+<ul>
+<li>在上面的程序中，8086 CPU si、cx、ax、bx这些寄存器经常要使用到；cs、ip、ds也不能用，因为cs:ip时刻指向当前指令，ds指向datasg段；那么可用的寄存器就只用dx、di、es、ss、sp、bp等寄存器了。<strong>内存可以解决经常性的数据暂存问题。为了使程序结构清晰便于阅读，应该使用栈</strong></li>
+<li>再次被改进的程序</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:datasg
+    datasg segment
+    db 'ibm             '
+    db 'dec             '
+    db 'dos             '
+    db 'vax             '
+    dw 0;定义一个字用来保存cx的值
+datasg ends
+
+codesg segment
+      start:mov ax,datasg
+            mov ds,ax
+            mov bx,0;用bx来定位行
+            mov cx,4
+         s0:mov ds:[40h],cx;datasg:40h单元存放外层cx的值
+            mov si,0;用si来定位列
+            mov cx,3
+          s:mov al,[bx+si]
+            and al,11011111B
+            mov [bx+si],al
+            inc si
+            loop s
+            add bx,16
+            mov cx,ds:[40h];在进行外层循环的时候回复cx的值
+            loop s0
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+<ul>
+<li>再次使用栈改进程序</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:datasg,ss:stacksg
+datasg segment
+    db 'ibm             '
+    db 'dec             '
+    db 'dos             '
+    db 'vax             '
+datasg ends
+
+stacksg segment
+    dw 0,0,0,0,0,0,0,0;定义一个段，用作栈段，容量为16个字节
+stacksg ends
+
+codesg segment
+      start:mov ax,stacksg
+            mov ss,ax
+            mov sp,16
+            mov ax,datasg
+            mov ds,ax
+            mov bx,0;用bx来定位行
+            mov cx,4
+         s0:push cx;datasg:40h单元存放外层cx的值
+            mov si,0;用si来定位列
+            mov cx,3
+          s:mov al,[bx+si]
+            and al,11011111B
+            mov [bx+si],al
+            inc si
+            loop s
+            add bx,16
+            pop cx;在进行外层循环的时候回复cx的值
+            loop s0
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+<ul>
+<li>编程将数据段中的每个单词的前四个字母改为大写字母</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/7-9.jpg" alt="数据段中的数据存储结构3"></p>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:datasg,ss:stacksg
+
+stacksg segment
+stacksg ends
+
+datasg segment
+    db '1. display      '
+    db '2. brows        '
+    db '3. replace      '
+    db '4. modify       '
+datasg ends
+codesg segment
+      start:mov ax,stacksg
+            mov ss,ax
+            mov sp,16
+            mov ax,datasg
+            mov ds,ax
+            mov bx,0
+            mov cx,4
+         s0:push cx
+            mov si,0
+            mov cx,4
+          s:mov al,[bx+si+3]
+            and al,11011111B
+            mov [bx+si+3],al
+            inc si
+            loop s
+            add bx,16
+            pop cx
+            loop s0
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/18/assembly-summary-8/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-8</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/17/hui-bian-mo-ban/">
+        <span class="next-text nav-default">汇编模板</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

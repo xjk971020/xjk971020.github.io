@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-6">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/16/assembly-summary-6/">
+
+
+<meta name="description" content="第六章、包含多个段的程序6.1在代码段中使用数据 编程计算0123H、0456H，0abxH、0defH、0fesH、0cbaH、0987H这8个数据的和，结果存放在ax中：  assume cs:codesg codesg segment         dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H         ;dw，define w">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-6">
+<meta property="og:url" content="http://yoursite.com/2020/03/16/assembly-summary-6/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第六章、包含多个段的程序6.1在代码段中使用数据 编程计算0123H、0456H，0abxH、0defH、0fesH、0cbaH、0987H这8个数据的和，结果存放在ax中：  assume cs:codesg codesg segment         dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H         ;dw，define w">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/6-1.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:43:54.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-6">
+<meta name="twitter:description" content="第六章、包含多个段的程序6.1在代码段中使用数据 编程计算0123H、0456H，0abxH、0defH、0fesH、0cbaH、0987H这8个数据的和，结果存放在ax中：  assume cs:codesg codesg segment         dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H         ;dw，define w">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/6-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-6 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-6
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 16 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第六章、包含多个段的程序"><a href="#第六章、包含多个段的程序" class="headerlink" title="第六章、包含多个段的程序"></a>第六章、包含多个段的程序</h1><h2 id="6-1在代码段中使用数据"><a href="#6-1在代码段中使用数据" class="headerlink" title="6.1在代码段中使用数据"></a>6.1在代码段中使用数据</h2><ul>
+<li>编程计算0123H、0456H，0abxH、0defH、0fesH、0cbaH、0987H这8个数据的和，结果存放在ax中：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg
+codesg segment
+        dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H
+        ;dw，define word，定义字型数据，db定义字节型数据
+        ;由于数据在代码段中，所以段地址是CS
+        ;dw定义的数据在最开始的地方，所以偏移地址是0开始
+  start:mov bx,0 ;第一条指令
+        mov ax,0
+        mov cx,8
+    s:  add ax,cs:[bx]
+        add bx,2
+        loop s
+        mov ax,4c00H
+        int 21H
+codesg ends
+end start ;入口找end</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/6-1.jpg" alt></p>
+<ul>
+<li><strong>end的作用除了通知编译器结束之外还有告诉编译器程序的入口在什么地方。</strong></li>
+<li>可执行文件中的程序执行过程</li>
+</ul>
+<h2 id="6-2-在代码段中使用栈"><a href="#6-2-在代码段中使用栈" class="headerlink" title="6.2 在代码段中使用栈"></a>6.2 在代码段中使用栈</h2><ul>
+<li>利用栈编程将定义的数据逆序(联想栈的特性)存放：dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg
+codesg segment
+        dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H;地址0~15
+        dw 0,0,0,0,0,0,0,0;定义8个字型空数据，后面当作栈来使用，地址是16~31
+
+    start:  
+            mov ax,cs
+            mov ss,ax
+            mov sp,32;设置栈底ss:sp指向cs:32，十进制的32
+            mov bx,0
+            mov cx,8
+           s:push cs:[bx]
+            add bx,2
+            loop s; 以上代码段0~15个单元中的8个字型数据一次入栈
+
+            mov bx,0
+            mov cx,8
+          s0:pop cs:[bx]
+            add bx,2
+            loop s0;依次出栈8个执行数据到代码段0~15单元中
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start;指明程序入口在start处</code></pre>
+<ul>
+<li>如果对此程序的栈有疑惑，跳转到 3.6 栈和3.10 栈段</li>
+</ul>
+<h2 id="6-3-将数据、代码、栈放入不同的段"><a href="#6-3-将数据、代码、栈放入不同的段" class="headerlink" title="6.3 将数据、代码、栈放入不同的段"></a>6.3 将数据、代码、栈放入不同的段</h2><ul>
+<li>在8086CPU中数据、栈和代码存储空间不能大于64KB。<strong>可以用像定义代码段一样的方法来定义多个段并在其中定义需要的数据，或者通过定义数据来取得栈空间。</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:data,ss:stack;在源程序中为三个段进行有意义的名称
+data segment
+        dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H
+data ends
+
+stack segment
+        dw 0,0,0,0,0,0,0,0;定义8个字型空数据，后面当作栈来使用
+stack ends
+
+code segment
+    start:      
+            mov ax,stack
+            mov ss,ax
+            mov sp,16;设置栈底ss:sp指向stack:16，
+            mov ax,data
+            mov ds,ax;ds指向data段
+            mov bx,0;ds:bx指向data段中的第一个单元
+           s:push cs:[bx]
+            add bx,2
+            loop s; 以上代码段0~16个单元中的8个字型数据一次入栈
+
+            mov bx,0
+            mov cx,8
+          s0:pop cs:[bx]
+            add bx,2
+            loop s0;依次出栈8个执行数据到代码段0~16单元中
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start;指明程序入口在start处</code></pre>
+<ul>
+<li>程序中指令决定了段中的内容是作为数据处理还是作为指令执行还是作为栈空间使用。</li>
+</ul>
+<h2 id="实验五"><a href="#实验五" class="headerlink" title="实验五"></a>实验五</h2><pre class=" language-asm"><code class="language-asm">assume cs:codesg,ds:data,ss:stack
+data segment
+        dw 0123H,0564H,0789H,0abcH,0defH,0fedH,0cbaH,0987H
+data ends
+
+stack segment
+        dw 0,0,0,0,0,0,0,0
+stack ends
+
+codesg segment
+    start:  mov ax,stack
+            mov ss,ax
+            mov sp,16
+            mov ax,data
+            mov ds,ax
+            push ds:[0]
+            push ds:[2]
+            pop ds:[2]
+            pop ds:[0]
+
+            mov ax,4c00h
+            int 21h
+codesg ends
+end start</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/17/hui-bian-mo-ban/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">汇编模板</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/15/assembly-summary-5/">
+        <span class="next-text nav-default">assembly-summary-5</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

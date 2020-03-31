@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-14">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/23/assembly-summary-14/">
+
+
+<meta name="description" content="第十四章、端口引言 CPU可以直接读写3个地方的数据： 1、CPU内部的寄存器； 2、内存单元； 3、 端口。    14.1 端口的读写 mov、push、pop等死内存读写指令。in和out是端口读指令写指令时in是从端口读取数据，out是往端口写入数据。in和out指令只能用ax或al来存放从端口中读入的数据或要发送到端口中的数据，访问8位短空时用al，访问16位端口时用ax。  访问内存：">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-14">
+<meta property="og:url" content="http://yoursite.com/2020/03/23/assembly-summary-14/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第十四章、端口引言 CPU可以直接读写3个地方的数据： 1、CPU内部的寄存器； 2、内存单元； 3、 端口。    14.1 端口的读写 mov、push、pop等死内存读写指令。in和out是端口读指令写指令时in是从端口读取数据，out是往端口写入数据。in和out指令只能用ax或al来存放从端口中读入的数据或要发送到端口中的数据，访问8位短空时用al，访问16位端口时用ax。  访问内存：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-31T06:44:16.176Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-14">
+<meta name="twitter:description" content="第十四章、端口引言 CPU可以直接读写3个地方的数据： 1、CPU内部的寄存器； 2、内存单元； 3、 端口。    14.1 端口的读写 mov、push、pop等死内存读写指令。in和out是端口读指令写指令时in是从端口读取数据，out是往端口写入数据。in和out指令只能用ax或al来存放从端口中读入的数据或要发送到端口中的数据，访问8位短空时用al，访问16位端口时用ax。  访问内存：">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-14 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-14
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 23 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第十四章、端口"><a href="#第十四章、端口" class="headerlink" title="第十四章、端口"></a>第十四章、端口</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>CPU可以直接读写3个地方的数据：<ul>
+<li>1、CPU内部的寄存器；</li>
+<li>2、内存单元；</li>
+<li>3、 端口。</li>
+</ul>
+</li>
+</ul>
+<h2 id="14-1-端口的读写"><a href="#14-1-端口的读写" class="headerlink" title="14.1 端口的读写"></a>14.1 端口的读写</h2><ul>
+<li><p><strong>mov、push、pop等死内存读写指令。in和out是端口读指令写指令时in是从端口读取数据，out是往端口写入数据。in和out指令只能用ax或al来存放从端口中读入的数据或要发送到端口中的数据，访问8位短空时用al，访问16位端口时用ax。</strong></p>
+<ul>
+<li><p>访问内存：</p>
+<ul>
+<li>mov ax,ds:[8+0];假设(ds)=0</li>
+<li>执行时，与总线相关的操作：<ul>
+<li>1、CPU通过地址总线把信息发出；</li>
+<li>2、CPU通过控制线总发出内存读命令，选中存储器芯片并通知它将要从中读取数据；</li>
+<li>3、 存储器将8号单元中的数据通过数据线送入CPU。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>访问端口：</p>
+<ul>
+<li><p>in al,60h;从60h号端口读入一个字节。</p>
+</li>
+<li><p>执行时与总线相关的操作：</p>
+<ul>
+<li><p>1、CPU通过地址线将地址信息60h发出；</p>
+</li>
+<li><p>2、CPU通过控制线发出端口读命令，选中端口所在的芯片，并通知它，将要从中读取数据；</p>
+</li>
+<li><p>3、端口所在的芯片将60h端口中的数据通过数据线送入CPU。</p>
+<pre class=" language-asm"><code class="language-asm">;对0~255以内的端口进行读写
+in al,20h;从20h端口读入一个字节
+out 20h,al;往20h端口写入一个字节
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>    ;对256~65535的端口进行读写时，端口放在dx中
+    mov dx,3f8h;将端口号3f8h送入dx
+    in al,dx;从3f8端口读入一个字节
+    out 3f8h,al;往3f8h端口写入一个字节
+    ```</code></pre><h2 id="14-2-CMOS-RAM芯片"><a href="#14-2-CMOS-RAM芯片" class="headerlink" title="14.2 CMOS RAM芯片"></a>14.2 CMOS RAM芯片</h2><ul>
+<li><p>CMOA RAM特征：</p>
+<ul>
+<li><p>1、包含一个实时钟和一个有128个存储单元的RAM存储器。(早期的计算机位64个字节)。</p>
+</li>
+<li><p>2、该芯片靠电池供电。因此关机后其内部的实时钟仍可正常工作，RAM中的信息不会丢失。</p>
+</li>
+<li><p>3、128个字节的RAM，内部实时钟占用0~0dh单元来保存时间信息默契与大部分单元用于保存系统配置信息，供系统启动时bios程序读取。</p>
+</li>
+<li><blockquote>
+<p>bios也提供了相关的程序使用户在开机时配置CMOS RAM中的系统信息。</p>
+</blockquote>
+</li>
+<li><p>4、该芯片内部有两个端口，端口地址为70h和71h<br>h。CPU通过这两个端口读写CMOS RAM。</p>
+</li>
+<li><p>5、70h为地址端口，存放要访问的CMOS RAM单元的地址;71h为数据端口，存放从选定的CMOS RAM单元中读取的数据，或要写入到其中的数据。</p>
+</li>
+</ul>
+</li>
+<li><p>CPU对CMOS RAM的读写分两步进行，以读2号单元为例：</p>
+<ul>
+<li>1、将2送入端口70h；</li>
+<li>2、从71h读出2号单元的内容。</li>
+</ul>
+</li>
+</ul>
+<h2 id="14-3-shl和shr指令"><a href="#14-3-shl和shr指令" class="headerlink" title="14.3 shl和shr指令"></a>14.3 shl和shr指令</h2><ul>
+<li>shl为逻辑左移指令功能为：<ul>
+<li>1、将一个寄存器或内存单元中的数据向左移位；</li>
+<li>2、将<strong>最后移出</strong>的一位写入CF中；</li>
+<li>3、最低位用0补充。</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">          mov al,01001000b
+          shl al,1;将al中的数据左移一位
+          ;执行后al的值是10010000b，CF=0</code></pre>
+<ul>
+<li>如果移动位数大于1时，必须将移动位数放在cl中。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">          mov al,01010001b
+          mov cl,3
+          shl al,cl
+          ;执行后al的值为10001000b，cf=0</code></pre>
+<ul>
+<li>二进制逻辑左移一位，相当于执行x=x*2(2是进制位)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>mov al,00000001b</th>
+<th>执行后al的值等于00000001b=1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>shl al,1</td>
+<td>执行后al的值等于00000010b=2</td>
+</tr>
+<tr>
+<td>shl al,1</td>
+<td>执行后al的值等于00000100b=4</td>
+</tr>
+<tr>
+<td>shl al,1</td>
+<td>执行后al的值等于00001000b=8</td>
+</tr>
+<tr>
+<td>mov cl,3</td>
+<td></td>
+</tr>
+<tr>
+<td>shl al,cl</td>
+<td>执行后al的值等于01000000b=64</td>
+</tr>
+</tbody></table>
+<ul>
+<li>shr为逻辑左移指令功能为：<ul>
+<li>1、将一个寄存器或内存单元中的数据向右移位；</li>
+<li>2、将<strong>最后移出</strong>的一位写入CF中；</li>
+<li>3、最高位用0补充。</li>
+</ul>
+</li>
+<li>二进制逻辑右移一位，相当于执行x=x/2(2是进制位)</li>
+</ul>
+<h2 id="14-4-CMOS-RAM中存储的时间信息"><a href="#14-4-CMOS-RAM中存储的时间信息" class="headerlink" title="14.4 CMOS　RAM中存储的时间信息"></a>14.4 CMOS　RAM中存储的时间信息</h2><ul>
+<li>在CMOS RAM中以每个信息一字节存放着当前的时间信息：年09h，月08h，日07h，时04h，分02h，秒00h。这些数据以BCD码的方式存放，BCD码以4位为一位。</li>
+<li>数值26BCD码表示为0010 0110，用两个BCD码表示两位十进制，高4位表示十位，低4位表示各位。</li>
+<li>编程：在屏幕中间显示当前的月份。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    assume cs:code
+
+    code segment
+    start:
+            ;向地址端口70h写入要访问的单元地址，读取CMOS RAM的信息
+            mov al,8
+            out 70h,al
+            in al,71h;从数据端口中取得指定单元中的数据
+            mov ah,al;al中为从CMOS RAM的8号端口读出数据
+            mov cl,4
+            shr ah,cl;ah中为月份的十位数码值
+            and al,00001111b;ah中为月份的个位数值码
+            add ah,30h;BCD码值+30h(字符'0')=十进制对应的ASCII码
+            add al,30h
+            ;用BCD码表示的月份以十进制的形式显示到屏幕上。
+            mov bx,0b800h;显存
+            mov es,bx
+            mov byte ptr es:[160*12+40*2],ah;显示月份的十位数码
+            mov byte ptr es:[160*12+40*2+2],al;显示月份的个位数码
+
+            mov ax,4c00h
+            int 21h
+
+    code ends
+    end start</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/23/assembly-summary-15/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-15</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/23/assembly-summary-13/">
+        <span class="next-text nav-default">assembly-summary-13</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

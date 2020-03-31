@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-8">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/18/assembly-summary-8/">
+
+
+<meta name="description" content="第八章 数据处理的两个基本问题引言 本章是总结性的内容，数据处理的两个基本问题是 处理的数据在哪？ 要处理的数据有多长？   自定义得描述符： reg寄存器 ax、bx、cx、dx、ah、al、bh、bl、ch、cl、dh、dl、sp、bp、si、di；   sreg段寄存器 ds、ss、cs、es。      8.1 bx、si、di、bp 在8086 CPU中只有bx、si、di、bp这四个寄">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-8">
+<meta property="og:url" content="http://yoursite.com/2020/03/18/assembly-summary-8/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第八章 数据处理的两个基本问题引言 本章是总结性的内容，数据处理的两个基本问题是 处理的数据在哪？ 要处理的数据有多长？   自定义得描述符： reg寄存器 ax、bx、cx、dx、ah、al、bh、bl、ch、cl、dh、dl、sp、bp、si、di；   sreg段寄存器 ds、ss、cs、es。      8.1 bx、si、di、bp 在8086 CPU中只有bx、si、di、bp这四个寄">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/image/assembly/8-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/image/assembly/8-2.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:43:33.230Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-8">
+<meta name="twitter:description" content="第八章 数据处理的两个基本问题引言 本章是总结性的内容，数据处理的两个基本问题是 处理的数据在哪？ 要处理的数据有多长？   自定义得描述符： reg寄存器 ax、bx、cx、dx、ah、al、bh、bl、ch、cl、dh、dl、sp、bp、si、di；   sreg段寄存器 ds、ss、cs、es。      8.1 bx、si、di、bp 在8086 CPU中只有bx、si、di、bp这四个寄">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/image/assembly/8-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-8 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-8
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 18 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第八章-数据处理的两个基本问题"><a href="#第八章-数据处理的两个基本问题" class="headerlink" title="第八章 数据处理的两个基本问题"></a>第八章 数据处理的两个基本问题</h1><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><ul>
+<li>本章是总结性的内容，数据处理的两个基本问题是<ul>
+<li>处理的数据在哪？</li>
+<li>要处理的数据有多长？</li>
+</ul>
+</li>
+<li>自定义得描述符：<ul>
+<li>reg寄存器<ul>
+<li>ax、bx、cx、dx、ah、al、bh、bl、ch、cl、dh、dl、sp、bp、si、di；</li>
+</ul>
+</li>
+<li>sreg段寄存器<ul>
+<li>ds、ss、cs、es。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-1-bx、si、di、bp"><a href="#8-1-bx、si、di、bp" class="headerlink" title="8.1 bx、si、di、bp"></a>8.1 bx、si、di、bp</h3><ul>
+<li>在8086 CPU中只有bx、si、di、bp这四个寄存器用在[ ]中进行内存单元寻址。<strong>在[]中，组合只能以这四种形式：bx和si、bx和di、bp和si、bp和di</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    ;以下指令是错误的
+    mov ax,[ax]
+    mov ax,[cx]
+    mov ax,[dx]
+    mov ax,[ds]
+    mov ax,[bx+bp]
+    mov ax,[si+di]12345671234567</code></pre>
+<ul>
+<li>正确的指令</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,[bx]
+    mov ax,[si]
+    mov ax,[di]
+    mov ax,[bp]
+    mov ax,[bx+si]
+    mov ax,[bx+di]
+    mov ax,[bp+si]
+    mov ax,[bp+di]
+    mov ax,[bx+si+idata]
+    mov ax,[bx+di+idata]
+    mov ax,[bp+si+idata]
+    mov ax,[bp+di+idata]</code></pre>
+<ul>
+<li><strong>[bp]的段地址默认在ss中。</strong></li>
+</ul>
+<h3 id="8-2-机器指令处理的数据所在的位置"><a href="#8-2-机器指令处理的数据所在的位置" class="headerlink" title="8.2 机器指令处理的数据所在的位置"></a>8.2 机器指令处理的数据所在的位置</h3><ul>
+<li>绝大部分机器指令进行数据处理时，大致可以分为3类：读、写、运算。指令在处理前可以在三个地方：CPU内部、内存、端口。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>机器码</th>
+<th>汇编指令</th>
+<th>指令执行前数据的位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>89C3</td>
+<td>mov bx,[0]</td>
+<td>内存，ds:0单元</td>
+</tr>
+<tr>
+<td>89C3</td>
+<td>mov bx,ax</td>
+<td>CPU内部，ax寄存器</td>
+</tr>
+<tr>
+<td>BB0100</td>
+<td>mov bx,1</td>
+<td>CPU内部，指令缓冲器</td>
+</tr>
+</tbody></table>
+<h3 id="8-3-汇编语言中数据位置的表达"><a href="#8-3-汇编语言中数据位置的表达" class="headerlink" title="8.3 汇编语言中数据位置的表达"></a>8.3 汇编语言中数据位置的表达</h3><ul>
+<li>汇编语言中用三个概念来表达数据的位置。<ul>
+<li>1、立即数(idata)</li>
+<li>2、寄存器</li>
+<li>3、段地址(SA)和偏移地址(EA)</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-4-寻址方式总小结"><a href="#8-4-寻址方式总小结" class="headerlink" title="8.4 寻址方式总小结"></a>8.4 寻址方式总小结</h3><p><img src="http://cdn.cathetine.cn/image/assembly/8-1.jpg" alt></p>
+<h3 id="8-5-指令要处理的数据有多长"><a href="#8-5-指令要处理的数据有多长" class="headerlink" title="8.5 指令要处理的数据有多长"></a>8.5 指令要处理的数据有多长</h3><ul>
+<li>8086 CPU可以处理byte和word两种数据尺寸。</li>
+<li><strong>通过寄存器指明要处理的数据尺寸；push指令只进行字操作，若没有寄存器名存在的情况下，用操作符word ptr或者byte ptr指明内存单元的长度。</strong> 例如</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov word ptr ds:[0],1
+    inc word ptr [bx]
+    inc word ptr ds:[0]
+    add byte ptr [bx],212341234
+    ;假设内存2000:1000 FF FF FF FF FF FF ……
+    ;如果用以下指令
+    mov ax,2000H
+    mov ds,ax
+    mov byte ptr [1000H],1
+    ;那么内存中的内容变为
+    ;2000:1000 01 FF FF FF FF FF ……
+    如果是用以下指令
+    mov ax,2000H
+    mov ds,ax
+    mov word ptr [1000H],1
+    ;那么内存中的内容变为
+    ;2000:1000 01 00 FF FF FF ……</code></pre>
+<h3 id="8-6-寻址方式的综合应用"><a href="#8-6-寻址方式的综合应用" class="headerlink" title="8.6 寻址方式的综合应用"></a>8.6 寻址方式的综合应用</h3><p><img src="http://cdn.cathetine.cn/image/assembly/8-2.jpg" alt></p>
+<ul>
+<li>初步汇编代码</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,seg
+    mov ds,ax
+    mov bx,60h;确定记录物理地址：ds:bx
+    mov word ptr [bx+0ch],38;寄存器相对寻址     排名字段改为38
+    add word ptr [bx+0eh],70;收入字段增加70
+
+    mov si,0;用si来定位产品字符串中的字符
+    mov byte ptr [bx+10h+si],'V';相对基址变址寻址
+    inc si
+    mov byte ptr [bx+10h+si],'A'
+    inc si
+    mov byte ptr [bx+10h+si],'X'</code></pre>
+<ul>
+<li>c语言描述</li>
+</ul>
+<pre class=" language-c"><code class="language-c">    <span class="token keyword">struct</span> company  <span class="token comment" spellcheck="true">/*定义一个公司记录的结构体*/</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">char</span> cn<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/*公司名称*/</span>
+        <span class="token keyword">char</span> hn<span class="token punctuation">[</span><span class="token number">9</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/*总裁姓名*/</span>
+        <span class="token keyword">int</span> pm<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/*排名*/</span>
+        <span class="token keyword">int</span> sr<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/*收入*/</span>
+        <span class="token keyword">char</span> cp<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">/*著名产品*/</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">struct</span> compant dec<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"DEC"</span><span class="token punctuation">,</span><span class="token string">"Ken Olsen"</span><span class="token punctuation">,</span><span class="token number">137</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token string">"PDF"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">/*定义一个公司记录的变量，内存中将存有一条公司的记录*/</span>
+    <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+        dec<span class="token punctuation">.</span>pm<span class="token operator">=</span><span class="token number">38</span><span class="token punctuation">;</span>
+        dec<span class="token punctuation">.</span>sr<span class="token operator">=</span>dec<span class="token punctuation">.</span>sr<span class="token operator">+</span><span class="token number">70</span><span class="token punctuation">;</span>
+        i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+        dec<span class="token punctuation">.</span>cp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'V'</span><span class="token punctuation">;</span>
+        i<span class="token operator">++</span><span class="token punctuation">;</span>
+        dec<span class="token punctuation">.</span>cp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'A'</span><span class="token punctuation">;</span>
+        i<span class="token operator">++</span><span class="token punctuation">;</span>
+        dec<span class="token punctuation">.</span>cp<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">'X'</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+<ul>
+<li>按照c语言的风格用汇编写</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,seg
+    mov ds,ax
+    mov bx,60h;记录首地址送入bx
+
+    mov word ptr [bx].och,38;排名字段改为38
+    add word ptr [bx].0eh,70;收入字段增加70
+
+    ;产品名字段改为字符串'VAX'
+    mov si,0
+    mov byte ptr [bx].10h[si],'V'
+    inc si
+    mov byte ptr [bx].10h[si],'A'
+    inc si
+    mov byte ptr [bx].10h[si],'X'12345678910111213141234567891011121314</code></pre>
+<ul>
+<li>多种寻址方式为结构化数据的处理提供了方便。</li>
+<li><strong>一般用[bx+idata+si]的方式来访问结构体，用idata定位结构体中的某一数据项，用si定位数组项中的每个元素。</strong> 例如：[bx].idata、[bx].idata[si]。</li>
+</ul>
+<h3 id="8-7-div指令"><a href="#8-7-div指令" class="headerlink" title="8.7 div指令"></a>8.7 div指令</h3><ul>
+<li>div(divide)是除法指令，可用乘法模拟，格式为：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">div reg(寄存器)
+div 内存单元。1212</code></pre>
+<ul>
+<li><strong>除数：8位或16位，在寄存器或内存单元中；被除数：默认放在AX或DX和AX中。</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">        div byte ptr ds:[0]
+        div byte ptr [bx+si+idata]
+        ;al放商，ah放余数
+
+        div word ptr es:[0]
+        div word ptr [bx+si+idata]
+        ;ax放商，dx放余数</code></pre>
+<table>
+<thead>
+<tr>
+<th>除数</th>
+<th>被除数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8位</td>
+<td>16为(AX)</td>
+</tr>
+<tr>
+<td>16位</td>
+<td>32位(DX高16位+AX低16位)</td>
+</tr>
+</tbody></table>
+<ul>
+<li>8位或16位看的是除数。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>运算</th>
+<th>8位</th>
+<th>16位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>商</td>
+<td>AL</td>
+<td>AX</td>
+</tr>
+<tr>
+<td>余数</td>
+<td>AH</td>
+<td>DX</td>
+</tr>
+</tbody></table>
+<ul>
+<li>利用除法指令计算10001/100编程</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    ;被除数1001可用ax寄存器存放，除数100可用8位寄存器存放，要进行8位除法。
+    mov ax,1001
+    mov bl,100
+    div bl
+    ;执行后al的值等于0AH(10)，ah的值等于1(余数为1)。</code></pre>
+<ul>
+<li>利用除法指令计算100001/100编程</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    ;被除数100001大于2^16-1=65535(FFFF)，不能用ax来存放，要用dx和ax两个寄存器联合存放。除数小于255，可用一个8位寄存器存放，但是被除数是32位的，除数应为16位，所以要用一个16位寄存器来存放除数。
+    ;100001的十六进制为186A1H，100001的高16位(1)存放在dx，低16位(86AH)存放在ax中。
+    mov dx,1
+    mov ax,86A1H
+    mov bx,100
+    div bx
+    ;执行后ax内容等于03E8H(即1000)，dx的值等于1(余数)。</code></pre>
+<h3 id="8-8-伪指令dd"><a href="#8-8-伪指令dd" class="headerlink" title="8.8 伪指令dd"></a>8.8 伪指令dd</h3><ul>
+<li>db定义字节型数据，dw定于字型数据，<strong>dd 定于 dword(double word双字型数据)</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">data segment
+        db 1;第一个数据为01h，在data:0处，占1个字节
+        dw 1;第二个数据为0001h，在data:1处，占1个字
+        dd 1;第三个数据为00000001h，在data:3处，占2个字
+data ends</code></pre>
+<ul>
+<li>利用除法指令计算 dd 100001H 除以 dw 100，商放在 dw 0中</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">data segment
+    dd 100001H;低16位存储在ax中，高16位存储在dx中
+    dw 100
+    dw 0
+data ends
+
+    mov ax,data
+    mov ds,ax
+    mov ax,ds:[0];低16位存储在ax中
+    mov dx,ds:[2];高16位存储在dx中
+    div word ptr ds:[4]
+    mov ds:[6],ax</code></pre>
+<h3 id="8-9-伪指令dup"><a href="#8-9-伪指令dup" class="headerlink" title="8.9 伪指令dup"></a>8.9 伪指令dup</h3><ul>
+<li>和db、dw、dd等数据定义伪指令配合使用，用来进行数据的重复。格式 db或者dw或者dd 重复的次数 dup (重复的数据)</li>
+<li>例如：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">db 3 dup(0)
+;定义了3个字节，它们的值都是0，等同于db 0,0,0。
+db 3 dup(0,1,2)
+;定义了9个直接，它们是0、1、2、0、1、2、0、1、2，相当于db 0、1、2、0、1、2、0、1、2
+db 3 dup('abc','ABC')
+;定义了18个直接，它们是'abcABCabcABCabcABC'</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/19/assembly-summary-9/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-9</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/17/assembly-summary-7/">
+        <span class="next-text nav-default">assembly-summary-7</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-9">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/19/assembly-summary-9/">
+
+
+<meta name="description" content="第九章、转移指令的原理引言 可以修改IP，或者同时修改CS和IP的指令统称为转移指令。 简单的来说可以控制CPU执行内存中某处代码的指令就是转移指令。 CPU的转移行为有只修改的段内转移(如jmp ax) 和同时修改该CS和IP的段间转移(如jmp 1000:0)。其中段内转移分为短转移(IP的修改范围为-128127)和近转移 (IP的修改范围为-3276832767)。 8086 CPU的转移">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-9">
+<meta property="og:url" content="http://yoursite.com/2020/03/19/assembly-summary-9/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第九章、转移指令的原理引言 可以修改IP，或者同时修改CS和IP的指令统称为转移指令。 简单的来说可以控制CPU执行内存中某处代码的指令就是转移指令。 CPU的转移行为有只修改的段内转移(如jmp ax) 和同时修改该CS和IP的段间转移(如jmp 1000:0)。其中段内转移分为短转移(IP的修改范围为-128127)和近转移 (IP的修改范围为-3276832767)。 8086 CPU的转移">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/9-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/9-2.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/9-3.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:44:01.080Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-9">
+<meta name="twitter:description" content="第九章、转移指令的原理引言 可以修改IP，或者同时修改CS和IP的指令统称为转移指令。 简单的来说可以控制CPU执行内存中某处代码的指令就是转移指令。 CPU的转移行为有只修改的段内转移(如jmp ax) 和同时修改该CS和IP的段间转移(如jmp 1000:0)。其中段内转移分为短转移(IP的修改范围为-128127)和近转移 (IP的修改范围为-3276832767)。 8086 CPU的转移">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/9-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-9 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-9
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 19 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第九章、转移指令的原理"><a href="#第九章、转移指令的原理" class="headerlink" title="第九章、转移指令的原理"></a>第九章、转移指令的原理</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li><strong>可以修改IP，或者同时修改CS和IP的指令统称为转移指令。</strong> 简单的来说可以控制CPU执行内存中某处代码的指令就是转移指令。</li>
+<li>CPU的转移行为有<strong>只修改的段内转移</strong>(如jmp ax) 和<strong>同时修改该CS和IP的段间转移</strong>(如jmp 1000:0)。其中段内转移分为<strong>短转移</strong>(IP的修改范围为-128<del>127)和<strong>近转移</strong> (IP的修改范围为-32768</del>32767)。</li>
+<li>8086 CPU的转移指令分为以下几类：<ul>
+<li>无条件转移指令(如：jmp)</li>
+<li>条件转移指令(如: jcxz)</li>
+<li>循环指令(如：loop)</li>
+<li>过程</li>
+<li>中断</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-1-操作符offset"><a href="#9-1-操作符offset" class="headerlink" title="9.1 操作符offset"></a>9.1 操作符offset</h2><ul>
+<li>offset是伪指令，由编译器处理，它的功能是取得标号的偏移地址。</li>
+</ul>
+<pre class=" language-assembly"><code class="language-assembly">    assume cs:codesg
+    codesg segment
+
+    start:mov ax,offset start;相当于 mov ax,偏移地址0，段地址是从0开始
+        s:mov ax,offset s;相当于 mov ax,3，标记的是代码段中的第二条指令，第一条指令长度为3个字节，则s的偏移地址为3
+
+        codesg ends
+    end</code></pre>
+<h2 id="9-2-jmp指令"><a href="#9-2-jmp指令" class="headerlink" title="9.2 jmp指令"></a>9.2 jmp指令</h2><ul>
+<li><strong>jmp为无条件转移，可以只修改IP，也可以同时修改CS和IP。</strong></li>
+<li>jmp需要两种信息<ul>
+<li>1、转移的目的地址；</li>
+<li>2、转移的距离(段间转移、段内转移、段内近转移)。</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-3-依据位移进行转移的jmp指令"><a href="#9-3-依据位移进行转移的jmp指令" class="headerlink" title="9.3 依据位移进行转移的jmp指令"></a>9.3 依据位移进行转移的jmp指令</h2><ul>
+<li>段内短转移，<strong>jmp short 标号</strong> ，对IP的修改范围是-128~127，一个字节的空间，即向前转移最多128字节，向后最多127字节。short 表明指令进行的是短转移，标号指明了指令要转移的目的地，转移指令结束后<strong>CS:IP指向标号处的指令</strong>。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    assume cs:codesg
+    codesg segment
+
+    start:mov ax,0
+          jmp short s
+          add ax,1
+         s:inc ax
+
+    codesg ends
+    end</code></pre>
+<ul>
+<li>一般汇编指令中的立即数(idata)会出现在对应的机器指令中。而jmp指令的机器指令并不包含目的地址，包含的是<strong>相对于当前IP的转移位移</strong>，CPU并不需要目的地址就可以实现对IP的修改。</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/9-1.jpg" alt></p>
+<ul>
+<li>jmp short s 指令的读取和执行过程：<ul>
+<li>1、CS:IP指向jmp short s 的机器码；</li>
+<li>2、读取指令码进入指令缓冲器</li>
+<li>3、 改变IP，(IP)=(IP)+所读取指令的长度，IP指向下一个指令；</li>
+<li>4、CPU执行指令缓冲器中的指令；</li>
+<li>5、执行后CS:IP继续指向下一个指令</li>
+</ul>
+</li>
+<li>jmp short 标号的功能为(IP)=(IP)+8位位移。<ul>
+<li>1、8位为=标号处的地址-jmp指令后的第一个字节的地址；</li>
+<li>2、short 指明此处的位移为8位；</li>
+<li>3、8位位移的范围为-128~127，用补码表示。</li>
+<li>4、8位位移由编译程序在编译时算出的。</li>
+</ul>
+</li>
+<li>jmp near ptr 标号 指令实现段内近转移，功能为(IP)=(IP)+16位位移。<ul>
+<li>1、16位为=标号处的地址-jmp指令后的第一个字节的地址；</li>
+<li>2、nearptr 指明此处的位移为16位；</li>
+<li>3、16位位移的范围为-32769~32767，用补码表示。</li>
+<li>4、16位位移由编译程序在编译时算出的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-4-转移的目的地址在指令中的jmp指令"><a href="#9-4-转移的目的地址在指令中的jmp指令" class="headerlink" title="9.4 转移的目的地址在指令中的jmp指令"></a>9.4 转移的目的地址在指令中的jmp指令</h2><ul>
+<li><strong>jmp far ptr 段间转移，又称为远转移</strong></li>
+<li>jmp far ptr 标号的功能：<ul>
+<li>(CS)=标号所在段的段地址；</li>
+<li>(IP)=标号所在段总的偏移地址；</li>
+<li>far ptr 指明了指令用标号的段地址和偏移地址修改CS和IP。</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    assume cs:codesg
+    codesg segment
+    start:
+        mov ax,0
+        mov bx,0
+        jmp far ptr s
+        db 256 dup(0)
+        s:add ax,1
+        inc ax
+    codesg ends
+    end </code></pre>
+<ul>
+<li>机器码中包含了转移的目的地址。</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/9-2.jpg" alt></p>
+<h2 id="9-5-转移地址在寄存器中的jmp指令"><a href="#9-5-转移地址在寄存器中的jmp指令" class="headerlink" title="9.5 转移地址在寄存器中的jmp指令"></a>9.5 转移地址在寄存器中的jmp指令</h2><ul>
+<li>jmp 16位寄存器，功能是16位寄存器赋值给IP，实现段内的近(短)转移。</li>
+</ul>
+<h2 id="9-6-转移地址在内存中的jmp指令"><a href="#9-6-转移地址在内存中的jmp指令" class="headerlink" title="9.6 转移地址在内存中的jmp指令"></a>9.6 转移地址在内存中的jmp指令</h2><ul>
+<li><p>转移地址在内存中的jmp指令有两种格式：</p>
+</li>
+<li><p><strong>1、jmp word ptr内存单元地址(16位只能实现段内转移)。</strong> 功能是从内存单元地址处开始存放一个字(转移的目的偏移地址)，内存单元地址可用寻址方式的格式给出。</p>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    mov ax,0123H
+    mov ds:[0],ax
+    jmp word ptr ds:[0]
+    ;相当于 jmp ax，执行后(IP)=0123h
+
+    mov ax,0123H
+    mov [bx],ax
+    jmp word ptr [bx]
+    ;执行后(IP)=0123h</code></pre>
+<p><strong>2、jmp dword ptr 内存单元地址(段间转移)。</strong> 功能：从内存单元地址处开始存放两个字型数据，高地址是转移的目的段地址，低地址处是转移的目的偏移地址。(CS)=(内存单元地址+2),(IP)=(内存单元地址)，内存单元地址可用寻址方式的任一格式给出。</p>
+<pre class=" language-asm"><code class="language-asm">    mov ax,0123H
+    mov ds:[0],ax
+    mov word ptr ds:[2],0
+    jmp dword ptr ds:[0]
+
+    mov ax,0123H
+    mov [dx],ax
+    mov word ptr [bx+2],0
+    jmp dword ptr [bx]
+
+    ;执行后 (CS)=0,(IP)=0123H CS:IP指向0000:0123</code></pre>
+<h2 id="9-8-loop指令"><a href="#9-8-loop指令" class="headerlink" title="9.8 loop指令"></a>9.8 loop指令</h2><ul>
+<li><p>loop指令为循环指令，所有的循环指令都是短转移，在对应的机器码中包含转移的位移而不包含目的地址。</p>
+<p>操作i：</p>
+<ul>
+<li><strong>cx先自减1；</strong></li>
+<li><strong>当cx的值不为0时，(IP)=(IP)+8位位移，8位位移=标号处的地址-loop指令后的第一个字节的地址。</strong></li>
+<li>8位位移的范围是-128~127，用补码表。</li>
+<li>8位位移由编译器在编译时算出。</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-9-根据位移进行转移的意义"><a href="#9-9-根据位移进行转移的意义" class="headerlink" title="9.9 根据位移进行转移的意义"></a>9.9 根据位移进行转移的意义</h2><pre class=" language-asm"><code class="language-asm">    jmp short 标号
+    jmp near ptr 标号
+    jcxz 标号
+    loop 标号</code></pre>
+<ul>
+<li><strong>它们对IP的修改时根据转移目的地址和转移起始地址自检的位移来进行的。在它们对应的机器码中不包含转移的目的地址，而包含的是目的地址的位移距离。方便了程序段在内存中的浮动分配，没有固定目的地址的限制，更灵活。</strong></li>
+</ul>
+<h2 id="9-10-编译器对转移位移超界的检测"><a href="#9-10-编译器对转移位移超界的检测" class="headerlink" title="9.10 编译器对转移位移超界的检测"></a>9.10 编译器对转移位移超界的检测</h2><ul>
+<li>根据位移进行转移的指令，它们的转移范围受到了转移位移的限制，如果在源程序中出现了转移范围超界的问题，在编译时编译器会报错。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+    code segment
+    start:  jmp short s
+          db 128 dup(0)
+          s:mov ax,0FFFFH
+    code ends
+end</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/9-3.jpg" alt></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/21/assembly-summary-10/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-10</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/18/assembly-summary-8/">
+        <span class="next-text nav-default">assembly-summary-8</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

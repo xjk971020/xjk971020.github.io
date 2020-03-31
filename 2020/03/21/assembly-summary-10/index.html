@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-10">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/21/assembly-summary-10/">
+
+
+<meta name="description" content="第十章、CALL和RET指令引言 回想程序之间的加载返回过程。 call和ret指令都是转移指令，它们都修改IP或者同时修改CS和IP，经常被共用来实现程序的设计。 这一章讲解call和ret指令的原理。  10.1 ret和retf指令 ret指令用栈中的数据来修改IP的内容，从而实现近转移。 CPU执行ret指令时： 1、(IP)=((SS)*16+(SP))，指向栈顶 2、(SP)=(SP)">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-10">
+<meta property="og:url" content="http://yoursite.com/2020/03/21/assembly-summary-10/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第十章、CALL和RET指令引言 回想程序之间的加载返回过程。 call和ret指令都是转移指令，它们都修改IP或者同时修改CS和IP，经常被共用来实现程序的设计。 这一章讲解call和ret指令的原理。  10.1 ret和retf指令 ret指令用栈中的数据来修改IP的内容，从而实现近转移。 CPU执行ret指令时： 1、(IP)=((SS)*16+(SP))，指向栈顶 2、(SP)=(SP)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/10-1.jpg">
+<meta property="og:image" content="http://cdn.cathetine.cn/blog/images/assembly/10-2.jpg">
+<meta property="og:updated_time" content="2020-03-31T06:44:03.993Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-10">
+<meta name="twitter:description" content="第十章、CALL和RET指令引言 回想程序之间的加载返回过程。 call和ret指令都是转移指令，它们都修改IP或者同时修改CS和IP，经常被共用来实现程序的设计。 这一章讲解call和ret指令的原理。  10.1 ret和retf指令 ret指令用栈中的数据来修改IP的内容，从而实现近转移。 CPU执行ret指令时： 1、(IP)=((SS)*16+(SP))，指向栈顶 2、(SP)=(SP)">
+<meta name="twitter:image" content="http://cdn.cathetine.cn/blog/images/assembly/10-1.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-10 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-10
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 21 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第十章、CALL和RET指令"><a href="#第十章、CALL和RET指令" class="headerlink" title="第十章、CALL和RET指令"></a>第十章、CALL和RET指令</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>回想程序之间的加载返回过程。</li>
+<li>call和ret指令都是转移指令，它们都修改IP或者同时修改CS和IP，经常被共用来实现程序的设计。</li>
+<li>这一章讲解call和ret指令的原理。</li>
+</ul>
+<h2 id="10-1-ret和retf指令"><a href="#10-1-ret和retf指令" class="headerlink" title="10.1 ret和retf指令"></a>10.1 ret和retf指令</h2><ul>
+<li><strong>ret指令用栈中的数据来修改IP的内容，从而实现近转移。</strong></li>
+<li>CPU执行ret指令时：<ul>
+<li>1、(IP)=((SS)*16+(SP))，指向栈顶</li>
+<li>2、(SP)=(SP)+2</li>
+</ul>
+</li>
+<li><strong>retf指令用栈中的数据，修改CS和IP的内容，从而实现远转移。</strong></li>
+<li>CPU执行retf指令时，进行下面两步操作：<ul>
+<li>1、(IP)=((SS)*16+(SP))</li>
+<li>2、(SP)=(SP)+2</li>
+<li>3、(CS)=((SS)*16+(SP))</li>
+<li>4、(SP)=(SP)+2</li>
+</ul>
+</li>
+<li>用汇编的语法来解释ret和retf指令：<ul>
+<li>CPU执行ret指令相当于进行 POP IP</li>
+<li>CPU执行retf指令相当于进行 POP IP和POP CS</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;这段程序是通过ret指令让程序正常退出
+assume cs:codesg
+
+stack segment
+              db 16 dup(0)
+stack ends
+
+          codesg segment
+              mov ax,4c00h
+              int 21h
+
+          start:
+              mov ax,stack
+              mov ss,ax
+              mov sp,16
+              mov ax,0
+
+              push ax
+
+              mov bx,0
+              ret
+codesg ends
+
+end start</code></pre>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/10-1.jpg" alt></p>
+<pre class=" language-assembly"><code class="language-assembly">;这段程序是通过retf指令让程序正常退出
+assume cs:codesg
+
+stack segment
+        db 16 dup(0)
+stack ends
+
+codesg segment
+        mov ax,4c00h
+        int 21h
+
+start:
+    mov ax,stack
+    mov ss,ax
+    mov sp,16
+    mov ax,0
+    push cs
+    push ax
+
+    mov bx,0
+    retf
+
+codesg ends
+
+end start</code></pre>
+<h2 id="10-2-call指令"><a href="#10-2-call指令" class="headerlink" title="10.2 call指令"></a>10.2 call指令</h2><ul>
+<li>call指令经常跟ret指令配合使用，CPU执行call指令时：<ul>
+<li><strong>1、将当前的IP或者CS和IP压入栈；</strong></li>
+<li><strong>2、转移(jmp)。</strong></li>
+</ul>
+</li>
+<li>call指令不能实现短转移。</li>
+<li>call指令实现转移的方法和jmp指令的原理相同。</li>
+<li>call指令可以实现段间的转移(远转移)或近转移。</li>
+</ul>
+<h2 id="10-3-依据位移进行转移的call指令"><a href="#10-3-依据位移进行转移的call指令" class="headerlink" title="10.3 依据位移进行转移的call指令"></a>10.3 依据位移进行转移的call指令</h2><ul>
+<li>call标号(将当前的IP压入栈后转到目标处执行指令)，执行时进行以下操作：<ul>
+<li>1、(SP)=(SP)-2<br>((SS)*16+(SP))=(IP)</li>
+<li>2、(IP)=(IP)+16位位移；</li>
+<li>3、16位位移=标号处的地址减去call指令后的第一个字节的地址。16位位移的范围是-32768~32767，用补码表示。16位位移由编译器编译时算出。</li>
+</ul>
+</li>
+<li>用汇编语法解释call指令：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">push IP
+jmp near 标号</code></pre>
+<h2 id="10-4-转移的目的地址在指令中的call指令"><a href="#10-4-转移的目的地址在指令中的call指令" class="headerlink" title="10.4 转移的目的地址在指令中的call指令"></a>10.4 转移的目的地址在指令中的call指令</h2><ul>
+<li>call far ptr 标号 实现的是段间转移，执行时：<ul>
+<li>1、CS先自减2；</li>
+<li>2、CS的值等于SS的值乘以16加上SP的值，SP自减2，IP的值等于SS的值*16加上SP的值；</li>
+<li>3、CS的值等于标号所在的段地址，IP的值等于标号所在的偏移地址.</li>
+</ul>
+</li>
+<li>用汇编语法解释call指令：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">push CS
+push IP
+jmp far ptr 标号</code></pre>
+<h2 id="10-5-转移地址在寄存器中的call指令"><a href="#10-5-转移地址在寄存器中的call指令" class="headerlink" title="10.5 转移地址在寄存器中的call指令"></a>10.5 转移地址在寄存器中的call指令</h2><ul>
+<li>指令格式是：call 16位寄存器，功能是：<ul>
+<li>1、SP的值先自减2；</li>
+<li>2、IP的值SS的值乘以16再加上SP的值；</li>
+<li>3、 IP的值等于16位寄存器的内容。</li>
+</ul>
+</li>
+<li>用汇编语法解释此种call指令，CPU执行call 16位reg时，相当于：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">push IP
+jmp 16位寄存器</code></pre>
+<h2 id="10-6-转移地址在内存中的call指令"><a href="#10-6-转移地址在内存中的call指令" class="headerlink" title="10.6 转移地址在内存中的call指令"></a>10.6 转移地址在内存中的call指令</h2><ul>
+<li>转移地址在内存中的call指令有两种格式</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">       call word ptr 内存单元地址;段内跳转
+       call dword ptr 内存单元地址;段间跳转</code></pre>
+<ul>
+<li>用汇编语法解释call word ptr 内存单元地址</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">       push IP
+       jmp word ptr 内存单元地址</code></pre>
+<ul>
+<li>例子：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">       mov sp,10h
+       mov ax,0123H
+       mov ds:[0],ax
+       call word ptr ds:[0]
+       ;执行后IP的值等于0123H，SP的值等于0EH</code></pre>
+<ul>
+<li>用汇编语法解释call dword ptr 内存单元地址</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">       push CS
+       push IP
+       jmp word ptr 内存单元地址</code></pre>
+<ul>
+<li>例子：</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">       mov sp,10h
+       mov ax,0123H
+       mov ds:[0],ax
+       mov word ptr ds:[2],0
+       call dword ptr ds:[0] ;低位为IP，高位为CS
+       ;执行后IP的值等于0123H，SP的值等于0CH，CS的值等于0</code></pre>
+<h2 id="10-7-call和ret的配合使用"><a href="#10-7-call和ret的配合使用" class="headerlink" title="10.7 call和ret的配合使用"></a>10.7 call和ret的配合使用</h2><ul>
+<li>下面的程序返回前，bx中的值是多少？</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+code segment
+      start:
+            mov ax,1
+            mov cx,3
+            call s
+            mov bx,ax
+            mov ax,4c00h
+            int 21h
+          s:
+            add ax,ax
+            loop s
+            ret
+code ends
+end start</code></pre>
+<ul>
+<li>具有一定功能的程序段称为子程序，<strong>用call转去执行，在子程序后面使用ret实现返回。</strong></li>
+<li>具有子程序的源程序的框架如下</li>
+</ul>
+<p><img src="http://cdn.cathetine.cn/blog/images/assembly/10-2.jpg" alt></p>
+<h2 id="10-8-mul指令"><a href="#10-8-mul指令" class="headerlink" title="10.8 mul指令"></a>10.8 mul指令</h2><ul>
+<li>mul指令是乘法指令, <strong>相乘的两个数要么都是8位的，要么都是16位的</strong><ul>
+<li>8位：在AL中和8位寄存器中或内存字节单元中；</li>
+<li>16位：在AX中和16位寄存器或内存字单元中。</li>
+<li>结果<ul>
+<li>8位的存放在AX中；</li>
+<li>16位：DX(高位)和AX(低位)中。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mul reg
+
+mul 内存单元
+mul byte ptr ds:[0]
+
+mul word ptr [bx+si+idata]
+</code></pre>
+<pre class=" language-assembly"><code class="language-assembly">;(ax)=(ax)*((ds)*16+(bx)+(si)+idata)
+;(dx)=(ax)*((ds)*16+(bx)+(si)+idata)
+;计算100*10，两个数都小于255，可以做8位乘法
+mov ax,100
+mov bx,10
+mul bl
+;结果(ax)=1000(03E8H)
+
+;计算100*1000，1000都大于255，要做16位乘法
+mov ax,100;高位自动补零
+mov bx,10000
+mul bx
+;结果(ax)=4240H，(dx)=000FH，F4240H=1000000</code></pre>
+<h2 id="10-9-模块化程序设计"><a href="#10-9-模块化程序设计" class="headerlink" title="10.9 模块化程序设计"></a>10.9 模块化程序设计</h2><ul>
+<li>cal和ret指令共同支持汇编语言编程中的模块化设计。</li>
+</ul>
+<h2 id="10-10-参数和结果传递的问题"><a href="#10-10-参数和结果传递的问题" class="headerlink" title="10.10 参数和结果传递的问题"></a>10.10 参数和结果传递的问题</h2><ul>
+<li>用寄存器来存储参数和结果是最常用的方法。对于存放参数的寄存器和存放结果的寄存器，调用者和子程序的读写操作恰恰相反：<ul>
+<li>调用者将参数送入参数寄存器，从结果寄存器中取到返回值；</li>
+<li>子程序 从参数寄存器中取到参数，将返回值送入结果寄存器。</li>
+</ul>
+</li>
+<li>编程：根据提供的N来计算N^3</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">cube:
+     mov ax,bx
+     mul bx
+     mul bx
+     ret</code></pre>
+<ul>
+<li>编程：计算data段中第一组数据的3次方，结果保存在后面一组dword单元中</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+data segment
+          dw 1,2,3,4,5,6,7,8
+          dd 8 dup (0)
+data ends
+
+code segment
+          start:
+              mov ax,data
+              mov ds,ax
+              mov si,0;ds:si指向第一组word单元
+              mov di,16;ds:di指向第二组dword单元
+
+              mov cx,8
+          s:  mov bx,[si]
+              call cube
+              mov [di],ax
+              mov [di+2],dx
+              add si,2;ds:di指向下一个word单元
+              add di,4;ds:di指向下一个dword单元
+              loop s
+
+              mov ax,4c00h
+              int 21h
+
+          cube:mov ax,bx
+              mul bx
+              mul bx
+              ret
+code ends
+end start</code></pre>
+<h2 id="10-11-批量数据的传递"><a href="#10-11-批量数据的传递" class="headerlink" title="10.11 批量数据的传递"></a>10.11 批量数据的传递</h2><ul>
+<li>将批量数据放在内存中，然后将他们所在内存空间的首地址放在寄存器中，传递给需要的子程序，批量数据的返回结果也是采用同样的方法。除此之外还可以用栈来传递参数。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+
+data segment
+    db'conversation'
+data ends
+
+    start:
+        mov ax,data
+        mov ds,ax
+        mov si,0;ds:si指向字符串(批量数据)所在空间的首地址
+
+        mov cx,12;cx存放字符串的长度
+        call capital
+
+        mov ax,4c00h
+        int 21h
+
+    capital:
+        and byte ptr [si],11011111B ;小写变大写
+        inc si
+        loop capital
+        ret
+code ends</code></pre>
+<h2 id="10-12-寄存器冲突的问题"><a href="#10-12-寄存器冲突的问题" class="headerlink" title="10.12 寄存器冲突的问题"></a>10.12 寄存器冲突的问题</h2><ul>
+<li>编程：将一个全是字母，以0结尾的字符串转化为大写</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    capital:
+        mov cl,[si];低8位
+        mov ch,0;高8位设置为0
+        jcxz ok;如果(cx)=0则结束，如果不是0则处理
+        and byte ptr [si],11011111B
+        inc si
+        jmp short capital
+    ok:
+        ret</code></pre>
+<ul>
+<li>编程将data段中的字符串全部转化为大写</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">    assume cs:code
+    data segment
+    db'word',0
+    db'unix',0
+    db'wind',0
+    db'good',0
+    data ends
+    ;此程序有bug，cx有问题
+    assume cs:code
+
+    data segment
+    db 'word',0
+    db 'unix',0
+    db 'wind',0
+    db 'good',0
+    data ends
+
+    code segment
+    start:
+            mov ax,data
+            mov ds,ax
+            mov bx,0
+
+            mov cx,4
+        s:
+            mov si,bx
+            call capital
+            add bx,5
+            loop s
+
+            mov ax,4c00h
+            int 21h
+
+    capital:
+            mov cl,[si]
+            mov ch,0
+            jcxz ok
+            and byte ptr [si],11011111b
+            inc si
+            jmp short capital
+        ok:
+            ret
+
+    code ends
+    end start</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/21/assembly-summary-11/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-11</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/19/assembly-summary-9/">
+        <span class="next-text nav-default">assembly-summary-9</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

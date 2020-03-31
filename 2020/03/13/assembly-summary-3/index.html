@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-3">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/13/assembly-summary-3/">
+
+
+<meta name="description" content="第三章、寄存器(内存访问)3.1 内存中字的存储 字是两个字节，要用两个地址连续的内存来存放，字的低位字节存在低地址中，高位字节存放在高地址单元中。  3.2 DS和[address] DS通常存放要访问的数据的段地址。  8086 CPU由于硬件的设计不支持将数据直接送入段寄存器的操作。  数据 -&amp;gt; 通用寄存器 -&amp;gt; 段寄存器   [ ]里边的数据代表偏移地址值  mov指令：">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-3">
+<meta property="og:url" content="http://yoursite.com/2020/03/13/assembly-summary-3/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第三章、寄存器(内存访问)3.1 内存中字的存储 字是两个字节，要用两个地址连续的内存来存放，字的低位字节存在低地址中，高位字节存放在高地址单元中。  3.2 DS和[address] DS通常存放要访问的数据的段地址。  8086 CPU由于硬件的设计不支持将数据直接送入段寄存器的操作。  数据 -&amp;gt; 通用寄存器 -&amp;gt; 段寄存器   [ ]里边的数据代表偏移地址值  mov指令：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-31T06:43:44.233Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-3">
+<meta name="twitter:description" content="第三章、寄存器(内存访问)3.1 内存中字的存储 字是两个字节，要用两个地址连续的内存来存放，字的低位字节存在低地址中，高位字节存放在高地址单元中。  3.2 DS和[address] DS通常存放要访问的数据的段地址。  8086 CPU由于硬件的设计不支持将数据直接送入段寄存器的操作。  数据 -&amp;gt; 通用寄存器 -&amp;gt; 段寄存器   [ ]里边的数据代表偏移地址值  mov指令：">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-3 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-3
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 13 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第三章、寄存器-内存访问"><a href="#第三章、寄存器-内存访问" class="headerlink" title="第三章、寄存器(内存访问)"></a>第三章、寄存器(内存访问)</h1><h2 id="3-1-内存中字的存储"><a href="#3-1-内存中字的存储" class="headerlink" title="3.1 内存中字的存储"></a>3.1 内存中字的存储</h2><ul>
+<li>字是两个字节，要用两个地址连续的内存来存放，字的低位字节存在低地址中，高位字节存放在高地址单元中。</li>
+</ul>
+<h2 id="3-2-DS和-address"><a href="#3-2-DS和-address" class="headerlink" title="3.2 DS和[address]"></a>3.2 DS和[address]</h2><ul>
+<li><p>DS通常存放要访问的数据的段地址。</p>
+</li>
+<li><p><strong>8086 CPU由于硬件的设计不支持将数据直接送入段寄存器的操作。</strong></p>
+<blockquote>
+<p>数据 -&gt; 通用寄存器 -&gt; 段寄存器</p>
+</blockquote>
+</li>
+<li><p>[ ]里边的数据代表偏移地址值</p>
+</li>
+<li><p>mov指令：</p>
+<ul>
+<li>将数据直接送入寄存器；</li>
+<li>将一个寄存器或内存单元中的内容送入另一个寄存器；</li>
+</ul>
+</li>
+<li><p>mov指令格式:</p>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov 寄存器名,内存单元1</code></pre>
+<h2 id="3-3-字型的传送"><a href="#3-3-字型的传送" class="headerlink" title="3.3 字型的传送"></a>3.3 字型的传送</h2><ul>
+<li>高地址单元和高8位寄存器，低地址单元和低8位寄存器相对应。</li>
+</ul>
+<h2 id="3-4-mov、add、sub指令"><a href="#3-4-mov、add、sub指令" class="headerlink" title="3.4 mov、add、sub指令"></a>3.4 mov、add、sub指令</h2><ul>
+<li>有两个操作对象，jmp只有一个操作对象。</li>
+<li><strong>mov指令的几种形式</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov 寄存器,数据;mov ax,8
+mov 寄存器,寄存器;mov ax,bx
+mov 寄存器,内存单元;mov ax,[0]
+mov 内存单元,寄存器;mov [0],ax
+mov 段寄存器,寄存器;mov ds,ax
+mov 寄存器,段寄存器;mov ax,ds</code></pre>
+<ul>
+<li><strong>add指令的几种形式</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">add 通用寄存器,数据
+add 通用寄存器,通用寄存器
+add 通用寄存器,内存单元
+add 内存单元,寄存器</code></pre>
+<ul>
+<li><strong>sub指令的几种形式</strong></li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">sub 通用寄存器,数据
+sub 通用寄存器,通用寄存器
+sub 通用寄存器,内存单元
+sub 内存单元,通用寄存器</code></pre>
+<h2 id="3-5-数据段"><a href="#3-5-数据段" class="headerlink" title="3.5 数据段"></a>3.5 数据段</h2><ul>
+<li>对于8086PC机，在编程时可以将长度为N(N小于等于64KB)的一组代码存在一组地址连续、起始地址为16的倍数的内存单元中，这段内存是用来存放数据的，从而定义了一个数据段。</li>
+<li>可以通过在DS中存放数据段的段地址，用相关的指令访问数据段中的具体单元来访问数据段中的数据。</li>
+</ul>
+<h2 id="3-6-栈"><a href="#3-6-栈" class="headerlink" title="3.6 栈"></a>3.6 栈</h2><ul>
+<li>具有特殊的访问方式的存储空间，也是内存空间的一部分，数据<strong>先进后出。</strong></li>
+<li>有两个基本操作:<ul>
+<li>入栈：将一个新的元素放到栈顶；</li>
+<li>出栈：从栈顶取出一个元素。</li>
+</ul>
+</li>
+<li>栈顶元素最后入栈最先出栈。</li>
+</ul>
+<h2 id="3-7-8086-CPU提供的栈机制"><a href="#3-7-8086-CPU提供的栈机制" class="headerlink" title="3.7 8086 CPU提供的栈机制"></a>3.7 8086 CPU提供的栈机制</h2><ul>
+<li><p>现今的CPU都有栈的设计，基于8086CPU编程可以将一段内存当作栈来使用。</p>
+</li>
+<li><p>8086CPU的入栈(PUSH)和POP(出栈)，以字为单位。</p>
+<ul>
+<li>push ax 将寄存器ax中的数据送入栈</li>
+<li>pop ax 从栈顶取出数据送入ax</li>
+</ul>
+</li>
+<li><p><strong>段寄存器SS存放栈顶的段地址，寄存器SP存放栈顶的偏移地址。任意时刻SS:SP指向栈顶元素。push时SP先自减法后写内存，pop先读内存sp后自加。</strong></p>
+</li>
+<li><p>pop之后数据还是存在内存中，push时覆盖。</p>
+<blockquote>
+<p>CS和IP存放当前指令的段地址和偏移地址。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="3-8-栈顶越界的问题"><a href="#3-8-栈顶越界的问题" class="headerlink" title="3.8 栈顶越界的问题"></a>3.8 栈顶越界的问题</h2><ul>
+<li><strong>栈是空的，则SP指向栈底+1的内存。</strong></li>
+<li>8086 CPU只纪录栈顶，栈空间由自己控制。栈顶越界问题导致溢出漏洞。</li>
+<li>8086CPU只考虑当前的情况：<ul>
+<li>当前栈顶在何处；</li>
+<li>当前要执行的指令时哪一条。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-9-push、pop指令"><a href="#3-9-push、pop指令" class="headerlink" title="3.9 push、pop指令"></a>3.9 push、pop指令</h2><ul>
+<li>可以直接对段寄存器使用。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;push和pop格式
+push 寄存器
+pop 寄存器
+push 段寄存器
+pop 段寄存器
+push 内存单元
+pop 内存单元1234567</code></pre>
+<ul>
+<li><strong>通用寄存器命名是x结尾的，段寄存器是以s结尾。</strong></li>
+<li>CPU在执行指令时，数据的段地址是从DS中获得，代码是在CS中获得，栈地址是从SS获得。</li>
+</ul>
+<h2 id="3-10-栈段"><a href="#3-10-栈段" class="headerlink" title="3.10 栈段"></a>3.10 栈段</h2><ul>
+<li>对于8086PC机，在编程时可以将长度为N(N小于等于64KB)的一组代码存在一组地址连续、起始地址为16的倍数的内存单元中，这段内存是当作栈来用，从而定义了一个栈段。</li>
+<li><strong>寄存器清零可用sub ax,ax或者直接赋值0，</strong>常见的也有使用xor。</li>
+<li>当栈空间定义为最大时，栈为空时SP=0。</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/14/assembly-summary-4/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-4</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/12/assembly-summary-2/">
+        <span class="next-text nav-default">assembly-summary-2</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

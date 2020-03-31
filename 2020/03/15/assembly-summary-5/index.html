@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="assembly-summary-5">
+
+
+
+
+  <meta name="keywords" content="编译原理,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Cathetine's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/15/assembly-summary-5/">
+
+
+<meta name="description" content="第五章、[BX]和loop指令引言 约定符号()来表示一个寄存器或者一个内存单元中的内容。例如(ax)=0010H表示ax中的内容为0010H；(21000H)=0010H，表示2000:1000处的内容为0010H。 约定符号idata表示常量。  5.1 [BX] inc指令是自增1的意思 和[0]有些类似，[0]表示内存单元，它的偏移地址是0。[bx]也是表示一个内存单元，它的内存偏移地址在">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="assembly-summary-5">
+<meta property="og:url" content="http://yoursite.com/2020/03/15/assembly-summary-5/index.html">
+<meta property="og:site_name" content="Cathetine&#39;s Blog">
+<meta property="og:description" content="第五章、[BX]和loop指令引言 约定符号()来表示一个寄存器或者一个内存单元中的内容。例如(ax)=0010H表示ax中的内容为0010H；(21000H)=0010H，表示2000:1000处的内容为0010H。 约定符号idata表示常量。  5.1 [BX] inc指令是自增1的意思 和[0]有些类似，[0]表示内存单元，它的偏移地址是0。[bx]也是表示一个内存单元，它的内存偏移地址在">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-31T06:43:50.821Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="assembly-summary-5">
+<meta name="twitter:description" content="第五章、[BX]和loop指令引言 约定符号()来表示一个寄存器或者一个内存单元中的内容。例如(ax)=0010H表示ax中的内容为0010H；(21000H)=0010H，表示2000:1000处的内容为0010H。 约定符号idata表示常量。  5.1 [BX] inc指令是自增1的意思 和[0]有些类似，[0]表示内存单元，它的偏移地址是0。[bx]也是表示一个内存单元，它的内存偏移地址在">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> assembly-summary-5 - Cathetine's Blog </title>
+  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Cathetine's Blog</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          assembly-summary-5
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 15 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="第五章、-BX-和loop指令"><a href="#第五章、-BX-和loop指令" class="headerlink" title="第五章、[BX]和loop指令"></a>第五章、[BX]和loop指令</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><ul>
+<li>约定符号()来表示一个寄存器或者一个内存单元中的内容。<strong>例如</strong>(ax)=0010H表示ax中的内容为0010H；(21000H)=0010H，表示2000:1000处的内容为0010H。</li>
+<li>约定符号idata表示常量。</li>
+</ul>
+<h2 id="5-1-BX"><a href="#5-1-BX" class="headerlink" title="5.1 [BX]"></a>5.1 [BX]</h2><ul>
+<li><strong>inc指令是自增1的意思</strong></li>
+<li>和[0]有些类似，[0]表示内存单元，它的偏移地址是0。[bx]也是表示一个内存单元，它的内存偏移地址在bx中。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov bx,0
+mov ax,[bx]
+mov al,[bx]123</code></pre>
+<ul>
+<li><p>用以下两种信息描述一个内存单元：</p>
+<ul>
+<li><p>1、内存单元的地址；</p>
+</li>
+<li><p>2、内存单元的长度(类型)。</p>
+<blockquote>
+<p>我们用[0]表示一个内存单元时，0表示单元的偏移地址，段地址默认在DS中，单元的长度(类型)可以由具体指令中的其他的操作对象(比如说寄存器)指出。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">mov ax,[0];0对应的字单元，主要单位要看操作对象(寄存器)
+mov al,[0];字节</code></pre>
+<h2 id="5-2-loop指令"><a href="#5-2-loop指令" class="headerlink" title="5.2 loop指令"></a>5.2 loop指令</h2><ul>
+<li>指令的格式是loop 标号。CUP执行loop指令时要进两步操作：<ul>
+<li><strong>CX中存放循环的次数，执行时CX中的内容自减1。相当于C的do while</strong></li>
+<li><strong>判断CX中的值，不为0则转至标号处执行程序，为0则向下执行。</strong></li>
+</ul>
+</li>
+<li>通常loop指令来实现循坏功能CX中存放循环的次数。</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+       code segment
+       mov ax,2
+       add ax,ax
+
+       mov ax,4c00H
+       int 21H
+code ends
+end
+;计算2^3
+assume cs:code
+code segment
+     mov ax,2
+     add ax,ax
+     add,ax,ax
+
+     mov ax,4c00H
+     int 21h
+code ends
+end
+;计算2^12
+assume cs:code
+code segment
+start:  mov ax,2
+        mov cx,11
+      p:add ax,ax       
+        loop p;p是标号
+
+       mov ax,4c00H;masm默认数字是十进制
+       int 21H
+code ends
+end start123456789101112
+;编程计算123*236，结果放在ax中
+assume cs:code
+code segment
+start:mov ax,0
+      mov cx,236
+   an:add ax,123
+      loop an
+      mov ax,4c00H
+      int 21H
+code ends
+end start
+assume cs:code
+code segment
+start:mov ax,0
+      mov cx,123
+   pa:add ax,236
+      loop pa
+
+      mov ax,4c00H
+      int 21H
+
+code ends
+end start</code></pre>
+<h2 id="5-3-loop和-BX-的联合应用"><a href="#5-3-loop和-BX-的联合应用" class="headerlink" title="5.3 loop和[BX]的联合应用"></a>5.3 loop和[BX]的联合应用</h2><ul>
+<li>可以用循环来解决处理地址连续的内存单元中的数据的问题，用变量来给出内存单元的地址。</li>
+</ul>
+<h2 id="5-4-段前缀"><a href="#5-4-段前缀" class="headerlink" title="5.4 段前缀"></a>5.4 段前缀</h2><ul>
+<li>出现在访问内存单元的指令中用显式地指明内存单元的段地址的ds、cs、ss、es称为段前缀。<strong>没有显式地给出内存单元的段地址则默认在ds中。</strong></li>
+</ul>
+<h2 id="5-5-一段安全的空间"><a href="#5-5-一段安全的空间" class="headerlink" title="5.5 一段安全的空间"></a>5.5 一段安全的空间</h2><blockquote>
+<p>在8086模式中，随意向一段内存空间写入数据是危险的，因为这段空间中可能存放着重要的系统数据或代码。</p>
+</blockquote>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+code segment
+    mov ax,0
+    mov ds,ax
+    mov ds:[26H],ax
+    mov ax,4c00H
+    int 21H
+code ends
+end</code></pre>
+<ul>
+<li>dos下0:200H<del>0:2FFH的256个字节的空间是安全的，dos和其他合法程序一般都不会使用这段空间。内存0000:0000</del>0000:03FF大小为1kb的空间是系统存放中断处理程序入口地址的中断向量表。一般情况下0:200H~0:2FFH的256个字节的空间所对应的中断向量表都是空的，操作系统和其他应用程序都不占用。</li>
+</ul>
+<h2 id="5-6-段前缀的使用"><a href="#5-6-段前缀的使用" class="headerlink" title="5.6 段前缀的使用"></a>5.6 段前缀的使用</h2><ul>
+<li>将内存ffff:0~ffff:b段单元中的数据拷贝到0:200 ~ 0:20b单元中</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">assume cs:code
+code segment
+          mov bx,0 ;(bx)=0，偏移地址从0开始
+          mov cx,12 ;(cx)=12，循环12次
+      s:  mov ax,offffh
+          mov ds,ax ;(ds)=0ffffh
+          mov dl,[bx] ;(ds)=((ds)*16+(bx))，将ffff:bx中的数据送入dl
+          mov ax,0020h
+          mov ds,ax ;(ds)=0020h
+          mov [bx],dl ;((ds)*16+(bx))=dl，将数据送入0020:bx
+          inc bx ;(bx)=(bx)+1
+          loop s
+
+          mov ax,4c00h
+          int 21h
+code ends
+end</code></pre>
+<ul>
+<li>两个内存单元相差64KB则不再同一个段里，需要设置ds的值两次，效率不高。</li>
+<li>使用 es(附加段)</li>
+</ul>
+<pre class=" language-asm"><code class="language-asm">;优化后的代码，优化了两次设置ds
+assume cs:code
+code segment
+           mov ax,offffh
+           mov ds,ax ;(ds)=0ffffh
+           mov ax,0020h
+           mov es,ax ;(es)=0020H
+           mov bx,0 ;(bx)=0，此时ds:bx指向ffff:0，es:bx指向0020:0
+           mov cx,12 ;(cx)=12，循环12次
+       s:  mov dl,[bx] ;(ds)=((ds)*16+(bx))，将ffff:bx中的数据送入dl
+           mov es:[bx],dl ;((es)*16+(bx))=dl，将数据送入0020:bx
+           inc bx ;(bx)=(bx)+1
+           loop s
+
+           mov ax,4c00h
+           int 21h
+code ends
+end</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/编译原理/">编译原理</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/16/assembly-summary-6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">assembly-summary-6</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/14/assembly-summary-4/">
+        <span class="next-text nav-default">assembly-summary-4</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">Cathetine.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
