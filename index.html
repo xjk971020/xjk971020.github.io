@@ -1,458 +1,522 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
-  <head><meta name="generator" content="Hexo 3.9.0">
-    
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>林清瑶 · 产品设计师简历</title>
+    <!-- 使用 Google Fonts 提升字体质感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (免费图标库) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Inter', sans-serif;
+            padding: 48px 24px;
+            color: #1e2a3e;
+        }
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+        /* 简历卡片容器 */
+        .resume-card {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
+        /* 两栏布局 */
+        .resume-inner {
+            display: flex;
+            flex-wrap: wrap;
+        }
 
+        /* 左侧栏 (深色优雅区域) */
+        .sidebar {
+            flex: 1.2;
+            background: #1e2f3e;
+            color: #eef2f5;
+            padding: 2rem 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
 
+        /* 右侧主要内容区 */
+        .main-content {
+            flex: 2.5;
+            background: #ffffff;
+            padding: 2rem 2.2rem;
+        }
 
+        /* ========== 左侧样式 ========== */
+        .avatar {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
 
+        .avatar-circle {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(135deg, #85a8c5, #3b5c7c);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 3px solid rgba(255,255,240,0.7);
+        }
 
+        .avatar-circle i {
+            font-size: 4.2rem;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+        }
 
+        .sidebar h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.25rem;
+            color: white;
+            text-align: center;
+        }
 
+        .sidebar .title {
+            text-align: center;
+            font-size: 0.9rem;
+            background: rgba(255,255,240,0.18);
+            display: inline-block;
+            width: 100%;
+            padding: 0.4rem 0;
+            border-radius: 40px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
 
+        .contact-info, .education, .skills, .languages {
+            margin-top: 0.2rem;
+        }
 
-  <link rel="alternate" href="/default" title="Cathetine's Blog">
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #7aa5c2;
+            padding-left: 12px;
+            text-transform: uppercase;
+            color: #f0f6fc;
+        }
 
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.9rem;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            word-break: break-word;
+        }
 
+        .contact-detail i {
+            width: 24px;
+            font-size: 1rem;
+            color: #9bc0da;
+        }
 
+        .edu-item {
+            margin-bottom: 1rem;
+        }
+        .edu-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .edu-item p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+        .skill-tag {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .skill-tag span {
+            background: rgba(255,255,245,0.15);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
 
+        .lang-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+        .lang-name {
+            font-weight: 500;
+        }
+        .lang-level {
+            opacity: 0.75;
+            font-size: 0.75rem;
+        }
 
+        hr {
+            border-color: rgba(255,255,255,0.15);
+            margin: 8px 0;
+        }
 
-<link rel="canonical" href="http://yoursite.com/">
+        /* ========== 右侧样式 ========== */
+        .right-section {
+            margin-bottom: 2rem;
+        }
+        .right-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e2f3e;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 6px;
+            display: inline-block;
+        }
+        .profile-text {
+            color: #2c3e4e;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
 
+        .exp-item, .project-item {
+            margin-bottom: 1.8rem;
+        }
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .exp-role {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f2c3b;
+        }
+        .exp-company {
+            font-weight: 600;
+            color: #4b6a84;
+            font-size: 0.85rem;
+        }
+        .exp-date {
+            font-size: 0.75rem;
+            background: #f1f5f9;
+            padding: 3px 10px;
+            border-radius: 30px;
+            color: #2c5a7a;
+        }
+        .exp-desc {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #334e68;
+            margin-top: 6px;
+            padding-left: 6px;
+            border-left: 2px solid #cbdde9;
+        }
+        .exp-desc ul {
+            padding-left: 1.2rem;
+            margin-top: 4px;
+        }
+        .exp-desc li {
+            margin-bottom: 6px;
+        }
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cathetine&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Cathetine&#39;s Blog">
-<meta property="og:locale" content="zh-Hans">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cathetine&#39;s Blog">
+        .project-item .exp-header .exp-role {
+            font-weight: 700;
+        }
 
+        /* 证书/奖项小标签 */
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .badge {
+            background: #eff3f8;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1f4e6e;
+        }
 
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
-<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        /* 响应式 */
+        @media (max-width: 780px) {
+            body {
+                padding: 20px 16px;
+            }
+            .resume-inner {
+                flex-direction: column;
+            }
+            .sidebar {
+                text-align: left;
+            }
+            .section-title {
+                border-left: 4px solid #7aa5c2;
+            }
+            .exp-header {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
 
+        /* 打印样式 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .resume-card {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .sidebar {
+                background: #1e2f3e;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .badge, .skill-tag span {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
 
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .contact-detail a:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 1rem;
+            background: #f8fafc;
+            color: #6f8eae;
+            border-top: 1px solid #e9eef3;
+        }
+    </style>
+</head>
+<body>
+<div class="resume-card">
+    <div class="resume-inner">
+        <!-- 左侧个人信息区域 -->
+        <div class="sidebar">
+            <div class="avatar">
+                <div class="avatar-circle">
+                    <i class="fas fa-user-astronaut"></i> <!-- 时尚头像图标 -->
+                </div>
+                <h1>林清瑶</h1>
+                <div class="title">资深UI/UX产品设计师</div>
+            </div>
 
+            <div class="contact-info">
+                <div class="section-title">联系方式</div>
+                <div class="contact-detail">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+86 138 6688 2390</span>
+                </div>
+                <div class="contact-detail">
+                    <i class="fas fa-envelope"></i>
+                    <span>qingya.lin@design.com</span>
+                </div>
+                <div class="contact-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>中国 · 成都 / 上海</span>
+                </div>
+                <div class="contact-detail">
+                    <i class="fab fa-linkedin"></i>
+                    <span>linkedin.com/in/linqingya</span>
+                </div>
+                <div class="contact-detail">
+                    <i class="fab fa-behance"></i>
+                    <span>behance.net/qingya</span>
+                </div>
+            </div>
 
+            <div class="education">
+                <div class="section-title">教育背景</div>
+                <div class="edu-item">
+                    <h4>江南大学 · 设计学院</h4>
+                    <p>数字媒体艺术 硕士 | 2020 - 2023</p>
+                    <p style="font-size:0.75rem; opacity:0.7">GPA 3.9/4.0 · 国家奖学金</p>
+                </div>
+                <div class="edu-item">
+                    <h4>四川美术学院</h4>
+                    <p>视觉传达设计 学士 | 2016 - 2020</p>
+                    <p style="font-size:0.75rem; opacity:0.7">优秀毕业设计，校级一等奖学金</p>
+                </div>
+            </div>
 
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
+            <div class="skills">
+                <div class="section-title">设计工具</div>
+                <div class="skill-tag">
+                    <span>Figma</span><span>Sketch</span><span>Adobe XD</span>
+                    <span>Photoshop</span><span>Illustrator</span><span>After Effects</span>
+                    <span>Protopie</span><span>Framer</span>
+                </div>
+            </div>
 
+            <div class="skills">
+                <div class="section-title">专业领域</div>
+                <div class="skill-tag">
+                    <span>UX研究</span><span>交互设计</span><span>用户测试</span>
+                    <span>设计系统</span><span>动效设计</span><span>产品策略</span>
+                </div>
+            </div>
 
+            <div class="languages">
+                <div class="section-title">语言能力</div>
+                <div class="lang-item">
+                    <span class="lang-name">中文 (普通话)</span>
+                    <span class="lang-level">母语 · 写作精通</span>
+                </div>
+                <div class="lang-item">
+                    <span class="lang-name">英语 (IELTS 7.5)</span>
+                    <span class="lang-level">专业工作流利 · 读写优秀</span>
+                </div>
+            </div>
+        </div>
 
+        <!-- 右侧工作经历 & 项目成就 -->
+        <div class="main-content">
+            <div class="right-section">
+                <div class="right-title">专业简介</div>
+                <div class="profile-text">
+                    5年以上用户体验设计经验，善于从用户洞察到产品落地全流程。曾主导千万级用户产品的设计改版，提升核心转化率23%。 
+                    热爱设计系统与跨部门协作，交付高质量、包容性强的数字产品，并在多个设计奖项中入围。
+                </div>
+            </div>
 
-  
-
-
-
-    <title> Cathetine's Blog - </title>
-  <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">Cathetine's Blog</a>
-    </h1>
-
-    <nav id="nav-top">
-        
-            <ul id="menu-top" class="nav-top-items">
+            <div class="right-section">
+                <div class="right-title">工作经验</div>
                 
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
-        
-  </nav>
-</div>
-
-      </header>
-      <div id="content">
-        
-    <div id="primary" class="home">
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/23/assembly-summary-15/">assembly-summary-15</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 23 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/23/assembly-summary-14/">assembly-summary-14</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 23 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/23/assembly-summary-13/">assembly-summary-13</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 23 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/22/assembly-summary-12/">assembly-summary-12</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 22 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/21/assembly-summary-11/">assembly-summary-11</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 21 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/21/assembly-summary-10/">assembly-summary-10</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 21 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/19/assembly-summary-9/">assembly-summary-9</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 19 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/18/assembly-summary-8/">assembly-summary-8</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 18 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/17/assembly-summary-7/">assembly-summary-7</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 17 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2020/03/16/assembly-summary-6/">assembly-summary-6</a>
-        
-      </h1>
-
-      <time class="post-time">
-          Mar 16 2020
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </div></article>
-
-        
-        
-  <nav class="pagination">
-    
-    
-      <a class="next" href="/page/2/">
-        <span class="next-text">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
+                <div class="exp-item">
+                    <div class="exp-header">
+                        <div>
+                            <span class="exp-role">资深产品设计师</span>
+                            <span class="exp-company"> · 字节跳动 · 抖音设计中心</span>
+                        </div>
+                        <div class="exp-date">2023.04 – 至今</div>
+                    </div>
+                    <div class="exp-desc">
+                        <ul>
+                            <li>负责抖音创作工具及本地生活业务模块体验升级，主导B端设计规范迭代，覆盖20+业务场景，设计一致性提升35%。</li>
+                            <li>协同产品与研发搭建“智能组件库2.0”，设计交付效率提升40%，获得团队卓越贡献奖。</li>
+                            <li>通过用户调研与A/B测试优化创作者入驻流程，转化率提升12.6%，用户满意度NPS提高18%。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-item">
+                    <div class="exp-header">
+                        <div>
+                            <span class="exp-role">UI/UX 设计师</span>
+                            <span class="exp-company"> · 蚂蚁集团 · 支付宝设计团队</span>
+                        </div>
+                        <div class="exp-date">2021.07 – 2023.02</div>
+                    </div>
+                    <div class="exp-desc">
+                        <ul>
+                            <li>参与支付宝「生活缴费」与「市民中心」改版，重构信息架构，使用户任务完成时间缩短28%，日活用户增长近百万。</li>
+                            <li>建立无障碍设计检查清单，推动适老化改造，帮助老年用户独立完成率提升31%。</li>
+                            <li>与用研团队合作进行可用性测试，输出20+份体验报告，迭代高频痛点并降低客诉量17%。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exp-item">
+                    <div class="exp-header">
+                        <div>
+                            <span class="exp-role">视觉/交互设计师 (实习)</span>
+                            <span class="exp-company"> · 蔚来汽车 · 数字座舱团队</span>
+                        </div>
+                        <div class="exp-date">2020.09 – 2021.04</div>
+                    </div>
+                    <div class="exp-desc">
+                        <ul>
+                            <li>设计车载娱乐系统的HMI界面及动态原型，推动高保真设计落地，支持NIO OS 3.0更新。</li>
+                            <li>参与设计系统的图标库搭建，确保多屏幕设备视觉一致性，获得创新设计提名。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="right-title">核心项目</div>
+                <div class="project-item">
+                    <div class="exp-header">
+                        <div>
+                            <span class="exp-role">「灵感集」AI创作平台 · 主设</span>
+                        </div>
+                        <div class="exp-date">2024.01 – 至今</div>
+                    </div>
+                    <div class="exp-desc">
+                        从0到1设计AI辅助创作工具，覆盖设计师素材管理与生成工作流。上线3个月获取5w+种子用户，设计系统被团队沿用至多条产品线。
+                    </div>
+                </div>
+                <div class="project-item">
+                    <div class="exp-header">
+                        <div>
+                            <span class="exp-role">本地生活「探店地图」交互革新</span>
+                        </div>
+                        <div class="exp-date">2023.08 – 2024.02</div>
+                    </div>
+                    <div class="exp-desc">
+                        主导全新地图可视化方案，结合用户偏好算法推荐，沉浸式体验提升内容互动率34%。该项目获得抖音年度产品创新提名奖。
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="right-title">荣誉 & 证书</div>
+                <div class="badge-list">
+                    <span class="badge">🏆 2024 国际用户体验设计大赛 银奖</span>
+                    <span class="badge">📘  Google UX Design 认证</span>
+                    <span class="badge">✨ 站酷年度推荐设计师</span>
+                    <span class="badge">📌 持有 9 项外观设计专利</span>
+                    <span class="badge">🎤 2023 UX Conference 演讲嘉宾</span>
+                </div>
+            </div>
+
+            <div class="right-section">
+                <div class="right-title">设计之外</div>
+                <div class="profile-text" style="font-size:0.85rem">
+                    旅行摄影师 · 户外爱好者（徒步/露营） · 开源设计社区贡献者。常写设计博客分享组件库心得，累计阅读量超20w。
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="secondary">
-    
-    <section id="widget-custom" class="widget-area">
-        <h3 class="widget-title">Intro</h3>
-        <p>什么都懂一点, 又什么都不太懂。</p>
-    </section>
-
-
-    
-    <section id="tags" class="widget-area widget_categories">
-        <h3 class="widget-title">Categories</h3>
-        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础知识/">Java基础知识</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java虚拟机/">Java虚拟机</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mysql/">Mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/单点登录/">单点登录</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据结构/">数据结构</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">2</span></li></ul>
-    </section>
-
-
-    
-
+    <footer>
+        <i class="far fa-copyright"></i> 林清瑶 · 在线简历  |  更新于2025年  |  更多作品可联系获取作品集
+    </footer>
 </div>
-
-
-      </div>
-
-      <footer id="colophon"><span class="copyright-year">
-    
-        &copy;
-    
-        2014 -
-    
-    2020
-    <span class="footer-author">Cathetine.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
-    </span>
-</span>
-
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
+</body>
 </html>
